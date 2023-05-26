@@ -4,7 +4,6 @@ import { Geb } from './geb'
 
 import * as utils from './utils'
 import * as contracts from '@reflexer-finance/geb-contract-api'
-import { GebEthersProvider } from '@reflexer-finance/geb-ethers-provider'
 import {
     ContractList,
     GebProviderInterface,
@@ -19,7 +18,6 @@ export {
     Geb,
     GebErrorTypes,
     GebProxyActions,
-    GebEthersProvider,
     utils,
     contracts,
     KOVAN_ADDRESSES,

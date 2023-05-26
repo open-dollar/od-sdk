@@ -13,8 +13,8 @@ import {
     GebDeployment,
     BaseContractAPI,
     GebContractAPIConstructorInterface,
-} from '@reflexer-finance/geb-contract-base'
-import { GebEthersProvider } from '@reflexer-finance/geb-ethers-provider'
+} from './contracts/index'
+import { GebEthersProvider } from './provider'
 import { ethers } from 'ethers'
 import { GebError, GebErrorTypes } from './errors'
 import { GebProxyActions } from './proxy-action'
