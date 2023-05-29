@@ -1,25 +1,10 @@
-import {
-    GebProviderInterface,
-    ContractList,
-    GebDeployment,
-    getAddressList,
-} from '@reflexer-finance/geb-contract-base'
-import { TransactionRequest } from '@reflexer-finance/geb-contract-base'
+import { ContractList, GebDeployment, getAddressList } from './contracts'
 import { BytesLike } from '@ethersproject/bytes'
 import { BigNumberish } from '@ethersproject/bignumber'
 import { BigNumber } from '@ethersproject/bignumber'
+import { ethers } from 'ethers'
 
-import {
-    GebProxyActions as GebProxyActionsCore,
-    DsProxy,
-    GebProxyActionsGlobalSettlement,
-    GebProxyLeverageActions,
-    GebProxyIncentivesActions,
-    GebProxyDebtAuctionActions,
-    GebProxySurplusAuctionActions,
-    GebProxyStakedTokenAuctionActions,
-    GebProxySaviourActions,
-} from '@reflexer-finance/geb-contract-api'
+import * as types from './typechained'
 import { NULL_ADDRESS } from './utils'
 
 /**
@@ -30,7 +15,7 @@ export class GebProxyActions {
      * Underlying proxy object. Can be use to make custom calls to the proxy using `proxy.execute()` function.
      * For the details of each function
      */
-    public proxy: DsProxy
+    public proxy: types.DSProxy
 
     /**
      * Address of the base proxy actions contract.
@@ -73,14 +58,14 @@ export class GebProxyActions {
     public proxyActionSaviourAddress: string
 
     private addressList: ContractList
-    private proxyActionCore: GebProxyActionsCore
-    private proxyActionGlobalSettlement: GebProxyActionsGlobalSettlement
-    private proxyActionIncentive: GebProxyIncentivesActions
-    private proxyActionLeverage: GebProxyLeverageActions
-    private proxyActionDebtAuction: GebProxyDebtAuctionActions
-    private proxyActionSurplusAuction: GebProxySurplusAuctionActions
-    private proxyStakedTokenAuction: GebProxyStakedTokenAuctionActions
-    private proxyActionSaviour: GebProxySaviourActions
+    private proxyActionCore: types.GebProxyActions
+    private proxyActionGlobalSettlement: types.GebProxyActionsGlobalSettlement
+    private proxyActionIncentive: types.GebProxyIncentivesActions
+    private proxyActionLeverage: types.GebProxyLeverageActions
+    private proxyActionDebtAuction: types.GebProxyDebtAuctionActions
+    private proxyActionSurplusAuction: types.GebProxySurplusAuctionActions
+    private proxyStakedTokenAuction: types.GebProxyStakedTokenAuctionActions
+    private proxyActionSaviour: types.GebProxySaviourActions
 
     constructor(
         /**
@@ -88,11 +73,14 @@ export class GebProxyActions {
          */
         public proxyAddress: string,
         network: GebDeployment,
-        private chainProvider: GebProviderInterface
+        private chainProvider: ethers.providers.Provider
     ) {
         this.addressList = getAddressList(network)
 
-        this.proxy = new DsProxy(proxyAddress, this.chainProvider)
+        this.proxy = types.DSProxy__factory.connect(
+            proxyAddress,
+            this.chainProvider
+        )
 
         // Set proxy action contract addresses
         this.proxyActionCoreAddress = this.addressList.PROXY_ACTIONS
@@ -105,45 +93,46 @@ export class GebProxyActions {
         this.proxyActionSaviourAddress = this.addressList.PROXY_SAVIOUR_ACTIONS
 
         // Proxy contract APIs
-        this.proxyActionCore = new GebProxyActionsCore(
+        this.proxyActionCore = types.GebProxyActions__factory.connect(
             this.proxyActionCoreAddress,
             this.chainProvider
         )
-        this.proxyActionGlobalSettlement = new GebProxyActionsGlobalSettlement(
+        this.proxyActionGlobalSettlement = types.GebProxyActionsGlobalSettlement__factory.connect(
             this.proxyActionGlobalSettlementAddress,
             this.chainProvider
         )
 
-        this.proxyActionIncentive = new GebProxyIncentivesActions(
+        this.proxyActionIncentive = types.GebProxyIncentivesActions__factory.connect(
             this.proxyActionIncentiveAddress,
             this.chainProvider
         )
 
-        this.proxyActionLeverage = new GebProxyLeverageActions(
+        this.proxyActionLeverage = types.GebProxyLeverageActions__factory.connect(
             this.proxyActionLeverageAddress,
             this.chainProvider
         )
-        this.proxyActionDebtAuction = new GebProxyDebtAuctionActions(
+        this.proxyActionDebtAuction = types.GebProxyDebtAuctionActions__factory.connect(
             this.proxyActionDebtAuctionAddress,
             this.chainProvider
         )
-        this.proxyActionSurplusAuction = new GebProxySurplusAuctionActions(
+        this.proxyActionSurplusAuction = types.GebProxySurplusAuctionActions__factory.connect(
             this.proxyActionSurplusAuctionAddress,
             this.chainProvider
         )
-        this.proxyStakedTokenAuction = new GebProxyStakedTokenAuctionActions(
+        this.proxyStakedTokenAuction = types.GebProxyStakedTokenAuctionActions__factory.connect(
             this.proxyStakedTokenAuctionAddress,
             this.chainProvider
         )
-        this.proxyActionSaviour = new GebProxySaviourActions(
+        this.proxyActionSaviour = types.GebProxySaviourActions__factory.connect(
             this.proxyActionSaviourAddress,
             this.chainProvider
         )
     }
 
-    private getProxiedTransactionRequest(
-        tx: TransactionRequest
-    ): TransactionRequest {
+    private async getProxiedTransactionRequest(
+        txPromise: Promise<ethers.PopulatedTransaction>
+    ): Promise<ethers.PopulatedTransaction> {
+        const tx = await txPromise
         let ethValue = tx.value
         if (!ethValue) {
             ethValue = BigNumber.from('0')
@@ -153,7 +142,11 @@ export class GebProxyActions {
             throw Error('This proxy action is not supported on this network')
         }
 
-        return this.proxy.execute__AddressBytes(ethValue, tx.to, tx.data)
+        return this.proxy.populateTransaction['execute(address,bytes)'](
+            tx.to,
+            tx.data,
+            { value: ethValue }
+        )
     }
 
     // ==== Proxy Action Core ====
@@ -162,9 +155,9 @@ export class GebProxyActions {
         safe: BigNumberish,
         usr: string,
         ok: BigNumberish
-    ): TransactionRequest {
+    ): Promise<ethers.PopulatedTransaction> {
         return this.getProxiedTransactionRequest(
-            this.proxyActionCore.allowSAFE(
+            this.proxyActionCore.populateTransaction.allowSAFE(
                 this.addressList.SAFE_MANAGER,
                 safe,
                 usr,
@@ -173,9 +166,15 @@ export class GebProxyActions {
         )
     }
 
-    approveSAFEModification(obj: string, usr: string): TransactionRequest {
+    approveSAFEModification(
+        obj: string,
+        usr: string
+    ): Promise<ethers.PopulatedTransaction> {
         return this.getProxiedTransactionRequest(
-            this.proxyActionCore.approveSAFEModification(obj, usr)
+            this.proxyActionCore.populateTransaction.approveSAFEModification(
+                obj,
+                usr
+            )
         )
     }
 
@@ -183,21 +182,34 @@ export class GebProxyActions {
         apt: string,
         safeHandler: string,
         wad: BigNumberish
-    ): TransactionRequest {
+    ): Promise<ethers.PopulatedTransaction> {
         return this.getProxiedTransactionRequest(
-            this.proxyActionCore.coinJoin_join(apt, safeHandler, wad)
+            this.proxyActionCore.populateTransaction.coinJoin_join(
+                apt,
+                safeHandler,
+                wad
+            )
         )
     }
 
-    denySAFEModification(obj: string, usr: string): TransactionRequest {
+    denySAFEModification(
+        obj: string,
+        usr: string
+    ): Promise<ethers.PopulatedTransaction> {
         return this.getProxiedTransactionRequest(
-            this.proxyActionCore.denySAFEModification(obj, usr)
+            this.proxyActionCore.populateTransaction.denySAFEModification(
+                obj,
+                usr
+            )
         )
     }
 
-    enterSystem(src: string, safe: BigNumberish): TransactionRequest {
+    enterSystem(
+        src: string,
+        safe: BigNumberish
+    ): Promise<ethers.PopulatedTransaction> {
         return this.getProxiedTransactionRequest(
-            this.proxyActionCore.enterSystem(
+            this.proxyActionCore.populateTransaction.enterSystem(
                 this.addressList.SAFE_MANAGER,
                 src,
                 safe
@@ -205,9 +217,12 @@ export class GebProxyActions {
         )
     }
 
-    exitETH(safe: BigNumberish, wad: BigNumberish): TransactionRequest {
+    exitETH(
+        safe: BigNumberish,
+        wad: BigNumberish
+    ): Promise<ethers.PopulatedTransaction> {
         return this.getProxiedTransactionRequest(
-            this.proxyActionCore.exitETH(
+            this.proxyActionCore.populateTransaction.exitETH(
                 this.addressList.SAFE_MANAGER,
                 this.addressList.GEB_JOIN_ETH_A,
                 safe,
@@ -220,9 +235,9 @@ export class GebProxyActions {
         collateralJoin: string,
         safe: BigNumberish,
         amt: BigNumberish
-    ): TransactionRequest {
+    ): Promise<ethers.PopulatedTransaction> {
         return this.getProxiedTransactionRequest(
-            this.proxyActionCore.exitTokenCollateral(
+            this.proxyActionCore.populateTransaction.exitTokenCollateral(
                 this.addressList.SAFE_MANAGER,
                 collateralJoin,
                 safe,
@@ -231,9 +246,12 @@ export class GebProxyActions {
         )
     }
 
-    freeETH(safe: BigNumberish, wad: BigNumberish): TransactionRequest {
+    freeETH(
+        safe: BigNumberish,
+        wad: BigNumberish
+    ): Promise<ethers.PopulatedTransaction> {
         return this.getProxiedTransactionRequest(
-            this.proxyActionCore.freeETH(
+            this.proxyActionCore.populateTransaction.freeETH(
                 this.addressList.SAFE_MANAGER,
                 this.addressList.GEB_JOIN_ETH_A,
                 safe,
@@ -246,9 +264,9 @@ export class GebProxyActions {
         collateralJoin: string,
         safe: BigNumberish,
         amt: BigNumberish
-    ): TransactionRequest {
+    ): Promise<ethers.PopulatedTransaction> {
         return this.getProxiedTransactionRequest(
-            this.proxyActionCore.freeTokenCollateral(
+            this.proxyActionCore.populateTransaction.freeTokenCollateral(
                 this.addressList.SAFE_MANAGER,
                 collateralJoin,
                 safe,
@@ -257,9 +275,12 @@ export class GebProxyActions {
         )
     }
 
-    generateDebt(safe: BigNumberish, wad: BigNumberish): TransactionRequest {
+    generateDebt(
+        safe: BigNumberish,
+        wad: BigNumberish
+    ): Promise<ethers.PopulatedTransaction> {
         return this.getProxiedTransactionRequest(
-            this.proxyActionCore.generateDebt(
+            this.proxyActionCore.populateTransaction.generateDebt(
                 this.addressList.SAFE_MANAGER,
                 this.addressList.GEB_TAX_COLLECTOR,
                 this.addressList.GEB_COIN_JOIN,
@@ -273,9 +294,9 @@ export class GebProxyActions {
         safe: BigNumberish,
         wad: BigNumberish,
         saviour: string
-    ): TransactionRequest {
+    ): Promise<ethers.PopulatedTransaction> {
         return this.getProxiedTransactionRequest(
-            this.proxyActionCore.generateDebtAndProtectSAFE(
+            this.proxyActionCore.populateTransaction.generateDebtAndProtectSAFE(
                 this.addressList.SAFE_MANAGER,
                 this.addressList.GEB_TAX_COLLECTOR,
                 this.addressList.GEB_COIN_JOIN,
@@ -287,13 +308,16 @@ export class GebProxyActions {
         )
     }
 
-    lockETH(ethValue: BigNumberish, safe: BigNumberish): TransactionRequest {
+    lockETH(
+        ethValue: BigNumberish,
+        safe: BigNumberish
+    ): Promise<ethers.PopulatedTransaction> {
         return this.getProxiedTransactionRequest(
-            this.proxyActionCore.lockETH(
-                BigNumber.from(ethValue),
+            this.proxyActionCore.populateTransaction.lockETH(
                 this.addressList.SAFE_MANAGER,
                 this.addressList.GEB_JOIN_ETH_A,
-                safe
+                safe,
+                { value: ethValue }
             )
         )
     }
@@ -302,16 +326,16 @@ export class GebProxyActions {
         ethValue: BigNumberish,
         safe: BigNumberish,
         deltaWad: BigNumberish
-    ): TransactionRequest {
+    ): Promise<ethers.PopulatedTransaction> {
         return this.getProxiedTransactionRequest(
-            this.proxyActionCore.lockETHAndGenerateDebt(
-                BigNumber.from(ethValue),
+            this.proxyActionCore.populateTransaction.lockETHAndGenerateDebt(
                 this.addressList.SAFE_MANAGER,
                 this.addressList.GEB_TAX_COLLECTOR,
                 this.addressList.GEB_JOIN_ETH_A,
                 this.addressList.GEB_COIN_JOIN,
                 safe,
-                deltaWad
+                deltaWad,
+                { value: ethValue }
             )
         )
     }
@@ -321,9 +345,9 @@ export class GebProxyActions {
         safe: BigNumberish,
         amt: BigNumberish,
         transferFrom: boolean
-    ): TransactionRequest {
+    ): Promise<ethers.PopulatedTransaction> {
         return this.getProxiedTransactionRequest(
-            this.proxyActionCore.lockTokenCollateral(
+            this.proxyActionCore.populateTransaction.lockTokenCollateral(
                 this.addressList.SAFE_MANAGER,
                 collateralJoin,
                 safe,
@@ -339,9 +363,9 @@ export class GebProxyActions {
         collateralAmount: BigNumberish,
         deltaWad: BigNumberish,
         transferFrom: boolean
-    ): TransactionRequest {
+    ): Promise<ethers.PopulatedTransaction> {
         return this.getProxiedTransactionRequest(
-            this.proxyActionCore.lockTokenCollateralAndGenerateDebt(
+            this.proxyActionCore.populateTransaction.lockTokenCollateralAndGenerateDebt(
                 this.addressList.SAFE_MANAGER,
                 this.addressList.GEB_TAX_COLLECTOR,
                 collateralJoin,
@@ -361,9 +385,9 @@ export class GebProxyActions {
         deltaWad: BigNumberish,
         transferFrom: boolean,
         saviour: string
-    ): TransactionRequest {
+    ): Promise<ethers.PopulatedTransaction> {
         return this.getProxiedTransactionRequest(
-            this.proxyActionCore.lockTokenCollateralGenerateDebtAndProtectSAFE(
+            this.proxyActionCore.populateTransaction.lockTokenCollateralGenerateDebtAndProtectSAFE(
                 this.addressList.SAFE_MANAGER,
                 this.addressList.GEB_TAX_COLLECTOR,
                 collateralJoin,
@@ -378,9 +402,13 @@ export class GebProxyActions {
         )
     }
 
-    makeCollateralBag(collateralJoin: string): TransactionRequest {
+    makeCollateralBag(
+        collateralJoin: string
+    ): Promise<ethers.PopulatedTransaction> {
         return this.getProxiedTransactionRequest(
-            this.proxyActionCore.makeCollateralBag(collateralJoin)
+            this.proxyActionCore.populateTransaction.makeCollateralBag(
+                collateralJoin
+            )
         )
     }
 
@@ -388,9 +416,9 @@ export class GebProxyActions {
         safe: BigNumberish,
         deltaCollateral: BigNumberish,
         deltaDebt: BigNumberish
-    ): TransactionRequest {
+    ): Promise<ethers.PopulatedTransaction> {
         return this.getProxiedTransactionRequest(
-            this.proxyActionCore.modifySAFECollateralization(
+            this.proxyActionCore.populateTransaction.modifySAFECollateralization(
                 this.addressList.SAFE_MANAGER,
                 safe,
                 deltaCollateral,
@@ -399,9 +427,12 @@ export class GebProxyActions {
         )
     }
 
-    moveSAFE(safeSrc: BigNumberish, safeDst: BigNumberish): TransactionRequest {
+    moveSAFE(
+        safeSrc: BigNumberish,
+        safeDst: BigNumberish
+    ): Promise<ethers.PopulatedTransaction> {
         return this.getProxiedTransactionRequest(
-            this.proxyActionCore.moveSAFE(
+            this.proxyActionCore.populateTransaction.moveSAFE(
                 this.addressList.SAFE_MANAGER,
                 safeSrc,
                 safeDst
@@ -413,16 +444,16 @@ export class GebProxyActions {
         ethValue: BigNumberish,
         collateralType: BytesLike,
         deltaWad: BigNumberish
-    ): TransactionRequest {
+    ): Promise<ethers.PopulatedTransaction> {
         return this.getProxiedTransactionRequest(
-            this.proxyActionCore.openLockETHAndGenerateDebt(
-                BigNumber.from(ethValue),
+            this.proxyActionCore.populateTransaction.openLockETHAndGenerateDebt(
                 this.addressList.SAFE_MANAGER,
                 this.addressList.GEB_TAX_COLLECTOR,
                 this.addressList.GEB_JOIN_ETH_A,
                 this.addressList.GEB_COIN_JOIN,
                 collateralType,
-                deltaWad
+                deltaWad,
+                { value: ethValue }
             )
         )
     }
@@ -432,10 +463,9 @@ export class GebProxyActions {
         collateralType: BytesLike,
         deltaWad: BigNumberish,
         saviour: string
-    ): TransactionRequest {
+    ): Promise<ethers.PopulatedTransaction> {
         return this.getProxiedTransactionRequest(
-            this.proxyActionCore.openLockETHGenerateDebtAndProtectSAFE(
-                BigNumber.from(ethValue),
+            this.proxyActionCore.populateTransaction.openLockETHGenerateDebtAndProtectSAFE(
                 this.addressList.SAFE_MANAGER,
                 this.addressList.GEB_TAX_COLLECTOR,
                 this.addressList.GEB_JOIN_ETH_A,
@@ -443,7 +473,8 @@ export class GebProxyActions {
                 collateralType,
                 deltaWad,
                 this.addressList.GEB_LIQUIDATION_ENGINE,
-                saviour
+                saviour,
+                { value: ethValue }
             )
         )
     }
@@ -453,9 +484,9 @@ export class GebProxyActions {
         collateralType: BytesLike,
         collateralAmount: BigNumberish,
         deltaWad: BigNumberish
-    ): TransactionRequest {
+    ): Promise<ethers.PopulatedTransaction> {
         return this.getProxiedTransactionRequest(
-            this.proxyActionCore.openLockGNTAndGenerateDebt(
+            this.proxyActionCore.populateTransaction.openLockGNTAndGenerateDebt(
                 this.addressList.SAFE_MANAGER,
                 this.addressList.GEB_TAX_COLLECTOR,
                 gntJoin,
@@ -473,9 +504,9 @@ export class GebProxyActions {
         collateralAmount: BigNumberish,
         deltaWad: BigNumberish,
         saviour: string
-    ): TransactionRequest {
+    ): Promise<ethers.PopulatedTransaction> {
         return this.getProxiedTransactionRequest(
-            this.proxyActionCore.openLockGNTGenerateDebtAndProtectSAFE(
+            this.proxyActionCore.populateTransaction.openLockGNTGenerateDebtAndProtectSAFE(
                 this.addressList.SAFE_MANAGER,
                 this.addressList.GEB_TAX_COLLECTOR,
                 gntJoin,
@@ -495,9 +526,9 @@ export class GebProxyActions {
         collateralAmount: BigNumberish,
         deltaWad: BigNumberish,
         transferFrom: boolean
-    ): TransactionRequest {
+    ): Promise<ethers.PopulatedTransaction> {
         return this.getProxiedTransactionRequest(
-            this.proxyActionCore.openLockTokenCollateralAndGenerateDebt(
+            this.proxyActionCore.populateTransaction.openLockTokenCollateralAndGenerateDebt(
                 this.addressList.SAFE_MANAGER,
                 this.addressList.GEB_TAX_COLLECTOR,
                 collateralJoin,
@@ -517,9 +548,9 @@ export class GebProxyActions {
         deltaWad: BigNumberish,
         transferFrom: boolean,
         saviour: string
-    ): TransactionRequest {
+    ): Promise<ethers.PopulatedTransaction> {
         return this.getProxiedTransactionRequest(
-            this.proxyActionCore.openLockTokenCollateralGenerateDebtAndProtectSAFE(
+            this.proxyActionCore.populateTransaction.openLockTokenCollateralGenerateDebtAndProtectSAFE(
                 this.addressList.SAFE_MANAGER,
                 this.addressList.GEB_TAX_COLLECTOR,
                 collateralJoin,
@@ -534,9 +565,12 @@ export class GebProxyActions {
         )
     }
 
-    openSAFE(collateralType: BytesLike, usr: string): TransactionRequest {
+    openSAFE(
+        collateralType: BytesLike,
+        usr: string
+    ): Promise<ethers.PopulatedTransaction> {
         return this.getProxiedTransactionRequest(
-            this.proxyActionCore.openSAFE(
+            this.proxyActionCore.populateTransaction.openSAFE(
                 this.addressList.SAFE_MANAGER,
                 collateralType,
                 usr
@@ -544,9 +578,12 @@ export class GebProxyActions {
         )
     }
 
-    quitSystem(safe: BigNumberish, dst: string): TransactionRequest {
+    quitSystem(
+        safe: BigNumberish,
+        dst: string
+    ): Promise<ethers.PopulatedTransaction> {
         return this.getProxiedTransactionRequest(
-            this.proxyActionCore.quitSystem(
+            this.proxyActionCore.populateTransaction.quitSystem(
                 this.addressList.SAFE_MANAGER,
                 safe,
                 dst
@@ -554,9 +591,9 @@ export class GebProxyActions {
         )
     }
 
-    repayAllDebt(safe: BigNumberish): TransactionRequest {
+    repayAllDebt(safe: BigNumberish): Promise<ethers.PopulatedTransaction> {
         return this.getProxiedTransactionRequest(
-            this.proxyActionCore.repayAllDebt(
+            this.proxyActionCore.populateTransaction.repayAllDebt(
                 this.addressList.SAFE_MANAGER,
                 this.addressList.GEB_COIN_JOIN,
                 safe
@@ -567,9 +604,9 @@ export class GebProxyActions {
     repayAllDebtAndFreeETH(
         safe: BigNumberish,
         collateralWad: BigNumberish
-    ): TransactionRequest {
+    ): Promise<ethers.PopulatedTransaction> {
         return this.getProxiedTransactionRequest(
-            this.proxyActionCore.repayAllDebtAndFreeETH(
+            this.proxyActionCore.populateTransaction.repayAllDebtAndFreeETH(
                 this.addressList.SAFE_MANAGER,
                 this.addressList.GEB_JOIN_ETH_A,
                 this.addressList.GEB_COIN_JOIN,
@@ -583,9 +620,9 @@ export class GebProxyActions {
         collateralJoin: string,
         safe: BigNumberish,
         collateralAmount: BigNumberish
-    ): TransactionRequest {
+    ): Promise<ethers.PopulatedTransaction> {
         return this.getProxiedTransactionRequest(
-            this.proxyActionCore.repayAllDebtAndFreeTokenCollateral(
+            this.proxyActionCore.populateTransaction.repayAllDebtAndFreeTokenCollateral(
                 this.addressList.SAFE_MANAGER,
                 collateralJoin,
                 this.addressList.GEB_COIN_JOIN,
@@ -595,9 +632,12 @@ export class GebProxyActions {
         )
     }
 
-    repayDebt(safe: BigNumberish, wad: BigNumberish): TransactionRequest {
+    repayDebt(
+        safe: BigNumberish,
+        wad: BigNumberish
+    ): Promise<ethers.PopulatedTransaction> {
         return this.getProxiedTransactionRequest(
-            this.proxyActionCore.repayDebt(
+            this.proxyActionCore.populateTransaction.repayDebt(
                 this.addressList.SAFE_MANAGER,
                 this.addressList.GEB_COIN_JOIN,
                 safe,
@@ -610,9 +650,9 @@ export class GebProxyActions {
         safe: BigNumberish,
         collateralWad: BigNumberish,
         deltaWad: BigNumberish
-    ): TransactionRequest {
+    ): Promise<ethers.PopulatedTransaction> {
         return this.getProxiedTransactionRequest(
-            this.proxyActionCore.repayDebtAndFreeETH(
+            this.proxyActionCore.populateTransaction.repayDebtAndFreeETH(
                 this.addressList.SAFE_MANAGER,
                 this.addressList.GEB_JOIN_ETH_A,
                 this.addressList.GEB_COIN_JOIN,
@@ -628,9 +668,9 @@ export class GebProxyActions {
         safe: BigNumberish,
         collateralAmount: BigNumberish,
         deltaWad: BigNumberish
-    ): TransactionRequest {
+    ): Promise<ethers.PopulatedTransaction> {
         return this.getProxiedTransactionRequest(
-            this.proxyActionCore.repayDebtAndFreeTokenCollateral(
+            this.proxyActionCore.populateTransaction.repayDebtAndFreeTokenCollateral(
                 this.addressList.SAFE_MANAGER,
                 collateralJoin,
                 this.addressList.GEB_COIN_JOIN,
@@ -645,14 +685,14 @@ export class GebProxyActions {
         ethValue: BigNumberish,
         safe: BigNumberish,
         owner: string
-    ): TransactionRequest {
+    ): Promise<ethers.PopulatedTransaction> {
         return this.getProxiedTransactionRequest(
-            this.proxyActionCore.safeLockETH(
-                BigNumber.from(ethValue),
+            this.proxyActionCore.populateTransaction.safeLockETH(
                 this.addressList.SAFE_MANAGER,
                 this.addressList.GEB_JOIN_ETH_A,
                 safe,
-                owner
+                owner,
+                { value: ethValue }
             )
         )
     }
@@ -663,9 +703,9 @@ export class GebProxyActions {
         amt: BigNumberish,
         transferFrom: boolean,
         owner: string
-    ): TransactionRequest {
+    ): Promise<ethers.PopulatedTransaction> {
         return this.getProxiedTransactionRequest(
-            this.proxyActionCore.safeLockTokenCollateral(
+            this.proxyActionCore.populateTransaction.safeLockTokenCollateral(
                 this.addressList.SAFE_MANAGER,
                 collateralJoin,
                 safe,
@@ -676,9 +716,12 @@ export class GebProxyActions {
         )
     }
 
-    safeRepayAllDebt(safe: BigNumberish, owner: string): TransactionRequest {
+    safeRepayAllDebt(
+        safe: BigNumberish,
+        owner: string
+    ): Promise<ethers.PopulatedTransaction> {
         return this.getProxiedTransactionRequest(
-            this.proxyActionCore.safeRepayAllDebt(
+            this.proxyActionCore.populateTransaction.safeRepayAllDebt(
                 this.addressList.SAFE_MANAGER,
                 this.addressList.GEB_COIN_JOIN,
                 safe,
@@ -691,9 +734,9 @@ export class GebProxyActions {
         safe: BigNumberish,
         wad: BigNumberish,
         owner: string
-    ): TransactionRequest {
+    ): Promise<ethers.PopulatedTransaction> {
         return this.getProxiedTransactionRequest(
-            this.proxyActionCore.safeRepayDebt(
+            this.proxyActionCore.populateTransaction.safeRepayDebt(
                 this.addressList.SAFE_MANAGER,
                 this.addressList.GEB_COIN_JOIN,
                 safe,
@@ -708,9 +751,9 @@ export class GebProxyActions {
         safe: string,
         amt: BigNumberish,
         transferFrom: boolean
-    ): TransactionRequest {
+    ): Promise<ethers.PopulatedTransaction> {
         return this.getProxiedTransactionRequest(
-            this.proxyActionCore.tokenCollateralJoin_join(
+            this.proxyActionCore.populateTransaction.tokenCollateralJoin_join(
                 apt,
                 safe,
                 amt,
@@ -723,9 +766,13 @@ export class GebProxyActions {
         collateral: string,
         dst: string,
         amt: BigNumberish
-    ): TransactionRequest {
+    ): Promise<ethers.PopulatedTransaction> {
         return this.getProxiedTransactionRequest(
-            this.proxyActionCore.transfer(collateral, dst, amt)
+            this.proxyActionCore.populateTransaction.transfer(
+                collateral,
+                dst,
+                amt
+            )
         )
     }
 
@@ -733,9 +780,9 @@ export class GebProxyActions {
         safe: BigNumberish,
         dst: string,
         wad: BigNumberish
-    ): TransactionRequest {
+    ): Promise<ethers.PopulatedTransaction> {
         return this.getProxiedTransactionRequest(
-            this.proxyActionCore.transferCollateral(
+            this.proxyActionCore.populateTransaction.transferCollateral(
                 this.addressList.SAFE_MANAGER,
                 safe,
                 dst,
@@ -748,9 +795,9 @@ export class GebProxyActions {
         safe: BigNumberish,
         dst: string,
         rad: BigNumberish
-    ): TransactionRequest {
+    ): Promise<ethers.PopulatedTransaction> {
         return this.getProxiedTransactionRequest(
-            this.proxyActionCore.transferInternalCoins(
+            this.proxyActionCore.populateTransaction.transferInternalCoins(
                 this.addressList.SAFE_MANAGER,
                 safe,
                 dst,
@@ -759,9 +806,12 @@ export class GebProxyActions {
         )
     }
 
-    transferSAFEOwnership(safe: BigNumberish, usr: string): TransactionRequest {
+    transferSAFEOwnership(
+        safe: BigNumberish,
+        usr: string
+    ): Promise<ethers.PopulatedTransaction> {
         return this.getProxiedTransactionRequest(
-            this.proxyActionCore.transferSAFEOwnership(
+            this.proxyActionCore.populateTransaction.transferSAFEOwnership(
                 this.addressList.SAFE_MANAGER,
                 safe,
                 usr
@@ -772,9 +822,9 @@ export class GebProxyActions {
     transferSAFEOwnershipToProxy(
         safe: BigNumberish,
         dst: string
-    ): TransactionRequest {
+    ): Promise<ethers.PopulatedTransaction> {
         return this.getProxiedTransactionRequest(
-            this.proxyActionCore.transferSAFEOwnershipToProxy(
+            this.proxyActionCore.populateTransaction.transferSAFEOwnershipToProxy(
                 this.addressList.PROXY_REGISTRY,
                 this.addressList.SAFE_MANAGER,
                 safe,
@@ -787,7 +837,7 @@ export class GebProxyActions {
 
     prepareCoinsForRedeemingGlobalSettlement(
         wad: BigNumberish
-    ): TransactionRequest {
+    ): Promise<ethers.PopulatedTransaction> {
         return this.getProxiedTransactionRequest(
             this.proxyActionGlobalSettlement.prepareCoinsForRedeeming(
                 this.addressList.GEB_COIN_JOIN,
@@ -800,7 +850,7 @@ export class GebProxyActions {
     freeTokenCollateralGlobalSettlement(
         collateralJoin: string,
         safe: BigNumberish
-    ): TransactionRequest {
+    ): Promise<ethers.PopulatedTransaction> {
         return this.getProxiedTransactionRequest(
             this.proxyActionGlobalSettlement.freeTokenCollateral(
                 this.addressList.SAFE_MANAGER,
@@ -815,7 +865,7 @@ export class GebProxyActions {
         ethJoin: string,
         collateralType: BytesLike,
         wad: BigNumberish
-    ): TransactionRequest {
+    ): Promise<ethers.PopulatedTransaction> {
         return this.getProxiedTransactionRequest(
             this.proxyActionGlobalSettlement.redeemETH(
                 ethJoin,
@@ -830,7 +880,7 @@ export class GebProxyActions {
         collateralJoin: string,
         collateralType: BytesLike,
         wad: BigNumberish
-    ): TransactionRequest {
+    ): Promise<ethers.PopulatedTransaction> {
         return this.getProxiedTransactionRequest(
             this.proxyActionGlobalSettlement.redeemTokenCollateral(
                 collateralJoin,
@@ -846,7 +896,7 @@ export class GebProxyActions {
     exitAndRemoveLiquidity(
         minTokenAmounts: [BigNumberish, BigNumberish],
         campaignAddress: string
-    ): TransactionRequest {
+    ): Promise<ethers.PopulatedTransaction> {
         return this.getProxiedTransactionRequest(
             this.proxyActionIncentive.exitAndRemoveLiquidity(
                 this.addressList.GEB_COIN_JOIN,
@@ -857,7 +907,7 @@ export class GebProxyActions {
         )
     }
 
-    exitMine(campaignAddress: string): TransactionRequest {
+    exitMine(campaignAddress: string): Promise<ethers.PopulatedTransaction> {
         return this.getProxiedTransactionRequest(
             this.proxyActionIncentive.exitMine(campaignAddress)
         )
@@ -867,7 +917,7 @@ export class GebProxyActions {
         safe: BigNumberish,
         minTokenAmounts: [BigNumberish, BigNumberish],
         campaignAddress: string
-    ): TransactionRequest {
+    ): Promise<ethers.PopulatedTransaction> {
         return this.getProxiedTransactionRequest(
             this.proxyActionIncentive.exitRemoveLiquidityRepayDebt(
                 this.addressList.SAFE_MANAGER,
@@ -886,10 +936,9 @@ export class GebProxyActions {
         wad: BigNumberish,
         minTokenAmounts: [BigNumberish, BigNumberish],
         campaignAddress: string
-    ): TransactionRequest {
+    ): Promise<ethers.PopulatedTransaction> {
         return this.getProxiedTransactionRequest(
             this.proxyActionIncentive.generateDebtAndProvideLiquidityStake(
-                BigNumber.from(ethValue),
                 this.addressList.SAFE_MANAGER,
                 this.addressList.GEB_TAX_COLLECTOR,
                 this.addressList.GEB_COIN_JOIN,
@@ -897,7 +946,8 @@ export class GebProxyActions {
                 campaignAddress,
                 safe,
                 wad,
-                minTokenAmounts
+                minTokenAmounts,
+                { value: ethValue }
             )
         )
     }
@@ -908,17 +958,17 @@ export class GebProxyActions {
         wad: BigNumberish,
         minTokenAmounts: [BigNumberish, BigNumberish],
         campaignAddress: string
-    ): TransactionRequest {
+    ): Promise<ethers.PopulatedTransaction> {
         return this.getProxiedTransactionRequest(
             this.proxyActionIncentive.generateDebtAndProvideLiquidityUniswap(
-                BigNumber.from(ethValue),
                 this.addressList.SAFE_MANAGER,
                 this.addressList.GEB_TAX_COLLECTOR,
                 this.addressList.GEB_COIN_JOIN,
                 this.addressList.UNISWAP_ROUTER,
                 safe,
                 wad,
-                minTokenAmounts
+                minTokenAmounts,
+                { value: ethValue }
             )
         )
     }
@@ -930,10 +980,9 @@ export class GebProxyActions {
         liquidityWad: BigNumberish,
         minTokenAmounts: [BigNumberish, BigNumberish],
         campaignAddress: string
-    ): TransactionRequest {
+    ): Promise<ethers.PopulatedTransaction> {
         return this.getProxiedTransactionRequest(
             this.proxyActionIncentive.lockETHGenerateDebtProvideLiquidityStake(
-                BigNumber.from(ethValue),
                 this.addressList.SAFE_MANAGER,
                 this.addressList.GEB_TAX_COLLECTOR,
                 this.addressList.GEB_JOIN_ETH_A,
@@ -943,7 +992,8 @@ export class GebProxyActions {
                 safe,
                 deltaWad,
                 liquidityWad,
-                minTokenAmounts
+                minTokenAmounts,
+                { value: ethValue }
             )
         )
     }
@@ -954,10 +1004,9 @@ export class GebProxyActions {
         deltaWad: BigNumberish,
         liquidityWad: BigNumberish,
         minTokenAmounts: [BigNumberish, BigNumberish]
-    ): TransactionRequest {
+    ): Promise<ethers.PopulatedTransaction> {
         return this.getProxiedTransactionRequest(
             this.proxyActionIncentive.lockETHGenerateDebtProvideLiquidityUniswap(
-                BigNumber.from(ethValue),
                 this.addressList.SAFE_MANAGER,
                 this.addressList.GEB_TAX_COLLECTOR,
                 this.addressList.GEB_JOIN_ETH_A,
@@ -966,7 +1015,8 @@ export class GebProxyActions {
                 safe,
                 deltaWad,
                 liquidityWad,
-                minTokenAmounts
+                minTokenAmounts,
+                { value: ethValue }
             )
         )
     }
@@ -978,10 +1028,9 @@ export class GebProxyActions {
         liquidityWad: BigNumberish,
         minTokenAmounts: [BigNumberish, BigNumberish],
         campaignAddress: string
-    ): TransactionRequest {
+    ): Promise<ethers.PopulatedTransaction> {
         return this.getProxiedTransactionRequest(
             this.proxyActionIncentive.openLockETHGenerateDebtProvideLiquidityStake(
-                BigNumber.from(ethValue),
                 this.addressList.SAFE_MANAGER,
                 this.addressList.GEB_TAX_COLLECTOR,
                 this.addressList.GEB_JOIN_ETH_A,
@@ -991,7 +1040,8 @@ export class GebProxyActions {
                 collateralType,
                 deltaWad,
                 liquidityWad,
-                minTokenAmounts
+                minTokenAmounts,
+                { value: ethValue }
             )
         )
     }
@@ -1002,10 +1052,9 @@ export class GebProxyActions {
         collateralType: string,
         liquidityWad: BigNumberish,
         minTokenAmounts: [BigNumberish, BigNumberish]
-    ): TransactionRequest {
+    ): Promise<ethers.PopulatedTransaction> {
         return this.getProxiedTransactionRequest(
             this.proxyActionIncentive.openLockETHGenerateDebtProvideLiquidityUniswap(
-                BigNumber.from(ethValue),
                 this.addressList.SAFE_MANAGER,
                 this.addressList.GEB_TAX_COLLECTOR,
                 this.addressList.GEB_JOIN_ETH_A,
@@ -1014,7 +1063,8 @@ export class GebProxyActions {
                 collateralType,
                 deltaWad,
                 liquidityWad,
-                minTokenAmounts
+                minTokenAmounts,
+                { value: ethValue }
             )
         )
     }
@@ -1023,14 +1073,14 @@ export class GebProxyActions {
         ethValue: BigNumberish,
         wad: BigNumberish,
         minTokenAmounts: [BigNumberish, BigNumberish]
-    ): TransactionRequest {
+    ): Promise<ethers.PopulatedTransaction> {
         return this.getProxiedTransactionRequest(
             this.proxyActionIncentive.provideLiquidityUniswap(
-                BigNumber.from(ethValue),
                 this.addressList.GEB_COIN_JOIN,
                 this.addressList.UNISWAP_ROUTER,
                 wad,
-                minTokenAmounts
+                minTokenAmounts,
+                { value: ethValue }
             )
         )
     }
@@ -1039,7 +1089,7 @@ export class GebProxyActions {
         systemCoin: string,
         value: BigNumberish,
         minTokenAmounts: [BigNumberish, BigNumberish]
-    ): TransactionRequest {
+    ): Promise<ethers.PopulatedTransaction> {
         return this.getProxiedTransactionRequest(
             this.proxyActionIncentive.removeLiquidityUniswap(
                 this.addressList.UNISWAP_ROUTER,
@@ -1053,7 +1103,7 @@ export class GebProxyActions {
     stakeInMine(
         wad: BigNumberish,
         campaignAddress: string
-    ): TransactionRequest {
+    ): Promise<ethers.PopulatedTransaction> {
         return this.getProxiedTransactionRequest(
             this.proxyActionIncentive.stakeInMine(campaignAddress, wad)
         )
@@ -1062,7 +1112,7 @@ export class GebProxyActions {
     withdrawAndHarvest(
         value: BigNumberish,
         campaignAddress: string
-    ): TransactionRequest {
+    ): Promise<ethers.PopulatedTransaction> {
         return this.getProxiedTransactionRequest(
             this.proxyActionIncentive.withdrawAndHarvest(campaignAddress, value)
         )
@@ -1072,7 +1122,7 @@ export class GebProxyActions {
         value: BigNumberish,
         minTokenAmounts: [BigNumberish, BigNumberish],
         campaignAddress: string
-    ): TransactionRequest {
+    ): Promise<ethers.PopulatedTransaction> {
         return this.getProxiedTransactionRequest(
             this.proxyActionIncentive.withdrawAndRemoveLiquidity(
                 this.addressList.GEB_COIN_JOIN,
@@ -1087,7 +1137,7 @@ export class GebProxyActions {
     withdrawFromMine(
         value: BigNumberish,
         campaignAddress: string
-    ): TransactionRequest {
+    ): Promise<ethers.PopulatedTransaction> {
         return this.getProxiedTransactionRequest(
             this.proxyActionIncentive.withdrawFromMine(campaignAddress, value)
         )
@@ -1098,7 +1148,7 @@ export class GebProxyActions {
         value: BigNumberish,
         minTokenAmounts: [BigNumberish, BigNumberish],
         campaignAddress: string
-    ): TransactionRequest {
+    ): Promise<ethers.PopulatedTransaction> {
         return this.getProxiedTransactionRequest(
             this.proxyActionIncentive.withdrawRemoveLiquidityRepayDebt(
                 this.addressList.SAFE_MANAGER,
@@ -1112,7 +1162,7 @@ export class GebProxyActions {
         )
     }
 
-    getRewards(campaignAddress: string): TransactionRequest {
+    getRewards(campaignAddress: string): Promise<ethers.PopulatedTransaction> {
         return this.getProxiedTransactionRequest(
             this.proxyActionIncentive.getRewards(campaignAddress)
         )
@@ -1123,15 +1173,15 @@ export class GebProxyActions {
         wad: BigNumberish,
         minTokenAmounts: [BigNumberish, BigNumberish],
         campaignAddress: string
-    ): TransactionRequest {
+    ): Promise<ethers.PopulatedTransaction> {
         return this.getProxiedTransactionRequest(
             this.proxyActionIncentive.provideLiquidityStake(
-                ethValue,
                 this.addressList.GEB_COIN_JOIN,
                 this.addressList.UNISWAP_ROUTER,
                 campaignAddress,
                 wad,
-                minTokenAmounts
+                minTokenAmounts,
+                { value: ethValue }
             )
         )
     }
@@ -1140,7 +1190,7 @@ export class GebProxyActions {
         amount: BigNumberish,
         minTokenAmounts: [BigNumberish, BigNumberish],
         campaignAddress: string
-    ): TransactionRequest {
+    ): Promise<ethers.PopulatedTransaction> {
         return this.getProxiedTransactionRequest(
             this.proxyActionIncentive.withdrawHarvestRemoveLiquidity(
                 campaignAddress,
@@ -1155,7 +1205,7 @@ export class GebProxyActions {
     migrateCampaign(
         oldCampaignAddress: string,
         newCampaignAddress: string
-    ): TransactionRequest {
+    ): Promise<ethers.PopulatedTransaction> {
         return this.getProxiedTransactionRequest(
             this.proxyActionIncentive.migrateCampaign(
                 oldCampaignAddress,
@@ -1171,7 +1221,7 @@ export class GebProxyActions {
         callbackProxy: string,
         collateralType: BytesLike,
         safe: BigNumberish
-    ): TransactionRequest {
+    ): Promise<ethers.PopulatedTransaction> {
         return this.getProxiedTransactionRequest(
             this.proxyActionLeverage.flashDeleverage(
                 uniswapV2Pair,
@@ -1193,7 +1243,7 @@ export class GebProxyActions {
         collateralType: BytesLike,
         safe: BigNumberish,
         amountToFree: BigNumberish
-    ): TransactionRequest {
+    ): Promise<ethers.PopulatedTransaction> {
         return this.getProxiedTransactionRequest(
             this.proxyActionLeverage.flashDeleverageFreeETH(
                 uniswapV2Pair,
@@ -1216,7 +1266,7 @@ export class GebProxyActions {
         collateralType: BytesLike,
         safe: BigNumberish,
         leverage: BigNumberish
-    ): TransactionRequest {
+    ): Promise<ethers.PopulatedTransaction> {
         return this.getProxiedTransactionRequest(
             this.proxyActionLeverage.flashLeverage(
                 uniswapV2Pair,
@@ -1240,10 +1290,9 @@ export class GebProxyActions {
         collateralType: BytesLike,
         safe: BigNumberish,
         leverage: BigNumberish
-    ): TransactionRequest {
+    ): Promise<ethers.PopulatedTransaction> {
         return this.getProxiedTransactionRequest(
             this.proxyActionLeverage.lockETHLeverage(
-                BigNumber.from(ethValue),
                 uniswapV2Pair,
                 this.addressList.SAFE_MANAGER,
                 this.addressList.GEB_JOIN_ETH_A,
@@ -1253,7 +1302,8 @@ export class GebProxyActions {
                 callbackProxy,
                 collateralType,
                 safe,
-                leverage
+                leverage,
+                { value: ethValue }
             )
         )
     }
@@ -1264,10 +1314,9 @@ export class GebProxyActions {
         callbackProxy: string,
         collateralType: BytesLike,
         leverage: BigNumberish
-    ): TransactionRequest {
+    ): Promise<ethers.PopulatedTransaction> {
         return this.getProxiedTransactionRequest(
             this.proxyActionLeverage.openLockETHLeverage(
-                BigNumber.from(ethValue),
                 uniswapV2Pair,
                 this.addressList.SAFE_MANAGER,
                 this.addressList.GEB_JOIN_ETH_A,
@@ -1276,7 +1325,8 @@ export class GebProxyActions {
                 this.addressList.ETH,
                 callbackProxy,
                 collateralType,
-                leverage
+                leverage,
+                { value: ethValue }
             )
         )
     }
@@ -1286,7 +1336,7 @@ export class GebProxyActions {
         _amount0: BigNumberish,
         _amount1: BigNumberish,
         _data: BytesLike
-    ): TransactionRequest {
+    ): Promise<ethers.PopulatedTransaction> {
         return this.getProxiedTransactionRequest(
             this.proxyActionLeverage.uniswapV2Call(
                 _sender,
@@ -1301,7 +1351,7 @@ export class GebProxyActions {
 
     debtAuctionStartAndDecreaseSoldAmount(
         amountToBuy: BigNumberish
-    ): TransactionRequest {
+    ): Promise<ethers.PopulatedTransaction> {
         return this.getProxiedTransactionRequest(
             this.proxyActionDebtAuction.startAndDecreaseSoldAmount(
                 this.addressList.GEB_COIN_JOIN,
@@ -1314,7 +1364,7 @@ export class GebProxyActions {
     debtAuctionDecreaseSoldAmount(
         amountToBuy: BigNumberish,
         auctionId: BigNumberish
-    ): TransactionRequest {
+    ): Promise<ethers.PopulatedTransaction> {
         return this.getProxiedTransactionRequest(
             this.proxyActionDebtAuction.decreaseSoldAmount(
                 this.addressList.GEB_COIN_JOIN,
@@ -1325,7 +1375,9 @@ export class GebProxyActions {
         )
     }
 
-    debtAuctionSettleAuction(auctionId: BigNumberish): TransactionRequest {
+    debtAuctionSettleAuction(
+        auctionId: BigNumberish
+    ): Promise<ethers.PopulatedTransaction> {
         return this.getProxiedTransactionRequest(
             this.proxyActionDebtAuction.settleAuction(
                 this.addressList.GEB_COIN_JOIN,
@@ -1335,7 +1387,7 @@ export class GebProxyActions {
         )
     }
 
-    exitAllCoin(): TransactionRequest {
+    exitAllCoin(): Promise<ethers.PopulatedTransaction> {
         return this.getProxiedTransactionRequest(
             this.proxyActionDebtAuction.exitAllCoin(
                 this.addressList.GEB_COIN_JOIN
@@ -1343,7 +1395,7 @@ export class GebProxyActions {
         )
     }
 
-    exitCoin(amount: BigNumberish): TransactionRequest {
+    exitCoin(amount: BigNumberish): Promise<ethers.PopulatedTransaction> {
         return this.getProxiedTransactionRequest(
             this.proxyActionDebtAuction.exitCoin(
                 this.addressList.GEB_COIN_JOIN,
@@ -1354,7 +1406,9 @@ export class GebProxyActions {
 
     // ==== Proxy Actions Surplus Auctions ====
 
-    surplusStartAndIncreaseBidSize(bidSize: BigNumberish): TransactionRequest {
+    surplusStartAndIncreaseBidSize(
+        bidSize: BigNumberish
+    ): Promise<ethers.PopulatedTransaction> {
         return this.getProxiedTransactionRequest(
             this.proxyActionSurplusAuction.startAndIncreaseBidSize(
                 this.addressList.GEB_ACCOUNTING_ENGINE,
@@ -1366,7 +1420,7 @@ export class GebProxyActions {
     surplusIncreaseBidSize(
         bidSize: BigNumberish,
         auctionId: BigNumberish
-    ): TransactionRequest {
+    ): Promise<ethers.PopulatedTransaction> {
         return this.getProxiedTransactionRequest(
             this.proxyActionSurplusAuction.increaseBidSize(
                 this.addressList.GEB_SURPLUS_AUCTION_HOUSE,
@@ -1376,7 +1430,9 @@ export class GebProxyActions {
         )
     }
 
-    surplusSettleAuction(auctionId: BigNumberish): TransactionRequest {
+    surplusSettleAuction(
+        auctionId: BigNumberish
+    ): Promise<ethers.PopulatedTransaction> {
         return this.getProxiedTransactionRequest(
             this.proxyActionSurplusAuction.settleAuction(
                 this.addressList.GEB_COIN_JOIN,
@@ -1391,7 +1447,7 @@ export class GebProxyActions {
     recyclingSurplusIncreaseBidSize(
         bidSize: BigNumberish,
         auctionId: BigNumberish
-    ): TransactionRequest {
+    ): Promise<ethers.PopulatedTransaction> {
         return this.getProxiedTransactionRequest(
             this.proxyActionSurplusAuction.increaseBidSize(
                 this.addressList.GEB_STAKE_RECYCLING_SURPLUS_AUCTION_HOUSE,
@@ -1401,7 +1457,9 @@ export class GebProxyActions {
         )
     }
 
-    recyclingSurplusSettleAuction(auctionId: BigNumberish): TransactionRequest {
+    recyclingSurplusSettleAuction(
+        auctionId: BigNumberish
+    ): Promise<ethers.PopulatedTransaction> {
         return this.getProxiedTransactionRequest(
             this.proxyActionSurplusAuction.settleAuction(
                 this.addressList.GEB_COIN_JOIN,
@@ -1415,7 +1473,7 @@ export class GebProxyActions {
 
     stakedTokenAuctionStartAndIncreaseBidSize(
         bidSize: BigNumberish
-    ): TransactionRequest {
+    ): Promise<ethers.PopulatedTransaction> {
         return this.getProxiedTransactionRequest(
             this.proxyStakedTokenAuction.startAndIncreaseBidSize(
                 this.addressList.GEB_COIN_JOIN,
@@ -1428,7 +1486,7 @@ export class GebProxyActions {
     stakedTokenAuctionIncreaseBidSize(
         bidSize: BigNumberish,
         auctionId: BigNumberish
-    ): TransactionRequest {
+    ): Promise<ethers.PopulatedTransaction> {
         return this.getProxiedTransactionRequest(
             this.proxyStakedTokenAuction.increaseBidSize(
                 this.addressList.GEB_COIN_JOIN,
@@ -1439,7 +1497,9 @@ export class GebProxyActions {
         )
     }
 
-    stakedTokenSettleAuction(auctionId: BigNumberish): TransactionRequest {
+    stakedTokenSettleAuction(
+        auctionId: BigNumberish
+    ): Promise<ethers.PopulatedTransaction> {
         return this.getProxiedTransactionRequest(
             this.proxyStakedTokenAuction.settleAuction(
                 this.addressList.GEB_STAKING_AUCTION_HOUSE,
@@ -1450,13 +1510,18 @@ export class GebProxyActions {
 
     // ==== Proxy Actions Saviour ====
 
-    transferTokensToCaller(tokens: string[]): TransactionRequest {
+    transferTokensToCaller(
+        tokens: string[]
+    ): Promise<ethers.PopulatedTransaction> {
         return this.getProxiedTransactionRequest(
             this.proxyActionSaviour.transferTokensToCaller(tokens)
         )
     }
 
-    protectSAFE(saviour: string, safe: BigNumberish): TransactionRequest {
+    protectSAFE(
+        saviour: string,
+        safe: BigNumberish
+    ): Promise<ethers.PopulatedTransaction> {
         return this.getProxiedTransactionRequest(
             this.proxyActionSaviour.protectSAFE(
                 saviour,
@@ -1471,7 +1536,7 @@ export class GebProxyActions {
         collateralType: string,
         safe: BigNumberish,
         cRatio: BigNumberish
-    ): TransactionRequest {
+    ): Promise<ethers.PopulatedTransaction> {
         return this.getProxiedTransactionRequest(
             this.proxyActionSaviour.setDesiredCollateralizationRatio(
                 this.addressList.GEB_SAVIOUR_CRATIO_SETTER,
@@ -1487,7 +1552,7 @@ export class GebProxyActions {
         token: string,
         safe: BigNumberish,
         tokenAmount: BigNumberish
-    ): TransactionRequest {
+    ): Promise<ethers.PopulatedTransaction> {
         return this.getProxiedTransactionRequest(
             this.proxyActionSaviour.deposit(
                 collateralSpecific,
@@ -1506,7 +1571,7 @@ export class GebProxyActions {
         safe: BigNumberish,
         tokenAmount: BigNumberish,
         cRatio: BigNumberish
-    ): TransactionRequest {
+    ): Promise<ethers.PopulatedTransaction> {
         return this.getProxiedTransactionRequest(
             this.proxyActionSaviour.setDesiredCRatioDeposit(
                 collateralSpecific,
@@ -1526,7 +1591,7 @@ export class GebProxyActions {
         safe: BigNumberish,
         tokenAmount: BigNumberish,
         dst: string
-    ): TransactionRequest {
+    ): Promise<ethers.PopulatedTransaction> {
         return this.getProxiedTransactionRequest(
             this.proxyActionSaviour.withdraw(
                 collateralSpecific,
@@ -1545,7 +1610,7 @@ export class GebProxyActions {
         tokenAmount: BigNumberish,
         cRatio: BigNumberish,
         dst: string
-    ): TransactionRequest {
+    ): Promise<ethers.PopulatedTransaction> {
         return this.getProxiedTransactionRequest(
             this.proxyActionSaviour.setDesiredCRatioWithdraw(
                 collateralSpecific,
@@ -1565,7 +1630,7 @@ export class GebProxyActions {
         token: string,
         safe: BigNumberish,
         tokenAmount: BigNumberish
-    ): TransactionRequest {
+    ): Promise<ethers.PopulatedTransaction> {
         return this.getProxiedTransactionRequest(
             this.proxyActionSaviour.protectSAFEDeposit(
                 collateralSpecific,
@@ -1585,7 +1650,7 @@ export class GebProxyActions {
         safe: BigNumberish,
         tokenAmount: BigNumberish,
         cRatio: BigNumberish
-    ): TransactionRequest {
+    ): Promise<ethers.PopulatedTransaction> {
         return this.getProxiedTransactionRequest(
             this.proxyActionSaviour.protectSAFESetDesiredCRatioDeposit(
                 collateralSpecific,
@@ -1607,7 +1672,7 @@ export class GebProxyActions {
         safe: BigNumberish,
         tokenAmount: BigNumberish,
         dst: string
-    ): TransactionRequest {
+    ): Promise<ethers.PopulatedTransaction> {
         return this.getProxiedTransactionRequest(
             this.proxyActionSaviour.withdrawUncoverSAFE(
                 collateralSpecific,
@@ -1631,7 +1696,7 @@ export class GebProxyActions {
         withdrawTokenAmount: BigNumberish,
         depositTokenAmount: BigNumberish,
         withdrawDst: string
-    ): TransactionRequest {
+    ): Promise<ethers.PopulatedTransaction> {
         return this.getProxiedTransactionRequest(
             this.proxyActionSaviour.withdrawProtectSAFEDeposit(
                 withdrawCollateralSpecific,
@@ -1652,7 +1717,7 @@ export class GebProxyActions {
         saviour: string,
         safe: BigNumberish,
         dst: string
-    ): TransactionRequest {
+    ): Promise<ethers.PopulatedTransaction> {
         return this.getProxiedTransactionRequest(
             this.proxyActionSaviour.getReserves(saviour, safe, dst)
         )
@@ -1662,7 +1727,7 @@ export class GebProxyActions {
         saviour: string,
         safe: BigNumberish,
         dst: string
-    ): TransactionRequest {
+    ): Promise<ethers.PopulatedTransaction> {
         return this.getProxiedTransactionRequest(
             this.proxyActionSaviour.getReservesAndUncover(
                 saviour,

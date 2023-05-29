@@ -1,5 +1,5 @@
 import { BigNumber, FixedNumber } from '@ethersproject/bignumber'
-import { ContractApis } from '@reflexer-finance/geb-contract-api'
+import { ContractApis } from '../api/contract-apis'
 import { RAY } from '../utils'
 
 /**
@@ -79,7 +79,7 @@ export class Safe {
         const {
             accumulatedRate,
         } = await this.contracts.safeEngine.collateralTypes(this.collateralType)
-        const redemptionPrice = await this.contracts.oracleRelayer.redemptionPrice_readOnly()
+        const redemptionPrice = await this.contracts.oracleRelayer.callStatic.redemptionPrice()
         const liqCRatio = (
             await this.contracts.oracleRelayer.collateralTypes(
                 this.collateralType

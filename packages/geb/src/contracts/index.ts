@@ -12,8 +12,6 @@ import {
     GebContractAPIConstructorInterface,
 } from './base-contract-api'
 import {
-    KOVAN_ADDRESSES,
-    MAINNET_ADDRESSES,
     GebDeployment,
     ContractList,
     ContractKey,
@@ -33,8 +31,6 @@ export {
     TransactionRequest,
     MulticallRequest,
     // Addresses
-    KOVAN_ADDRESSES,
-    MAINNET_ADDRESSES,
     GebDeployment,
     ContractList,
     ContractKey,

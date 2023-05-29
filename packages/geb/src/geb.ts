@@ -1,26 +1,11 @@
-import {
-    ContractApis,
-    Multicall,
-    Erc20,
-    StakingRewards,
-    MerkleDistributor,
-} from '@reflexer-finance/geb-contract-api'
-import {
-    GebProviderInterface,
-    MulticallRequest,
-    getAddressList,
-    ContractList,
-    GebDeployment,
-    BaseContractAPI,
-    GebContractAPIConstructorInterface,
-} from './contracts/index'
-import { GebEthersProvider } from './provider'
+import { ContractApis } from './api/contract-apis'
+import { ERC20__factory, ERC20 } from './typechained'
+import { getAddressList, ContractList, GebDeployment } from './contracts/index'
 import { ethers } from 'ethers'
 import { GebError, GebErrorTypes } from './errors'
 import { GebProxyActions } from './proxy-action'
 import { NULL_ADDRESS } from './utils'
 import { Safe } from './schema/safe'
-import { BigNumber } from '@ethersproject/bignumber'
 
 /**
  * The main package used to interact with the GEB system. Includes [[deployProxy |helper functions]] for safe
@@ -85,7 +70,8 @@ export class Geb {
      * documentation]]
      */
     public contracts: ContractApis
-    protected provider: GebProviderInterface
+    public provider: ethers.providers.Provider
+    public signer?: ethers.Signer
     protected addresses: ContractList
     /**
      * Constructor for the main Geb.js object.
@@ -93,24 +79,22 @@ export class Geb {
      * @param  {GebProviderInterface|ethers.providers.Provider} provider Either a Ethers.js provider or a Geb provider (support for Web3 will be added in the future)
      */
     constructor(
-        protected network: GebDeployment,
-        provider: GebProviderInterface | ethers.providers.Provider
+        public network: GebDeployment,
+        signerOrProvider:
+            | ethers.providers.JsonRpcSigner
+            | ethers.providers.Provider
     ) {
-        if (
-            // @ts-ignore
-            provider.getBlockNumber !== undefined &&
-            // @ts-ignore
-            provider.getBlock !== undefined
-        ) {
-            // It's an Ethers provider
-            this.provider = new GebEthersProvider(
-                provider as ethers.providers.Provider
-            )
+        if (ethers.providers.JsonRpcSigner.isSigner(signerOrProvider)) {
+            this.signer = signerOrProvider
+            this.provider = signerOrProvider.provider
+        } else if (ethers.providers.Provider.isProvider(signerOrProvider)) {
+            this.provider = signerOrProvider
         } else {
-            this.provider = provider as GebProviderInterface
+            throw new GebError(GebErrorTypes.INVALID_PROVIDER)
         }
+
         this.addresses = getAddressList(network)
-        this.contracts = new ContractApis(network, this.provider)
+        this.contracts = new ContractApis(network, signerOrProvider)
     }
 
     /**
@@ -124,14 +108,14 @@ export class Geb {
         if (address === NULL_ADDRESS) {
             throw new GebError(GebErrorTypes.DOES_NOT_OWN_HAVE_PROXY)
         }
-        return new GebProxyActions(address, this.network, this.provider)
+        return new GebProxyActions(address, this.network, this.signer.provider)
     }
 
     /**
      * Deploy a new proxy owned by the sender.
      */
     public deployProxy() {
-        return this.contracts.proxyRegistry.build()
+        return this.contracts.proxyRegistry['build()']()
     }
 
     /**
@@ -160,10 +144,10 @@ export class Geb {
 
             isManaged = true
             safeId = idOrHandler
-            ;[handler, collateralType] = await this.multiCall([
-                this.contracts.safeManager.safes(idOrHandler, true),
-                this.contracts.safeManager.collateralTypes(idOrHandler, true),
-            ])
+            handler = await this.contracts.safeManager.safes(idOrHandler)
+            collateralType = await this.contracts.safeManager.collateralTypes(
+                idOrHandler
+            )
 
             if (handler === NULL_ADDRESS) {
                 throw new GebError(
@@ -186,15 +170,14 @@ export class Geb {
             }
 
             handler = idOrHandler
-            let safeRights: BigNumber
-            ;[safeData, safeRights] = await this.multiCall([
-                this.contracts.safeEngine.safes(collateralType, handler, true),
-                this.contracts.safeEngine.safeRights(
-                    handler,
-                    this.contracts.safeManager.address,
-                    true
-                ),
-            ])
+            safeData = await this.contracts.safeEngine.safes(
+                collateralType,
+                handler
+            )
+            const safeRights = await this.contracts.safeEngine.safeRights(
+                handler,
+                this.contracts.safeManager.address
+            )
 
             // If SafeManager has rights over the safe, it's a managed safe
             isManaged = !safeRights.isZero()
@@ -258,194 +241,10 @@ export class Geb {
      * @param  {string} tokenAddress Token contract address
      * @returns Erc20
      */
-    public getErc20Contract(tokenAddress: string): Erc20 {
-        return new Erc20(tokenAddress, this.provider)
-    }
-    /**
-     *  Help function to get the contract object of an incentive campaign given its ID number
-     *
-     * @param  {number} campaignNumber incremental ID of the campaign
-     *
-     * @returns StakingRewards
-     */
-    public async getIncentiveCampaignContract(campaignNumber: number) {
-        const address = (
-            await this.contracts.stakingRewardFactory.stakingRewardsInfo(
-                campaignNumber
-            )
-        ).stakingRewards
-
-        if (address === NULL_ADDRESS) {
-            throw new Error('The campaign does not exist')
-        }
-        return new StakingRewards(address, this.provider)
-    }
-
-    /**
-     * Get the claim statues of merkle distributions given a list of distributions and a node
-     * The nodeIndex is the index of the address in the merkle tree.
-     * @param  {{distributionIndex:number;nodeIndex:number}[]} nodes
-     */
-    public async getMerkleDistributorClaimStatues(
-        nodes: { distributionIndex: number; nodeIndex: number }[]
-    ) {
-        const multiCall1: MulticallRequest<string>[] = []
-        for (let i = 0; i < nodes.length; i++) {
-            multiCall1.push(
-                this.contracts.merkleDistributorFactory.distributors(
-                    nodes[i].distributionIndex,
-                    true
-                )
-            )
-        }
-
-        //@ts-ignore
-        const distributorAddresses: string[] = await this.multiCall(multiCall1)
-
-        const multiCall2: MulticallRequest<boolean>[] = []
-        for (let i = 0; i < nodes.length; i++) {
-            multiCall2.push(
-                new MerkleDistributor(
-                    distributorAddresses[i],
-                    this.provider
-                ).isClaimed(nodes[i].nodeIndex, true)
-            )
-        }
-
-        //@ts-ignore
-        const claims: boolean[] = await this.multiCall(multiCall2)
-
-        const ret: {
-            nodeIndex: number
-            distributorAddress: string
-            isClaimed: boolean
-        }[] = []
-        for (let i = 0; i < nodes.length; i++) {
-            ret.push({
-                nodeIndex: nodes[i].nodeIndex,
-                distributorAddress: distributorAddresses[i],
-                isClaimed: claims[i],
-            })
-        }
-
-        return ret
-    }
-
-    /**
-     * Get a merkle distributor contract given its address
-     * @param  {string} distributorAddress
-     */
-    public getMerkleDistributor(distributorAddress: string) {
-        return new MerkleDistributor(distributorAddress, this.provider)
-    }
-
-    // Multicall overloads, typing support for up to 7 calls.
-
-    // prettier-ignore
-    /** @ignore */
-    public multiCall<O1>(calls: [MulticallRequest<O1>]): Promise<[O1]>
-    // prettier-ignore
-    /** @ignore */
-    public multiCall<O1, O2>(calls: [MulticallRequest<O1>, MulticallRequest<O2>]): Promise<[O1, O2]>
-    // prettier-ignore
-    public multiCall<O1, O2, O3>(calls: [MulticallRequest<O1>, MulticallRequest<O2>, MulticallRequest<O3>]): Promise<[O1, O2, O3]>
-    // prettier-ignore
-    /** @ignore */
-    public multiCall<O1, O2, O3, O4>(calls: [MulticallRequest<O1>, MulticallRequest<O2>, MulticallRequest<O3>, MulticallRequest<O4>]): Promise<[O1, O2, O3, O4]>
-    // prettier-ignore
-    /** @ignore */
-    public multiCall<O1, O2, O3, O4, O5>(calls: [MulticallRequest<O1>, MulticallRequest<O2>, MulticallRequest<O3>, MulticallRequest<O4>, MulticallRequest<O5>]): Promise<[O1, O2, O3, O4, O5]>
-    // prettier-ignore
-    /** @ignore */
-    public multiCall<O1, O2, O3, O4, O5, O6>(calls: [MulticallRequest<O1>, MulticallRequest<O2>, MulticallRequest<O3>, MulticallRequest<O4>, MulticallRequest<O5>, MulticallRequest<O6>]): Promise<[O1, O2, O3, O4, O5, O6]>
-    // prettier-ignore
-    /** @ignore */
-    public multiCall<O1, O2, O3, O4, O5, O6, O7>(calls: [MulticallRequest<O1>, MulticallRequest<O2>, MulticallRequest<O3>, MulticallRequest<O4>, MulticallRequest<O5>, MulticallRequest<O6>, MulticallRequest<O7>]): Promise<[O1, O2, O3, O4, O5, O6, O7]>
-
-    /**
-     * Bundles several read only GEB contract calls into a single RPC request. Useful for front-ends or apps that need to fetch many parameters from contracts but want to minimize network requests and the load on the underlying Ethereum node.
-     * The function takes as input an Array of GEB view contract calls.
-     * **IMPORTANT**: You have to set the `multicall` parameter of the contract function to `true`. It is the always the last function parameter.
-     * Multicall works for all contracts in `Geb.contracts` and can be used with any contract that inherits `BaseContractApi`. Note that it does not support non-view calls (calls that require you pay gas and change blockchain state).
-     *
-     * Example:
-     * ```typescript
-     * import { ethers } from "ethers"
-     * import { Geb } from "geb.js"
-     *
-     * const provider = new ethers.providers.JsonRpcProvider("http://kovan.infura.io/...")
-     * const geb = new Geb("kovan", provider);
-     *
-     * const [ globalDebt, collateralInfo ] = await geb.multiCall([
-     *     geb.contracts.safeEngine.globalDebt(true), // !! Note the last parameter set to true.
-     *     geb.contracts.safeEngine.collateralTypes(ETH_A, true),
-     * ])
-     *
-     * console.log(`Current global debt: ${globalDebt.toString()}`)
-     * console.log(`Current ETH_A debt: ${collateralInfo.debtAmount}`)
-     * ```
-     * @param  {MulticallRequest<T>[]} calls Call a read only GEB contract function. The GEB contract object needs to be called with the parameter `multicall` set to `true` as seen in the example above.
-     * @returns Promise<T[]> Array with results for the specified requests.
-     */
-    public async multiCall<T>(calls: MulticallRequest<T>[]): Promise<T[]> {
-        const multiCall = new Multicall(this.addresses.MULTICALL, this.provider)
-
-        const send = calls.map((x) => ({
-            target: x.to,
-            callData: x.data,
-        }))
-
-        const results = await multiCall.aggregate_readOnly(send)
-
-        const a = results.returnData.map((raw, i) =>
-            this.provider.decodeFunctionData(raw, calls[i].abi)
+    public getErc20Contract(tokenAddress: string): ERC20 {
+        return ERC20__factory.connect(
+            tokenAddress,
+            this.signer || this.provider
         )
-
-        return (a as unknown) as T[]
-    }
-    /**
-     * Returns an instance of a specific geb contract given a Geb contract API class constructor at a specified address
-     *
-     * @param  {GebContractAPIConstructorInterface<T>} gebContractClass Class from contracts or adminContracts
-     * @param  {string} address Contract address of the instance
-     * @param  {GebProviderInterface|ethers.providers.Provider} provider Either a Ethers.js provider or a Geb provider
-     */
-    public static getGebContract<T extends BaseContractAPI>(
-        gebContractClass: GebContractAPIConstructorInterface<T>,
-        address: string,
-        provider: GebProviderInterface | ethers.providers.Provider
-    ): T {
-        if (
-            // @ts-ignore
-            provider.getBlockNumber !== undefined &&
-            // @ts-ignore
-            provider.getBlock !== undefined
-        ) {
-            // It's an Ethers provider
-            provider = new GebEthersProvider(
-                provider as ethers.providers.Provider
-            )
-        }
-
-        return new gebContractClass(address, provider as GebProviderInterface)
-    }
-
-    /**
-     * Returns an instance of a specific GEB contract given a Geb contract API class at a specified address
-     *
-     * ```typescript
-     * import { contracts } from "geb.js"
-     * const safeEngine = geb.getGebContract(contracts.SafeEngine, "0xabcd123..")
-     * const globalDebt = safeEngine.globalDebt()
-     * ```
-     *
-     * @param  {GebContractAPIConstructorInterface<T>} gebContractClass Class from contracts or adminContracts
-     * @param  {string} address Contract address of the instance
-     */
-    public getGebContract<T extends BaseContractAPI>(
-        gebContractClass: GebContractAPIConstructorInterface<T>,
-        address: string
-    ): T {
-        return new gebContractClass(address, this.provider)
     }
 }
