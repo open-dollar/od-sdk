@@ -76,7 +76,7 @@ export class Geb {
     /**
      * Constructor for the main Geb.js object.
      * @param  {GebDeployment} network Either `'kovan'`, `'mainnet'` or an actual list of contract addresses.
-     * @param  {ethers.providers.Provider} provider Either a Ethers.js provider or a Geb provider (support for Web3 will be added in the future)
+     * @param  {GebProviderInterface|ethers.providers.Provider} provider Either a Ethers.js provider or a Geb provider (support for Web3 will be added in the future)
      */
     constructor(
         public network: GebDeployment,

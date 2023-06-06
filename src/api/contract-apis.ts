@@ -24,6 +24,7 @@ export class ContractApis {
     public collateralAuctionHouseETH_A: types.FixedDiscountCollateralAuctionHouse
     public protocolToken: types.DSDelegateToken
     public medianizerEth: types.ChainlinkRelayer
+    public medianizerCoin: types.UniswapConsecutiveSlotsMedianRAIUSD
     public rateSetter: types.PIRateSetter
     public piCalculator: types.PRawPerSecondCalculator
     public fsmEth: types.OSM
@@ -53,6 +54,7 @@ export class ContractApis {
         this.proxyRegistry = types.GebProxyRegistry__factory.connect(addressList.PROXY_REGISTRY, signerOrProvider)
         this.collateralAuctionHouseETH_A = types.FixedDiscountCollateralAuctionHouse__factory.connect(addressList.GEB_COLLATERAL_AUCTION_HOUSE_ETH_A, signerOrProvider)
         this.medianizerEth = types.ChainlinkRelayer__factory.connect(addressList.MEDIANIZER_ETH, signerOrProvider)
+        this.medianizerCoin = types.UniswapConsecutiveSlotsMedianRAIUSD__factory.connect(addressList.MEDIANIZER_RAI, signerOrProvider)
         this.rateSetter = types.PIRateSetter__factory.connect(addressList.GEB_RRFM_SETTER, signerOrProvider)
         this.piCalculator = types.PRawPerSecondCalculator__factory.connect(addressList.GEB_RRFM_CALCULATOR, signerOrProvider)
         this.fsmEth = types.OSM__factory.connect(addressList.FEED_SECURITY_MODULE_ETH, signerOrProvider)

@@ -6,8 +6,10 @@ import * as utils from './utils'
 import * as contracts from './api/contract-apis'
 import {
     ContractList,
+    GebProviderInterface,
     TransactionRequest,
     BaseContractAPI,
+    GebContractAPIConstructorInterface,
     MulticallRequest,
 } from './contracts'
 
@@ -20,6 +22,8 @@ export {
     // Type & Interfaces
     ContractList,
     TransactionRequest,
+    GebProviderInterface,
     BaseContractAPI,
+    GebContractAPIConstructorInterface,
     MulticallRequest,
 }
