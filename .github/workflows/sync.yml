@@ -34,6 +34,9 @@ jobs:
     if: github.repository == 'hai-on-op/sdk'
     runs-on: ubuntu-latest
     steps:
+      - name: Wait for 30 seconds for the release commit to be created
+        run: sleep 30s
+
       - name: Check out github repository
         uses: actions/checkout@v3
         with:
