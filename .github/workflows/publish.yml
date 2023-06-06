@@ -1,0 +1,65 @@
+name: Publish to npm
+
+permissions:
+  contents: write
+
+on:
+  push:
+    branches:
+      - main
+      - dev
+
+env:
+  IS_RC: ${{ github.ref != 'refs/heads/main' }}
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    if: github.repository == 'hai-on-op/sdk'
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Conventional Changelog Action
+        id: changelog
+        uses: TriPSs/conventional-changelog-action@v3
+        with:
+          github-token: ${{ secrets.github_token }}
+          pre-release: ${{ env.IS_RC }}
+          output-file: 'false'
+
+      - name: Install dependencies
+        if: ${{ steps.changelog.outputs.skipped == 'false' }}
+        run: yarn install
+
+      - name: Build
+        if: ${{ steps.changelog.outputs.skipped == 'false' }}
+        run: yarn build
+
+      - name: Create Release
+        if: ${{ steps.changelog.outputs.skipped == 'false' }}
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.github_token }}
+        with:
+          tag_name: ${{ steps.changelog.outputs.tag }}
+          release_name: ${{ steps.changelog.outputs.tag }}
+          body: ${{ steps.changelog.outputs.clean_changelog }}
+
+      - name: Publish to NPM
+        if: ${{ github.repository == 'hai-on-op/sdk' && steps.changelog.outputs.skipped == 'false' }}
+        run: |
+          if [ "${{ env.IS_RC }}" = "true" ]; then
+            npm publish --tag rc --access public
+          else
+            npm publish --access public
+          fi
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

@@ -1,21 +1,21 @@
 {
-    "compilerOptions": {
-        "rootDir": "./src",
-        "outDir": "./lib",
-        "esModuleInterop": true,
-        "lib": ["es2015", "es5", "dom"],
-        "moduleResolution": "node",
-        "declaration": true,
-        "pretty": false,
-        "forceConsistentCasingInFileNames": true,
-        "noEmitOnError": false,
-        "noFallthroughCasesInSwitch": true,
-        "noImplicitAny": true,
-        "noImplicitReturns": true,
-        "noUnusedLocals": true,
-        "module": "commonjs",
-        "sourceMap": true,
-        "target": "es5"
-    },
-    "include": ["./src"]
+  "compilerOptions": {
+    "rootDir": "./src",
+    "outDir": "./lib",
+    "esModuleInterop": true,
+    "lib": ["es2015", "es5", "dom"],
+    "moduleResolution": "node",
+    "declaration": true,
+    "pretty": false,
+    "forceConsistentCasingInFileNames": true,
+    "noEmitOnError": false,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitAny": true,
+    "noImplicitReturns": true,
+    "noUnusedLocals": true,
+    "module": "commonjs",
+    "sourceMap": true,
+    "target": "es5"
+  },
+  "include": ["./src"]
 }

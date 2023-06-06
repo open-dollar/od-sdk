@@ -1,0 +1,54 @@
+name: Sync Repository
+
+on:
+  push:
+    branches:
+      - 'main'
+      - 'dev'
+  release:
+    types:
+      - created
+
+jobs:
+  sync-to-public:
+    if: github.repository == 'hai-on-op/sdk-private'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out github repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Install SSH Client
+        uses: webfactory/ssh-agent@v0.7.0
+        with:
+          ssh-private-key: ${{ secrets.SYNC_SSH_PRIVATE_KEY }}
+
+      - name: Add Remote
+        run: git remote add public git@github.com:hai-on-op/sdk.git
+
+      - name: Sync branch
+        run: git push public ${{ github.ref_name }}
+
+  sync-to-private:
+    if: github.repository == 'hai-on-op/sdk'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out github repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Pull the release commit
+        run: git pull origin ${{ github.ref_name }}
+
+      - name: Install SSH Client
+        uses: webfactory/ssh-agent@v0.7.0
+        with:
+          ssh-private-key: ${{ secrets.SYNC_SSH_PRIVATE_KEY }}
+
+      - name: Add Remote
+        run: git remote add private git@github.com:hai-on-op/sdk-private.git
+
+      - name: Sync branch
+        run: git push private ${{ github.ref_name }}
