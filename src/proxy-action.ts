@@ -28,16 +28,6 @@ export class GebProxyActions {
     public proxyActionGlobalSettlementAddress: string
 
     /**
-     * Address of the proxy actions contract for Uniswap LP share staking.
-     */
-    public proxyActionIncentiveAddress: string
-
-    /**
-     * Address of the proxy actions contract used for leverage with flash loans.
-     */
-    public proxyActionLeverageAddress: string
-
-    /**
      * Address of the proxy actions contract for debt auctions.
      */
     public proxyActionDebtAuctionAddress: string
@@ -48,24 +38,15 @@ export class GebProxyActions {
     public proxyActionSurplusAuctionAddress: string
 
     /**
-     * Address of the proxy actions contract for staked token auctions.
-     */
-    public proxyStakedTokenAuctionAddress: string
-
-    /**
      * Address of the proxy actions contract for surplus auctions.
      */
-    public proxyActionSaviourAddress: string
+    // public proxyActionSaviourAddress: string
 
     private addressList: ContractList
     private proxyActionCore: types.GebProxyActions
     private proxyActionGlobalSettlement: types.GebProxyActionsGlobalSettlement
-    private proxyActionIncentive: types.GebProxyIncentivesActions
-    private proxyActionLeverage: types.GebProxyLeverageActions
     private proxyActionDebtAuction: types.GebProxyDebtAuctionActions
     private proxyActionSurplusAuction: types.GebProxySurplusAuctionActions
-    private proxyStakedTokenAuction: types.GebProxyStakedTokenAuctionActions
-    private proxyActionSaviour: types.GebProxySaviourActions
 
     constructor(
         /**
@@ -86,16 +67,10 @@ export class GebProxyActions {
         this.proxyActionCoreAddress = this.addressList.PROXY_ACTIONS
         this.proxyActionGlobalSettlementAddress =
             this.addressList.PROXY_ACTIONS_GLOBAL_SETTLEMENT
-        this.proxyActionIncentiveAddress =
-            this.addressList.PROXY_ACTIONS_INCENTIVES
-        this.proxyActionLeverageAddress = this.addressList.LEVERAGE_PROXY_ACTION
         this.proxyActionDebtAuctionAddress =
             this.addressList.PROXY_DEBT_AUCTION_ACTIONS
         this.proxyActionSurplusAuctionAddress =
             this.addressList.PROXY_SURPLUS_AUCTION_ACTIONS
-        this.proxyStakedTokenAuctionAddress =
-            this.addressList.GEB_STAKED_TOKEN_PROXY_ACTIONS
-        this.proxyActionSaviourAddress = this.addressList.PROXY_SAVIOUR_ACTIONS
 
         // Proxy contract APIs
         this.proxyActionCore = types.GebProxyActions__factory.connect(
@@ -108,36 +83,17 @@ export class GebProxyActions {
                 this.chainProvider
             )
 
-        this.proxyActionIncentive =
-            types.GebProxyIncentivesActions__factory.connect(
-                this.proxyActionIncentiveAddress,
-                this.chainProvider
-            )
-
-        this.proxyActionLeverage =
-            types.GebProxyLeverageActions__factory.connect(
-                this.proxyActionLeverageAddress,
-                this.chainProvider
-            )
         this.proxyActionDebtAuction =
             types.GebProxyDebtAuctionActions__factory.connect(
                 this.proxyActionDebtAuctionAddress,
                 this.chainProvider
             )
+
         this.proxyActionSurplusAuction =
             types.GebProxySurplusAuctionActions__factory.connect(
                 this.proxyActionSurplusAuctionAddress,
                 this.chainProvider
             )
-        this.proxyStakedTokenAuction =
-            types.GebProxyStakedTokenAuctionActions__factory.connect(
-                this.proxyStakedTokenAuctionAddress,
-                this.chainProvider
-            )
-        this.proxyActionSaviour = types.GebProxySaviourActions__factory.connect(
-            this.proxyActionSaviourAddress,
-            this.chainProvider
-        )
     }
 
     private async getProxiedTransactionRequest(
@@ -228,6 +184,7 @@ export class GebProxyActions {
         )
     }
 
+    /*
     exitETH(
         safe: BigNumberish,
         wad: BigNumberish
@@ -241,6 +198,7 @@ export class GebProxyActions {
             )
         )
     }
+    */
 
     exitTokenCollateral(
         collateralJoin: string,
@@ -257,6 +215,7 @@ export class GebProxyActions {
         )
     }
 
+    /*
     freeETH(
         safe: BigNumberish,
         wad: BigNumberish
@@ -270,6 +229,7 @@ export class GebProxyActions {
             )
         )
     }
+    */
 
     freeTokenCollateral(
         collateralJoin: string,
@@ -301,6 +261,7 @@ export class GebProxyActions {
         )
     }
 
+    /*
     generateDebtAndProtectSAFE(
         safe: BigNumberish,
         wad: BigNumberish,
@@ -318,7 +279,9 @@ export class GebProxyActions {
             )
         )
     }
+    */
 
+    /*
     lockETH(
         ethValue: BigNumberish,
         safe: BigNumberish
@@ -350,6 +313,7 @@ export class GebProxyActions {
             )
         )
     }
+    */
 
     lockTokenCollateral(
         collateralJoin: string,
@@ -389,6 +353,7 @@ export class GebProxyActions {
         )
     }
 
+    /*
     lockTokenCollateralGenerateDebtAndProtectSAFE(
         collateralJoin: string,
         safe: BigNumberish,
@@ -412,16 +377,7 @@ export class GebProxyActions {
             )
         )
     }
-
-    makeCollateralBag(
-        collateralJoin: string
-    ): Promise<ethers.PopulatedTransaction> {
-        return this.getProxiedTransactionRequest(
-            this.proxyActionCore.populateTransaction.makeCollateralBag(
-                collateralJoin
-            )
-        )
-    }
+    */
 
     modifySAFECollateralization(
         safe: BigNumberish,
@@ -451,6 +407,7 @@ export class GebProxyActions {
         )
     }
 
+    /*
     openLockETHAndGenerateDebt(
         ethValue: BigNumberish,
         collateralType: BytesLike,
@@ -489,47 +446,7 @@ export class GebProxyActions {
             )
         )
     }
-
-    openLockGNTAndGenerateDebt(
-        gntJoin: string,
-        collateralType: BytesLike,
-        collateralAmount: BigNumberish,
-        deltaWad: BigNumberish
-    ): Promise<ethers.PopulatedTransaction> {
-        return this.getProxiedTransactionRequest(
-            this.proxyActionCore.populateTransaction.openLockGNTAndGenerateDebt(
-                this.addressList.SAFE_MANAGER,
-                this.addressList.GEB_TAX_COLLECTOR,
-                gntJoin,
-                this.addressList.GEB_COIN_JOIN,
-                collateralType,
-                collateralAmount,
-                deltaWad
-            )
-        )
-    }
-
-    openLockGNTGenerateDebtAndProtectSAFE(
-        gntJoin: string,
-        collateralType: BytesLike,
-        collateralAmount: BigNumberish,
-        deltaWad: BigNumberish,
-        saviour: string
-    ): Promise<ethers.PopulatedTransaction> {
-        return this.getProxiedTransactionRequest(
-            this.proxyActionCore.populateTransaction.openLockGNTGenerateDebtAndProtectSAFE(
-                this.addressList.SAFE_MANAGER,
-                this.addressList.GEB_TAX_COLLECTOR,
-                gntJoin,
-                this.addressList.GEB_COIN_JOIN,
-                collateralType,
-                collateralAmount,
-                deltaWad,
-                this.addressList.GEB_LIQUIDATION_ENGINE,
-                saviour
-            )
-        )
-    }
+    */
 
     openLockTokenCollateralAndGenerateDebt(
         collateralJoin: string,
@@ -552,6 +469,7 @@ export class GebProxyActions {
         )
     }
 
+    /*
     openLockTokenCollateralGenerateDebtAndProtectSAFE(
         collateralJoin: string,
         collateralType: BytesLike,
@@ -575,6 +493,7 @@ export class GebProxyActions {
             )
         )
     }
+    */
 
     openSAFE(
         collateralType: BytesLike,
@@ -612,6 +531,7 @@ export class GebProxyActions {
         )
     }
 
+    /*
     repayAllDebtAndFreeETH(
         safe: BigNumberish,
         collateralWad: BigNumberish
@@ -626,6 +546,7 @@ export class GebProxyActions {
             )
         )
     }
+    */
 
     repayAllDebtAndFreeTokenCollateral(
         collateralJoin: string,
@@ -657,6 +578,7 @@ export class GebProxyActions {
         )
     }
 
+    /*
     repayDebtAndFreeETH(
         safe: BigNumberish,
         collateralWad: BigNumberish,
@@ -673,6 +595,7 @@ export class GebProxyActions {
             )
         )
     }
+    */
 
     repayDebtAndFreeTokenCollateral(
         collateralJoin: string,
@@ -692,6 +615,7 @@ export class GebProxyActions {
         )
     }
 
+    /*
     safeLockETH(
         ethValue: BigNumberish,
         safe: BigNumberish,
@@ -707,6 +631,7 @@ export class GebProxyActions {
             )
         )
     }
+    */
 
     safeLockTokenCollateral(
         collateralJoin: string,
@@ -902,462 +827,6 @@ export class GebProxyActions {
         )
     }
 
-    // ==== Proxy Actions Incentive ====
-
-    exitAndRemoveLiquidity(
-        minTokenAmounts: [BigNumberish, BigNumberish],
-        campaignAddress: string
-    ): Promise<ethers.PopulatedTransaction> {
-        return this.getProxiedTransactionRequest(
-            this.proxyActionIncentive.exitAndRemoveLiquidity(
-                this.addressList.GEB_COIN_JOIN,
-                campaignAddress,
-                this.addressList.UNISWAP_ROUTER,
-                minTokenAmounts
-            )
-        )
-    }
-
-    exitMine(campaignAddress: string): Promise<ethers.PopulatedTransaction> {
-        return this.getProxiedTransactionRequest(
-            this.proxyActionIncentive.exitMine(campaignAddress)
-        )
-    }
-
-    exitRemoveLiquidityRepayDebt(
-        safe: BigNumberish,
-        minTokenAmounts: [BigNumberish, BigNumberish],
-        campaignAddress: string
-    ): Promise<ethers.PopulatedTransaction> {
-        return this.getProxiedTransactionRequest(
-            this.proxyActionIncentive.exitRemoveLiquidityRepayDebt(
-                this.addressList.SAFE_MANAGER,
-                this.addressList.GEB_COIN_JOIN,
-                safe,
-                campaignAddress,
-                this.addressList.UNISWAP_ROUTER,
-                minTokenAmounts
-            )
-        )
-    }
-
-    generateDebtAndProvideLiquidityStake(
-        ethValue: BigNumberish,
-        safe: BigNumberish,
-        wad: BigNumberish,
-        minTokenAmounts: [BigNumberish, BigNumberish],
-        campaignAddress: string
-    ): Promise<ethers.PopulatedTransaction> {
-        return this.getProxiedTransactionRequest(
-            this.proxyActionIncentive.generateDebtAndProvideLiquidityStake(
-                this.addressList.SAFE_MANAGER,
-                this.addressList.GEB_TAX_COLLECTOR,
-                this.addressList.GEB_COIN_JOIN,
-                this.addressList.UNISWAP_ROUTER,
-                campaignAddress,
-                safe,
-                wad,
-                minTokenAmounts,
-                { value: ethValue }
-            )
-        )
-    }
-
-    generateDebtAndProvideLiquidityUniswap(
-        ethValue: BigNumberish,
-        safe: BigNumberish,
-        wad: BigNumberish,
-        minTokenAmounts: [BigNumberish, BigNumberish],
-        campaignAddress: string
-    ): Promise<ethers.PopulatedTransaction> {
-        return this.getProxiedTransactionRequest(
-            this.proxyActionIncentive.generateDebtAndProvideLiquidityUniswap(
-                this.addressList.SAFE_MANAGER,
-                this.addressList.GEB_TAX_COLLECTOR,
-                this.addressList.GEB_COIN_JOIN,
-                this.addressList.UNISWAP_ROUTER,
-                safe,
-                wad,
-                minTokenAmounts,
-                { value: ethValue }
-            )
-        )
-    }
-
-    lockETHGenerateDebtProvideLiquidityStake(
-        ethValue: BigNumberish,
-        safe: BigNumberish,
-        deltaWad: BigNumberish,
-        liquidityWad: BigNumberish,
-        minTokenAmounts: [BigNumberish, BigNumberish],
-        campaignAddress: string
-    ): Promise<ethers.PopulatedTransaction> {
-        return this.getProxiedTransactionRequest(
-            this.proxyActionIncentive.lockETHGenerateDebtProvideLiquidityStake(
-                this.addressList.SAFE_MANAGER,
-                this.addressList.GEB_TAX_COLLECTOR,
-                this.addressList.GEB_JOIN_ETH_A,
-                this.addressList.GEB_COIN_JOIN,
-                this.addressList.UNISWAP_ROUTER,
-                campaignAddress,
-                safe,
-                deltaWad,
-                liquidityWad,
-                minTokenAmounts,
-                { value: ethValue }
-            )
-        )
-    }
-
-    lockETHGenerateDebtProvideLiquidityUniswap(
-        ethValue: BigNumberish,
-        safe: BigNumberish,
-        deltaWad: BigNumberish,
-        liquidityWad: BigNumberish,
-        minTokenAmounts: [BigNumberish, BigNumberish]
-    ): Promise<ethers.PopulatedTransaction> {
-        return this.getProxiedTransactionRequest(
-            this.proxyActionIncentive.lockETHGenerateDebtProvideLiquidityUniswap(
-                this.addressList.SAFE_MANAGER,
-                this.addressList.GEB_TAX_COLLECTOR,
-                this.addressList.GEB_JOIN_ETH_A,
-                this.addressList.GEB_COIN_JOIN,
-                this.addressList.UNISWAP_ROUTER,
-                safe,
-                deltaWad,
-                liquidityWad,
-                minTokenAmounts,
-                { value: ethValue }
-            )
-        )
-    }
-
-    openLockETHGenerateDebtProvideLiquidityStake(
-        ethValue: BigNumberish,
-        deltaWad: BigNumberish,
-        collateralType: string,
-        liquidityWad: BigNumberish,
-        minTokenAmounts: [BigNumberish, BigNumberish],
-        campaignAddress: string
-    ): Promise<ethers.PopulatedTransaction> {
-        return this.getProxiedTransactionRequest(
-            this.proxyActionIncentive.openLockETHGenerateDebtProvideLiquidityStake(
-                this.addressList.SAFE_MANAGER,
-                this.addressList.GEB_TAX_COLLECTOR,
-                this.addressList.GEB_JOIN_ETH_A,
-                this.addressList.GEB_COIN_JOIN,
-                this.addressList.UNISWAP_ROUTER,
-                campaignAddress,
-                collateralType,
-                deltaWad,
-                liquidityWad,
-                minTokenAmounts,
-                { value: ethValue }
-            )
-        )
-    }
-
-    openLockETHGenerateDebtProvideLiquidityUniswap(
-        ethValue: BigNumberish,
-        deltaWad: BigNumberish,
-        collateralType: string,
-        liquidityWad: BigNumberish,
-        minTokenAmounts: [BigNumberish, BigNumberish]
-    ): Promise<ethers.PopulatedTransaction> {
-        return this.getProxiedTransactionRequest(
-            this.proxyActionIncentive.openLockETHGenerateDebtProvideLiquidityUniswap(
-                this.addressList.SAFE_MANAGER,
-                this.addressList.GEB_TAX_COLLECTOR,
-                this.addressList.GEB_JOIN_ETH_A,
-                this.addressList.GEB_COIN_JOIN,
-                this.addressList.UNISWAP_ROUTER,
-                collateralType,
-                deltaWad,
-                liquidityWad,
-                minTokenAmounts,
-                { value: ethValue }
-            )
-        )
-    }
-
-    provideLiquidityUniswap(
-        ethValue: BigNumberish,
-        wad: BigNumberish,
-        minTokenAmounts: [BigNumberish, BigNumberish]
-    ): Promise<ethers.PopulatedTransaction> {
-        return this.getProxiedTransactionRequest(
-            this.proxyActionIncentive.provideLiquidityUniswap(
-                this.addressList.GEB_COIN_JOIN,
-                this.addressList.UNISWAP_ROUTER,
-                wad,
-                minTokenAmounts,
-                { value: ethValue }
-            )
-        )
-    }
-
-    removeLiquidityUniswap(
-        systemCoin: string,
-        value: BigNumberish,
-        minTokenAmounts: [BigNumberish, BigNumberish]
-    ): Promise<ethers.PopulatedTransaction> {
-        return this.getProxiedTransactionRequest(
-            this.proxyActionIncentive.removeLiquidityUniswap(
-                this.addressList.UNISWAP_ROUTER,
-                systemCoin,
-                value,
-                minTokenAmounts
-            )
-        )
-    }
-
-    stakeInMine(
-        wad: BigNumberish,
-        campaignAddress: string
-    ): Promise<ethers.PopulatedTransaction> {
-        return this.getProxiedTransactionRequest(
-            this.proxyActionIncentive.stakeInMine(campaignAddress, wad)
-        )
-    }
-
-    withdrawAndHarvest(
-        value: BigNumberish,
-        campaignAddress: string
-    ): Promise<ethers.PopulatedTransaction> {
-        return this.getProxiedTransactionRequest(
-            this.proxyActionIncentive.withdrawAndHarvest(campaignAddress, value)
-        )
-    }
-
-    withdrawAndRemoveLiquidity(
-        value: BigNumberish,
-        minTokenAmounts: [BigNumberish, BigNumberish],
-        campaignAddress: string
-    ): Promise<ethers.PopulatedTransaction> {
-        return this.getProxiedTransactionRequest(
-            this.proxyActionIncentive.withdrawAndRemoveLiquidity(
-                this.addressList.GEB_COIN_JOIN,
-                campaignAddress,
-                value,
-                this.addressList.UNISWAP_ROUTER,
-                minTokenAmounts
-            )
-        )
-    }
-
-    withdrawFromMine(
-        value: BigNumberish,
-        campaignAddress: string
-    ): Promise<ethers.PopulatedTransaction> {
-        return this.getProxiedTransactionRequest(
-            this.proxyActionIncentive.withdrawFromMine(campaignAddress, value)
-        )
-    }
-
-    withdrawRemoveLiquidityRepayDebt(
-        safe: BigNumberish,
-        value: BigNumberish,
-        minTokenAmounts: [BigNumberish, BigNumberish],
-        campaignAddress: string
-    ): Promise<ethers.PopulatedTransaction> {
-        return this.getProxiedTransactionRequest(
-            this.proxyActionIncentive.withdrawRemoveLiquidityRepayDebt(
-                this.addressList.SAFE_MANAGER,
-                this.addressList.GEB_COIN_JOIN,
-                safe,
-                campaignAddress,
-                value,
-                this.addressList.UNISWAP_ROUTER,
-                minTokenAmounts
-            )
-        )
-    }
-
-    getRewards(campaignAddress: string): Promise<ethers.PopulatedTransaction> {
-        return this.getProxiedTransactionRequest(
-            this.proxyActionIncentive.getRewards(campaignAddress)
-        )
-    }
-
-    provideLiquidityStake(
-        ethValue: BigNumberish,
-        wad: BigNumberish,
-        minTokenAmounts: [BigNumberish, BigNumberish],
-        campaignAddress: string
-    ): Promise<ethers.PopulatedTransaction> {
-        return this.getProxiedTransactionRequest(
-            this.proxyActionIncentive.provideLiquidityStake(
-                this.addressList.GEB_COIN_JOIN,
-                this.addressList.UNISWAP_ROUTER,
-                campaignAddress,
-                wad,
-                minTokenAmounts,
-                { value: ethValue }
-            )
-        )
-    }
-
-    withdrawHarvestRemoveLiquidity(
-        amount: BigNumberish,
-        minTokenAmounts: [BigNumberish, BigNumberish],
-        campaignAddress: string
-    ): Promise<ethers.PopulatedTransaction> {
-        return this.getProxiedTransactionRequest(
-            this.proxyActionIncentive.withdrawHarvestRemoveLiquidity(
-                campaignAddress,
-                this.addressList.UNISWAP_ROUTER,
-                this.addressList.GEB_COIN,
-                amount,
-                minTokenAmounts
-            )
-        )
-    }
-
-    migrateCampaign(
-        oldCampaignAddress: string,
-        newCampaignAddress: string
-    ): Promise<ethers.PopulatedTransaction> {
-        return this.getProxiedTransactionRequest(
-            this.proxyActionIncentive.migrateCampaign(
-                oldCampaignAddress,
-                newCampaignAddress
-            )
-        )
-    }
-
-    // ==== Proxy Actions Leverage ====
-
-    flashDeleverage(
-        uniswapV2Pair: string,
-        callbackProxy: string,
-        collateralType: BytesLike,
-        safe: BigNumberish
-    ): Promise<ethers.PopulatedTransaction> {
-        return this.getProxiedTransactionRequest(
-            this.proxyActionLeverage.flashDeleverage(
-                uniswapV2Pair,
-                this.addressList.SAFE_MANAGER,
-                this.addressList.GEB_JOIN_ETH_A,
-                this.addressList.GEB_TAX_COLLECTOR,
-                this.addressList.GEB_COIN_JOIN,
-                this.addressList.ETH,
-                callbackProxy,
-                collateralType,
-                safe
-            )
-        )
-    }
-
-    flashDeleverageFreeETH(
-        uniswapV2Pair: string,
-        callbackProxy: string,
-        collateralType: BytesLike,
-        safe: BigNumberish,
-        amountToFree: BigNumberish
-    ): Promise<ethers.PopulatedTransaction> {
-        return this.getProxiedTransactionRequest(
-            this.proxyActionLeverage.flashDeleverageFreeETH(
-                uniswapV2Pair,
-                this.addressList.SAFE_MANAGER,
-                this.addressList.GEB_JOIN_ETH_A,
-                this.addressList.GEB_TAX_COLLECTOR,
-                this.addressList.GEB_COIN_JOIN,
-                this.addressList.ETH,
-                callbackProxy,
-                collateralType,
-                safe,
-                amountToFree
-            )
-        )
-    }
-
-    flashLeverage(
-        uniswapV2Pair: string,
-        callbackProxy: string,
-        collateralType: BytesLike,
-        safe: BigNumberish,
-        leverage: BigNumberish
-    ): Promise<ethers.PopulatedTransaction> {
-        return this.getProxiedTransactionRequest(
-            this.proxyActionLeverage.flashLeverage(
-                uniswapV2Pair,
-                this.addressList.SAFE_MANAGER,
-                this.addressList.GEB_JOIN_ETH_A,
-                this.addressList.GEB_TAX_COLLECTOR,
-                this.addressList.GEB_COIN_JOIN,
-                this.addressList.ETH,
-                callbackProxy,
-                collateralType,
-                safe,
-                leverage
-            )
-        )
-    }
-
-    lockETHLeverage(
-        ethValue: BigNumberish,
-        uniswapV2Pair: string,
-        callbackProxy: string,
-        collateralType: BytesLike,
-        safe: BigNumberish,
-        leverage: BigNumberish
-    ): Promise<ethers.PopulatedTransaction> {
-        return this.getProxiedTransactionRequest(
-            this.proxyActionLeverage.lockETHLeverage(
-                uniswapV2Pair,
-                this.addressList.SAFE_MANAGER,
-                this.addressList.GEB_JOIN_ETH_A,
-                this.addressList.GEB_TAX_COLLECTOR,
-                this.addressList.GEB_COIN_JOIN,
-                this.addressList.ETH,
-                callbackProxy,
-                collateralType,
-                safe,
-                leverage,
-                { value: ethValue }
-            )
-        )
-    }
-
-    openLockETHLeverage(
-        ethValue: BigNumberish,
-        uniswapV2Pair: string,
-        callbackProxy: string,
-        collateralType: BytesLike,
-        leverage: BigNumberish
-    ): Promise<ethers.PopulatedTransaction> {
-        return this.getProxiedTransactionRequest(
-            this.proxyActionLeverage.openLockETHLeverage(
-                uniswapV2Pair,
-                this.addressList.SAFE_MANAGER,
-                this.addressList.GEB_JOIN_ETH_A,
-                this.addressList.GEB_TAX_COLLECTOR,
-                this.addressList.GEB_COIN_JOIN,
-                this.addressList.ETH,
-                callbackProxy,
-                collateralType,
-                leverage,
-                { value: ethValue }
-            )
-        )
-    }
-
-    uniswapV2Call(
-        _sender: string,
-        _amount0: BigNumberish,
-        _amount1: BigNumberish,
-        _data: BytesLike
-    ): Promise<ethers.PopulatedTransaction> {
-        return this.getProxiedTransactionRequest(
-            this.proxyActionLeverage.uniswapV2Call(
-                _sender,
-                _amount0,
-                _amount1,
-                _data
-            )
-        )
-    }
-
     // ==== Proxy Actions Debt Auctions ====
 
     debtAuctionStartAndDecreaseSoldAmount(
@@ -1453,74 +922,8 @@ export class GebProxyActions {
         )
     }
 
-    // ==== Proxy Recycling surplus auctions ====
-
-    recyclingSurplusIncreaseBidSize(
-        bidSize: BigNumberish,
-        auctionId: BigNumberish
-    ): Promise<ethers.PopulatedTransaction> {
-        return this.getProxiedTransactionRequest(
-            this.proxyActionSurplusAuction.increaseBidSize(
-                this.addressList.GEB_STAKE_RECYCLING_SURPLUS_AUCTION_HOUSE,
-                auctionId,
-                bidSize
-            )
-        )
-    }
-
-    recyclingSurplusSettleAuction(
-        auctionId: BigNumberish
-    ): Promise<ethers.PopulatedTransaction> {
-        return this.getProxiedTransactionRequest(
-            this.proxyActionSurplusAuction.settleAuction(
-                this.addressList.GEB_COIN_JOIN,
-                this.addressList.GEB_STAKE_RECYCLING_SURPLUS_AUCTION_HOUSE,
-                auctionId
-            )
-        )
-    }
-
-    // ==== Proxy Actions Staked Token Auctions ====
-
-    stakedTokenAuctionStartAndIncreaseBidSize(
-        bidSize: BigNumberish
-    ): Promise<ethers.PopulatedTransaction> {
-        return this.getProxiedTransactionRequest(
-            this.proxyStakedTokenAuction.startAndIncreaseBidSize(
-                this.addressList.GEB_COIN_JOIN,
-                this.addressList.GEB_STAKING,
-                bidSize
-            )
-        )
-    }
-
-    stakedTokenAuctionIncreaseBidSize(
-        bidSize: BigNumberish,
-        auctionId: BigNumberish
-    ): Promise<ethers.PopulatedTransaction> {
-        return this.getProxiedTransactionRequest(
-            this.proxyStakedTokenAuction.increaseBidSize(
-                this.addressList.GEB_COIN_JOIN,
-                this.addressList.GEB_STAKING_AUCTION_HOUSE,
-                auctionId,
-                bidSize
-            )
-        )
-    }
-
-    stakedTokenSettleAuction(
-        auctionId: BigNumberish
-    ): Promise<ethers.PopulatedTransaction> {
-        return this.getProxiedTransactionRequest(
-            this.proxyStakedTokenAuction.settleAuction(
-                this.addressList.GEB_STAKING_AUCTION_HOUSE,
-                auctionId
-            )
-        )
-    }
-
     // ==== Proxy Actions Saviour ====
-
+    /*
     transferTokensToCaller(
         tokens: string[]
     ): Promise<ethers.PopulatedTransaction> {
@@ -1749,4 +1152,6 @@ export class GebProxyActions {
             )
         )
     }
+    
+    */
 }

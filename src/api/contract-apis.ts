@@ -29,20 +29,6 @@ export class ContractApis {
     public piCalculator: types.PRawPerSecondCalculator
     public fsmEth: types.OSM
     public weth: types.WETH9_
-    public stakingRewardFactory: types.StakingRewardsFactory
-    public uniswapPairCoinEth: types.UniswapV2Pair
-    public merkleDistributorFactory: types.MerkleDistributorFactory
-    public coinNativeUniswapSaviour: types.NativeUnderlyingUniswapSafeSaviour
-    public yearnCurveMaxSafeSaviour: types.YearnCurveMaxSafeSaviour
-    public saviourCRatioSetter: types.SaviourCRatioSetter
-    public saviourUniswapLiquidityManager: types.UniswapLiquidityManagerLike
-    public uniswapV3PairCoinEth: types.UniswapV3Pool
-    public uniswapV3TwoTrancheLiquidityManager: types.GebUniswapV3TwoTrancheManager
-    public stakingFirstResort: types.GebLenderFirstResort
-    public stakingAuctionHouse: types.StakedTokenAuctionHouse
-    public stakingToken: types.ERC20
-    public stakedProt: types.DSDelegateTokenNoTransfer
-    public stakingEscrow: types.StakingRewardsEscrow
 
     constructor(
         network: GebDeployment,
@@ -74,19 +60,5 @@ export class ContractApis {
         this.fsmEth = types.OSM__factory.connect(addressList.FEED_SECURITY_MODULE_ETH, signerOrProvider)
         this.weth = types.WETH9___factory.connect(addressList.ETH, signerOrProvider)
         this.protocolToken = types.DSDelegateToken__factory.connect(addressList.GEB_PROT, signerOrProvider)
-        this.stakingRewardFactory = types.StakingRewardsFactory__factory.connect(addressList.GEB_INCENTIVES_MINER, signerOrProvider)
-        this.uniswapPairCoinEth = types.UniswapV2Pair__factory.connect(addressList.GEB_COIN_UNISWAP_POOL, signerOrProvider)
-        this.merkleDistributorFactory = types.MerkleDistributorFactory__factory.connect(addressList.MERKLE_DISTRIBUTOR_FACTORY, signerOrProvider)
-        this.coinNativeUniswapSaviour = types.NativeUnderlyingUniswapSafeSaviour__factory.connect(addressList.GEB_COIN_ETH_UNISWAP_V2_POOL_SAVIOUR, signerOrProvider)
-        this.yearnCurveMaxSafeSaviour = types.YearnCurveMaxSafeSaviour__factory.connect(addressList.GEB_YEARN_CURVE_MAX_SAVIOUR, signerOrProvider)
-        this.saviourCRatioSetter = types.SaviourCRatioSetter__factory.connect(addressList.GEB_SAVIOUR_CRATIO_SETTER, signerOrProvider)
-        this.saviourUniswapLiquidityManager = types.UniswapLiquidityManagerLike__factory.connect(addressList.GEB_UNISWAP_SAVIOUR_LIQUIDITY_MANAGER, signerOrProvider)
-        this.uniswapV3PairCoinEth = types.UniswapV3Pool__factory.connect(addressList.GEB_COIN_UNISWAP_V3_POOL, signerOrProvider)
-        this.uniswapV3TwoTrancheLiquidityManager = types.GebUniswapV3TwoTrancheManager__factory.connect(addressList.GEB_UNISWAP_TWO_TRANCHE_MANAGER, signerOrProvider)
-        this.stakingFirstResort = types.GebLenderFirstResort__factory.connect(addressList.GEB_STAKING, signerOrProvider)
-        this.stakingAuctionHouse = types.StakedTokenAuctionHouse__factory.connect(addressList.GEB_STAKING_AUCTION_HOUSE, signerOrProvider)
-        this.stakingToken = types.ERC20__factory.connect(addressList.GEB_STAKING_TOKEN, signerOrProvider)
-        this.stakedProt = types.DSDelegateTokenNoTransfer__factory.connect(addressList.GEB_STAKED_PROT, signerOrProvider)
-        this.stakingEscrow = types.StakingRewardsEscrow__factory.connect(addressList.GEB_STAKING_REWARDS_ESCROW, signerOrProvider)
     }
 }
