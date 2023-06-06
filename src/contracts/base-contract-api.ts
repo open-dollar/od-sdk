@@ -22,10 +22,6 @@ export declare type MulticallRequest<ReturnType> = {
     to: string
 }
 
-export interface GebContractAPIConstructorInterface<T extends BaseContractAPI> {
-    new (address: string, gebP: GebProviderInterface): T
-}
-
 export class BaseContractAPI {
     constructor(
         public address: string,

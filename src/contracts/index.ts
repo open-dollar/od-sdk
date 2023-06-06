@@ -9,7 +9,6 @@ import {
     BaseContractAPI,
     TransactionRequest,
     MulticallRequest,
-    GebContractAPIConstructorInterface,
 } from './base-contract-api'
 import {
     GebDeployment,
@@ -27,7 +26,6 @@ export {
     Outputs,
     // Base contract API
     BaseContractAPI,
-    GebContractAPIConstructorInterface,
     TransactionRequest,
     MulticallRequest,
     // Addresses
