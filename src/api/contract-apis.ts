@@ -19,15 +19,14 @@ export class ContractApis {
     public getSafes: types.GetSafes
     public joinETH_A: types.BasicCollateralJoin
     public joinCoin: types.CoinJoin
-    public coin: types.Coin
+    public coin: types.ERC20
     public proxyRegistry: types.GebProxyRegistry
     public collateralAuctionHouseETH_A: types.FixedDiscountCollateralAuctionHouse
-    public protocolToken: types.DSDelegateToken
-    public medianizerEth: types.ChainlinkRelayer
-    public medianizerCoin: types.UniswapConsecutiveSlotsMedianRAIUSD
+    public protocolToken: types.ERC20
+    public medianizerEth: types.IBaseOracle
+    public medianizerCoin: types.IBaseOracle
     public rateSetter: types.PIRateSetter
     public piCalculator: types.PRawPerSecondCalculator
-    public fsmEth: types.OSM
     public weth: types.WETH9_
 
     constructor(
@@ -50,15 +49,14 @@ export class ContractApis {
         this.getSafes = types.GetSafes__factory.connect(addressList.GET_SAFES, signerOrProvider)
         this.joinETH_A = types.BasicCollateralJoin__factory.connect(addressList.GEB_JOIN_ETH_A, signerOrProvider)
         this.joinCoin = types.CoinJoin__factory.connect(addressList.GEB_COIN_JOIN, signerOrProvider)
-        this.coin = types.Coin__factory.connect(addressList.GEB_COIN, signerOrProvider)
+        this.coin = types.ERC20__factory.connect(addressList.GEB_COIN, signerOrProvider)
         this.proxyRegistry = types.GebProxyRegistry__factory.connect(addressList.PROXY_REGISTRY, signerOrProvider)
         this.collateralAuctionHouseETH_A = types.FixedDiscountCollateralAuctionHouse__factory.connect(addressList.GEB_COLLATERAL_AUCTION_HOUSE_ETH_A, signerOrProvider)
-        this.medianizerEth = types.ChainlinkRelayer__factory.connect(addressList.MEDIANIZER_ETH, signerOrProvider)
-        this.medianizerCoin = types.UniswapConsecutiveSlotsMedianRAIUSD__factory.connect(addressList.MEDIANIZER_RAI, signerOrProvider)
+        this.medianizerEth = types.IBaseOracle__factory.connect(addressList.MEDIANIZER_ETH, signerOrProvider)
+        this.medianizerCoin = types.IBaseOracle__factory.connect(addressList.MEDIANIZER_RAI, signerOrProvider)
         this.rateSetter = types.PIRateSetter__factory.connect(addressList.GEB_RRFM_SETTER, signerOrProvider)
         this.piCalculator = types.PRawPerSecondCalculator__factory.connect(addressList.GEB_RRFM_CALCULATOR, signerOrProvider)
-        this.fsmEth = types.OSM__factory.connect(addressList.FEED_SECURITY_MODULE_ETH, signerOrProvider)
         this.weth = types.WETH9___factory.connect(addressList.ETH, signerOrProvider)
-        this.protocolToken = types.DSDelegateToken__factory.connect(addressList.GEB_PROT, signerOrProvider)
+        this.protocolToken = types.ERC20__factory.connect(addressList.GEB_PROT, signerOrProvider)
     }
 }
