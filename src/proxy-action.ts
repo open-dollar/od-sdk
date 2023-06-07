@@ -1,9 +1,9 @@
-import { ContractList, GebDeployment, getAddressList } from './contracts'
+import { BigNumber, BigNumberish } from '@ethersproject/bignumber'
 import { BytesLike } from '@ethersproject/bytes'
-import { BigNumberish } from '@ethersproject/bignumber'
-import { BigNumber } from '@ethersproject/bignumber'
 import { ethers } from 'ethers'
+import { ContractList, GebDeployment, getAddressList } from './contracts'
 
+import { getCollateralJoin } from './contracts/addreses'
 import * as types from './typechained'
 import { NULL_ADDRESS } from './utils'
 
@@ -64,7 +64,7 @@ export class GebProxyActions {
         )
 
         // Set proxy action contract addresses
-        this.proxyActionCoreAddress = this.addressList.PROXY_ACTIONS
+        this.proxyActionCoreAddress = this.addressList.BASIC_ACTIONS
         this.proxyActionGlobalSettlementAddress =
             this.addressList.PROXY_ACTIONS_GLOBAL_SETTLEMENT
         this.proxyActionDebtAuctionAddress =
@@ -232,10 +232,14 @@ export class GebProxyActions {
     */
 
     freeTokenCollateral(
-        collateralJoin: string,
+        collateralType: BytesLike,
         safe: BigNumberish,
         amt: BigNumberish
     ): Promise<ethers.PopulatedTransaction> {
+        let collateralJoin = getCollateralJoin(
+            this.addressList,
+            collateralType.toString()
+        )
         return this.getProxiedTransactionRequest(
             this.proxyActionCore.populateTransaction.freeTokenCollateral(
                 this.addressList.SAFE_MANAGER,
@@ -316,11 +320,15 @@ export class GebProxyActions {
     */
 
     lockTokenCollateral(
-        collateralJoin: string,
+        collateralType: BytesLike,
         safe: BigNumberish,
         amt: BigNumberish,
         transferFrom: boolean
     ): Promise<ethers.PopulatedTransaction> {
+        let collateralJoin = getCollateralJoin(
+            this.addressList,
+            collateralType.toString()
+        )
         return this.getProxiedTransactionRequest(
             this.proxyActionCore.populateTransaction.lockTokenCollateral(
                 this.addressList.SAFE_MANAGER,
@@ -333,12 +341,16 @@ export class GebProxyActions {
     }
 
     lockTokenCollateralAndGenerateDebt(
-        collateralJoin: string,
+        collateralType: BytesLike,
         safe: BigNumberish,
         collateralAmount: BigNumberish,
         deltaWad: BigNumberish,
         transferFrom: boolean
     ): Promise<ethers.PopulatedTransaction> {
+        let collateralJoin = getCollateralJoin(
+            this.addressList,
+            collateralType.toString()
+        )
         return this.getProxiedTransactionRequest(
             this.proxyActionCore.populateTransaction.lockTokenCollateralAndGenerateDebt(
                 this.addressList.SAFE_MANAGER,
@@ -449,12 +461,15 @@ export class GebProxyActions {
     */
 
     openLockTokenCollateralAndGenerateDebt(
-        collateralJoin: string,
         collateralType: BytesLike,
         collateralAmount: BigNumberish,
         deltaWad: BigNumberish,
         transferFrom: boolean
     ): Promise<ethers.PopulatedTransaction> {
+        let collateralJoin = getCollateralJoin(
+            this.addressList,
+            collateralType.toString()
+        )
         return this.getProxiedTransactionRequest(
             this.proxyActionCore.populateTransaction.openLockTokenCollateralAndGenerateDebt(
                 this.addressList.SAFE_MANAGER,
@@ -549,10 +564,14 @@ export class GebProxyActions {
     */
 
     repayAllDebtAndFreeTokenCollateral(
-        collateralJoin: string,
+        collateralType: BytesLike,
         safe: BigNumberish,
         collateralAmount: BigNumberish
     ): Promise<ethers.PopulatedTransaction> {
+        let collateralJoin = getCollateralJoin(
+            this.addressList,
+            collateralType.toString()
+        )
         return this.getProxiedTransactionRequest(
             this.proxyActionCore.populateTransaction.repayAllDebtAndFreeTokenCollateral(
                 this.addressList.SAFE_MANAGER,
@@ -598,11 +617,15 @@ export class GebProxyActions {
     */
 
     repayDebtAndFreeTokenCollateral(
-        collateralJoin: string,
+        collateralType: BytesLike,
         safe: BigNumberish,
         collateralAmount: BigNumberish,
         deltaWad: BigNumberish
     ): Promise<ethers.PopulatedTransaction> {
+        let collateralJoin = getCollateralJoin(
+            this.addressList,
+            collateralType.toString()
+        )
         return this.getProxiedTransactionRequest(
             this.proxyActionCore.populateTransaction.repayDebtAndFreeTokenCollateral(
                 this.addressList.SAFE_MANAGER,

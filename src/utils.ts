@@ -7,11 +7,29 @@ import { BigNumberish, BigNumber, FixedNumber } from '@ethersproject/bignumber'
  */
 const ETH_A =
     '0x4554482d41000000000000000000000000000000000000000000000000000000'
+/**
+ * byte32 value for the "WETH" collateral
+ */
+const WETH =
+    '0x5745544800000000000000000000000000000000000000000000000000000000'
+/**
+ * byte32 value for the "OP" collateral
+ */
+const OP = '0x4f50000000000000000000000000000000000000000000000000000000000000'
 
 /**
  * 0x0 address or burn address
  */
 const NULL_ADDRESS = '0x0000000000000000000000000000000000000000'
+
+/**
+ * mapping from byte32 to collateral type name
+ */
+const COLLATERAL_TYPES: { [byte32Value: string]: string } = {
+    [WETH]: 'WETH',
+    [OP]: 'OP',
+    [ETH_A]: 'ETH_A',
+}
 
 /**
  * Constant 10^18
@@ -101,7 +119,10 @@ const getRequireString = (error: any): string | null => {
 
 export {
     // Constants
+    WETH,
+    OP,
     ETH_A,
+    COLLATERAL_TYPES,
     NULL_ADDRESS,
     WAD,
     RAY,
