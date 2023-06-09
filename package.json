@@ -1,66 +1,36 @@
 {
-    "name": "@reflexer-finance/geb",
-    "version": "0.0.0",
-    "description": "Javascript client for GEB reflex indexes",
-    "main": "index.js",
-    "scripts": {
-        "postinstall": "npm run bootstrap",
-        "bootstrap": "lerna bootstrap --hoist",
-        "publish": "lerna publish",
-        "build": "tsc --build ./tsconfig.project.json",
-        "clean": "tsc --build --clean ./tsconfig.project.json",
-        "add-package": "node ./scripts/add_package.js",
-        "prettier": "prettier --write \"{,**/*.{ts,json,js,md}}\"",
-        "api-codegen": "npm run codegen --prefix packages/geb-contract-api && npm run codegen --prefix packages/geb-admin-api && prettier --write packages/*/*/*.json packages/*/src/generated/*.ts && git apply packages/geb-contract-api/src/patches/*.patch",
-        "abi-codegen": "node ./scripts/load_abis.js && prettier --write packages/geb-contract-api/*/*.json packages/geb-contract-api/src/generated/*.ts",
-        "test-node": "mocha --timeout 8000 ./packages/geb-test/lib/*/*.js --grep",
-        "test": "npm run test-node",
-        "test-all": "npm run clean && npm run build && npm run bootstrap && npm run test-node Test",
-        "dev": "npm run clean && npm run build && npm run bootstrap",
-        "docs": "rm -rf docs && typedoc --options typedoc.json && node scripts/process_docs.js",
-        "docs-publish": "npm run docs && git clone git@github.com:reflexer-labs/geb-docs.git && cp -r docs/* geb-docs/geb-js && cd geb-docs && git add -A && git commit -m'Update geb.js docs...' && git push && cd .. && rm -rf geb-docs"
-    },
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/reflexer-labs/geb.js.git"
-    },
-    "keywords": [
-        "rai",
-        "geb",
-        "blockchain",
-        "ethereum",
-        "flx",
-        "reflexer",
-        "labs"
-    ],
-    "author": "Guillaume Felley <guillaume@reflexer.finance>",
-    "license": "MIT",
-    "bugs": {
-        "url": "https://github.com/reflexer-labs/geb.js/issues"
-    },
-    "homepage": "https://github.com/reflexer-labs/geb.js#readme",
-    "devDependencies": {
-        "@types/mocha": "^8.0.3",
-        "@types/node": "^14.6.0",
-        "husky": "^4.2.5",
-        "lerna": "^3.22.1",
-        "lint-staged": "^10.2.13",
-        "mocha": "^8.1.2",
-        "prettier": "^2.1.1",
-        "typescript": "^4.0.2",
-        "solc": "^0.6.7",
-        "typedoc": "^0.19.1",
-        "typedoc-plugin-markdown": "^2.4.2"
-    },
-    "husky": {
-        "hooks": {
-            "pre-commit": "lint-staged"
-        }
-    },
-    "lint-staged": {
-        "*.{js,md,json,ts}": "prettier --write"
-    },
-    "dependencies": {
-        "axios": "^0.21.1"
-    }
+  "name": "@hai-on-op/sdk",
+  "version": "0.0.11-rc.6",
+  "description": "Javascript client for GEB reflex indexes",
+  "license": "MIT",
+  "main": "./lib/index.js",
+  "files": [
+    "lib"
+  ],
+  "scripts": {
+    "build": "yarn generate-types && tsc",
+    "generate-types": "yarn typechain --target ethers-v5 --out-dir src/typechained './abis/*.json'",
+    "lint:check": "prettier --check .",
+    "lint:fix": "sort-package-json && prettier --write .",
+    "prepare": "husky install",
+    "test": "echo \"No tests yet\""
+  },
+  "lint-staged": {
+    "package.json": "sort-package-json",
+    "**/*": "prettier --write --ignore-unknown"
+  },
+  "dependencies": {
+    "ethers": "5.4.7"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "17.6.5",
+    "@commitlint/config-conventional": "17.6.5",
+    "@typechain/ethers-v5": "^11.0.0",
+    "husky": "8.0.3",
+    "lint-staged": "13.2.2",
+    "prettier": "2.8.8",
+    "sort-package-json": "2.4.1",
+    "typechain": "8.2.0",
+    "typescript": "5.0.4"
+  }
 }
