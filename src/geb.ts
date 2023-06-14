@@ -6,6 +6,7 @@ import { GebError, GebErrorTypes } from './errors'
 import { GebProxyActions } from './proxy-action'
 import { NULL_ADDRESS } from './utils'
 import { Safe } from './schema/safe'
+import { TokenList, getTokenList } from './contracts/addreses'
 
 /**
  * The main package used to interact with the GEB system. Includes [[deployProxy |helper functions]] for safe
@@ -70,6 +71,7 @@ export class Geb {
      * documentation]]
      */
     public contracts: ContractApis
+    public tokenList: TokenList
     public provider: ethers.providers.Provider
     public signer?: ethers.Signer
     protected addresses: ContractList
@@ -94,6 +96,7 @@ export class Geb {
         }
 
         this.addresses = getAddressList(network)
+        this.tokenList = getTokenList(network)
         this.contracts = new ContractApis(network, signerOrProvider)
     }
 

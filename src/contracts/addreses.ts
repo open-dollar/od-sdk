@@ -19,21 +19,17 @@ export type ContractKey =
     | 'GEB_COIN_JOIN'
     | 'GEB_SURPLUS_AUCTION_HOUSE'
     | 'GEB_DEBT_AUCTION_HOUSE'
-    | 'GEB_COIN'
     | 'GEB_ORACLE_RELAYER'
     | 'GEB_GLOBAL_SETTLEMENT'
     | 'GEB_STABILITY_FEE_TREASURY'
     | 'BASIC_ACTIONS'
     | 'PROXY_ACTIONS_GLOBAL_SETTLEMENT'
     | 'SAFE_MANAGER'
-    | 'GET_SAFES'
     | 'PROXY_FACTORY'
     | 'PROXY_REGISTRY'
     | 'ETH'
     | 'MEDIANIZER_ETH'
     // | 'MEDIANIZER_OP'
-    | 'GEB_JOIN_ETH_A'
-    | 'GEB_COLLATERAL_AUCTION_HOUSE_ETH_A'
     | 'PROXY_DEPLOYER'
     | 'GEB_RRFM_SETTER'
     | 'GEB_RRFM_SETTER_RELAYER'
@@ -43,10 +39,6 @@ export type ContractKey =
     | 'SPOT_RAI'
     | 'PROXY_DEBT_AUCTION_ACTIONS'
     | 'PROXY_SURPLUS_AUCTION_ACTIONS'
-    | 'GEB_JOIN_WETH'
-    | 'GEB_COLLATERAL_AUCTION_HOUSE_WETH'
-    | 'GEB_JOIN_OP'
-    | 'GEB_COLLATERAL_AUCTION_HOUSE_OP'
 
 export type ContractList = {
     [key in ContractKey]: string
@@ -73,7 +65,6 @@ const addresses: Record<GebDeployment, ContractList> = {
         GEB_COIN_JOIN: '0x0A5653CCa4DB1B6E265F47CAf6969e64f1CFdC45',
         GEB_SURPLUS_AUCTION_HOUSE: '0x4EEfDaE928ca97817302242a851f317Be1B85C90',
         GEB_DEBT_AUCTION_HOUSE: '0x1896adBE708bF91158748B3F33738Ba497A69e8f',
-        GEB_COIN: '0x03ab458634910AaD20eF5f1C8ee96F1D6ac54919',
         GEB_ORACLE_RELAYER: '0x4ed9C0dCa0479bC64d8f4EB3007126D5791f7851',
         GEB_GLOBAL_SETTLEMENT: '0xee4cf96e5359d9619197fd82b6ef2a9eae7b91e1',
         GEB_STABILITY_FEE_TREASURY:
@@ -90,22 +81,12 @@ const addresses: Record<GebDeployment, ContractList> = {
         PROXY_SURPLUS_AUCTION_ACTIONS:
             '0x16B0BF0Bf031A3691f4bD600e5340fEDd149C0ED',
         SAFE_MANAGER: '0xEfe0B4cA532769a3AE758fD82E1426a03A94F185',
-        GET_SAFES: '0xdf4BC9aA98cC8eCd90Ba2BEe73aD4a1a9C8d202B',
         PROXY_FACTORY: '0xA26e15C895EFc0616177B7c1e7270A4C7D51C997',
         PROXY_REGISTRY: '0x4678f0a6958e4D2Bc4F1BAF7Bc52E8F3564f3fE4',
         MEDIANIZER_RAI: '0xFbF4849a06F6e6F53EcB31D2f8BD61aA7874b268',
         SPOT_RAI: '0x7235a0094eD56eB2Bd0de168d307C8990233645f',
         ETH: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2',
         MEDIANIZER_ETH: '0xb825e25856bD98b3f2FAF2aEb6Cb8742B38C4025',
-        GEB_JOIN_ETH_A: '0x2D3cD7b81c93f188F3CB8aD87c8Acc73d6226e3A',
-        GEB_COLLATERAL_AUCTION_HOUSE_ETH_A:
-            '0x7fFdF1Dfef2bfeE32054C8E922959fB235679aDE',
-        GEB_JOIN_WETH: '0x0000000000000000000000000000000000000000',
-        GEB_COLLATERAL_AUCTION_HOUSE_WETH:
-            '0x0000000000000000000000000000000000000000',
-        GEB_JOIN_OP: '0x0000000000000000000000000000000000000000',
-        GEB_COLLATERAL_AUCTION_HOUSE_OP:
-            '0x0000000000000000000000000000000000000000',
     },
     'optimism-goerli': {
         ETH_FROM: '0x0000000000000000000000000000000000000100',
@@ -125,7 +106,6 @@ const addresses: Record<GebDeployment, ContractList> = {
         GEB_COIN_JOIN: '0x3217B0aBcaAC50898F4826f0C502dEd9AB8eae53',
         GEB_SURPLUS_AUCTION_HOUSE: '0xa65394B23d7c6C2B3aBe9B9ed69a527E2026f855',
         GEB_DEBT_AUCTION_HOUSE: '0x8F7cFe960F12710B1Fe1F3ef4352D3530209598A',
-        GEB_COIN: '0xEaE90F3b07fBE00921173298FF04f416398f7101',
         GEB_ORACLE_RELAYER: '0xca53F197A4A3C72F9954e34906DFC59148Ce653f',
         GEB_GLOBAL_SETTLEMENT: '0xFd4fB8e5f11A3FD403761a832bC35F31d5579B83',
         GEB_STABILITY_FEE_TREASURY:
@@ -142,40 +122,94 @@ const addresses: Record<GebDeployment, ContractList> = {
         PROXY_SURPLUS_AUCTION_ACTIONS:
             '0x0000000000000000000000000000000000000122',
         SAFE_MANAGER: '0x5325A56148f67b26FaBDc7EbB30686120a98736c',
-        GET_SAFES: '0x5325A56148f67b26FaBDc7EbB30686120a98736c',
         PROXY_FACTORY: '0xC832Ea7C08c381b1F4726894684F7Bf1538E1dEa',
         PROXY_REGISTRY: '0x558Cd657b65b7DFb6B4c65d55F17247810b9C12a',
         MEDIANIZER_RAI: '0x0000000000000000000000000000000000000420',
         SPOT_RAI: '0x0000000000000000000000000000000000000127',
         ETH: '0x4200000000000000000000000000000000000006',
         MEDIANIZER_ETH: '0x74558a1470c714BB5E24a6ba998905Ee5F3F0A25',
-        // MEDIANIZER_OP: '0x6171f9dB883E3bcC1804Ef17Eb1199133E27058D',
-        GEB_JOIN_ETH_A: '0xb5FCb19162987FeE6bBC3B7B09bCd43a465b1498',
-        GEB_COLLATERAL_AUCTION_HOUSE_ETH_A:
-            '0x80D7ED55d9f7623a21580adb6e4442C982Cb51aF',
-        GEB_JOIN_WETH: '0x69DE387041C3056ec96aEFb432A546EAe4394da6',
-        GEB_COLLATERAL_AUCTION_HOUSE_WETH:
-            '0x80D7ED55d9f7623a21580adb6e4442C982Cb51aF',
-        GEB_JOIN_OP: '0xA59A8a069284e52B8c761d7e0AC2129733ACCBF6',
-        GEB_COLLATERAL_AUCTION_HOUSE_OP:
-            '0x8C2Be56f48802c2E4B98a5a02ffD1BAC0925e213',
     },
+}
+
+export type TokenData = {
+    address: string
+    decimals: number
+    symbol: string
+    bytes32String: string
+    collateralJoin: string
+    collateralActionHouse: string
+    isCollateral: boolean
+}
+
+export type TokenList = {
+    [key: string]: TokenData
+}
+
+const tokens: Record<GebDeployment, TokenList> = {
+    mainnet: {
+        WETH: {
+            address: '0x0000000000000000000000000000000000000000',
+            decimals: 18,
+            symbol: 'WETH',
+            bytes32String: WETH,
+            collateralJoin: '0x0000000000000000000000000000000000000000',
+            collateralActionHouse: '0x0000000000000000000000000000000000000000',
+            isCollateral: true,
+        },
+        OP: {
+            address: '0x0000000000000000000000000000000000000000',
+            decimals: 18,
+            symbol: 'OP',
+            bytes32String: OP,
+            collateralJoin: '0x0000000000000000000000000000000000000000',
+            collateralActionHouse: '0x0000000000000000000000000000000000000000',
+            isCollateral: false,
+        },
+        HAI: {
+            address: '0x0000000000000000000000000000000000000000',
+            decimals: 18,
+            symbol: 'HAI',
+            bytes32String: '',
+            collateralJoin: '0x0000000000000000000000000000000000000000',
+            collateralActionHouse: '0x0000000000000000000000000000000000000000',
+            isCollateral: false,
+        },
+    },
+    'optimism-goerli': {
+        WETH: {
+            address: '0x4200000000000000000000000000000000000006',
+            decimals: 18,
+            symbol: 'WETH',
+            bytes32String: WETH,
+            collateralJoin: '0x69DE387041C3056ec96aEFb432A546EAe4394da6',
+            collateralActionHouse: '0x80D7ED55d9f7623a21580adb6e4442C982Cb51aF',
+            isCollateral: true,
+        },
+        OP: {
+            address: '0x4200000000000000000000000000000000000042',
+            decimals: 18,
+            symbol: 'OP',
+            bytes32String: OP,
+            collateralJoin: '0xA59A8a069284e52B8c761d7e0AC2129733ACCBF6',
+            collateralActionHouse: '0x8C2Be56f48802c2E4B98a5a02ffD1BAC0925e213',
+            isCollateral: true,
+        },
+        HAI: {
+            address: '0xEaE90F3b07fBE00921173298FF04f416398f7101',
+            decimals: 18,
+            symbol: 'HAI',
+            bytes32String: '',
+            collateralJoin: '0x3217B0aBcaAC50898F4826f0C502dEd9AB8eae53',
+            collateralActionHouse: '0x0000000000000000000000000000000000000000',
+            isCollateral: false,
+        },
+    },
+}
+
+export const getTokenList = (network: GebDeployment): TokenList => {
+    return tokens[network]
 }
 
 export const getAddressList = (network: GebDeployment): ContractList => {
     return addresses[network]
-}
-
-export const getCollateralJoin = (
-    contractList: ContractList,
-    collateral: string
-): string => {
-    switch (collateral) {
-        case WETH:
-            return contractList['GEB_JOIN_WETH']
-        case OP:
-            return contractList['GEB_JOIN_OP']
-        default:
-            return ''
-    }
 }
