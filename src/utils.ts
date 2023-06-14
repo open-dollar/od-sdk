@@ -23,15 +23,6 @@ const OP = '0x4f50000000000000000000000000000000000000000000000000000000000000'
 const NULL_ADDRESS = '0x0000000000000000000000000000000000000000'
 
 /**
- * mapping from byte32 to collateral type name
- */
-const COLLATERAL_TYPES: { [byte32Value: string]: string } = {
-    [WETH]: 'WETH',
-    [OP]: 'OP',
-    [ETH_A]: 'ETH_A',
-}
-
-/**
  * Constant 10^18
  */
 const WAD = BigNumber.from('1000000000000000000')
@@ -122,7 +113,6 @@ export {
     WETH,
     OP,
     ETH_A,
-    COLLATERAL_TYPES,
     NULL_ADDRESS,
     WAD,
     RAY,
