@@ -1,4 +1,4 @@
-import { WETH, OP } from '../utils'
+import { WETH, OP, WBTC, STONES, TOTEM } from '../utils'
 
 // All keys are mandatory
 export type ContractKey =
@@ -114,7 +114,7 @@ const addresses: Record<GebDeployment, ContractList> = {
         GEB_DUMMY_RRFM_CALCULATOR: '0x0000000000000000000000000000000000000115',
         GEB_RRFM_SETTER: '0x0000000000000000000000000000000000000116',
         GEB_RRFM_SETTER_RELAYER: '0x0000000000000000000000000000000000000117',
-        BASIC_ACTIONS: '0x8887EA9Aa9cb522bb3b5b1d1192238403501CeB4',
+        BASIC_ACTIONS: '0xf046d565170c41e87c29fb40b907fdcf26ac9ac6',
         PROXY_ACTIONS_GLOBAL_SETTLEMENT:
             '0x0000000000000000000000000000000000000000',
         PROXY_DEBT_AUCTION_ACTIONS:
@@ -192,6 +192,33 @@ const tokens: Record<GebDeployment, TokenList> = {
             bytes32String: OP,
             collateralJoin: '0xA59A8a069284e52B8c761d7e0AC2129733ACCBF6',
             collateralActionHouse: '0x8C2Be56f48802c2E4B98a5a02ffD1BAC0925e213',
+            isCollateral: true,
+        },
+        WBTC: {
+            address: '0xf1FDB809f41c187cE6F2A4C8cC6562Ba7479B4EF',
+            decimals: 8,
+            symbol: 'WBTC',
+            bytes32String: WBTC,
+            collateralJoin: '0x187Bcd738ca9fDDfC2439A7Cd537C05F85C40429',
+            collateralActionHouse: '0x6F9c1a306108777e86e43dF6e8E9D8AB4d4Ee9fd',
+            isCollateral: true,
+        },
+        STN: {
+            address: '0x4FC4CB45A812AE5d85bE39b6D7fc9D169405a31F',
+            decimals: 3,
+            symbol: 'STN',
+            bytes32String: STONES,
+            collateralJoin: '0x78c64A263F685f98A83412A6891706cFa7eA29BB',
+            collateralActionHouse: '0xa19FdEde94D4CFb89654b371f6b8e7e4ba19220d',
+            isCollateral: true,
+        },
+        TTM: {
+            address: '0xE3Efbd4fafD521dAEa38aDC6D1A1bD66583D5da4',
+            decimals: 0,
+            symbol: 'TTM',
+            bytes32String: TOTEM,
+            collateralJoin: '0xC396AC5dc7e35c0BA7dca51b5eedbdd6055b91dB',
+            collateralActionHouse: '0xC7311B466073bC68b0ff160E179742b7De900681',
             isCollateral: true,
         },
         HAI: {
