@@ -45,18 +45,14 @@
     "type": "function"
   },
   {
-    "inputs": [
-      { "internalType": "address", "name": "account", "type": "address" }
-    ],
+    "inputs": [{ "internalType": "address", "name": "account", "type": "address" }],
     "name": "addAuthority",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
   },
   {
-    "inputs": [
-      { "internalType": "address", "name": "account", "type": "address" }
-    ],
+    "inputs": [{ "internalType": "address", "name": "account", "type": "address" }],
     "name": "addReader",
     "outputs": [],
     "stateMutability": "nonpayable",
@@ -160,9 +156,7 @@
     "type": "function"
   },
   {
-    "inputs": [
-      { "internalType": "int256", "name": "piOutput", "type": "int256" }
-    ],
+    "inputs": [{ "internalType": "int256", "name": "piOutput", "type": "int256" }],
     "name": "getBoundedRedemptionRate",
     "outputs": [
       { "internalType": "uint256", "name": "", "type": "uint256" },
@@ -372,18 +366,14 @@
     "type": "function"
   },
   {
-    "inputs": [
-      { "internalType": "address", "name": "account", "type": "address" }
-    ],
+    "inputs": [{ "internalType": "address", "name": "account", "type": "address" }],
     "name": "removeAuthority",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
   },
   {
-    "inputs": [
-      { "internalType": "address", "name": "account", "type": "address" }
-    ],
+    "inputs": [{ "internalType": "address", "name": "account", "type": "address" }],
     "name": "removeReader",
     "outputs": [],
     "stateMutability": "nonpayable",

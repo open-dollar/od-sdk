@@ -67,19 +67,15 @@ const addresses: Record<GebDeployment, ContractList> = {
         GEB_DEBT_AUCTION_HOUSE: '0x1896adBE708bF91158748B3F33738Ba497A69e8f',
         GEB_ORACLE_RELAYER: '0x4ed9C0dCa0479bC64d8f4EB3007126D5791f7851',
         GEB_GLOBAL_SETTLEMENT: '0xee4cf96e5359d9619197fd82b6ef2a9eae7b91e1',
-        GEB_STABILITY_FEE_TREASURY:
-            '0x83533fdd3285f48204215E9CF38C785371258E76',
+        GEB_STABILITY_FEE_TREASURY: '0x83533fdd3285f48204215E9CF38C785371258E76',
         GEB_RRFM_CALCULATOR: '0x5CC4878eA3E6323FdA34b3D28551E1543DEe54C6',
         GEB_DUMMY_RRFM_CALCULATOR: '0x9F02ddBFb4B045Df83D45c4d644027FBD7d72A6D',
         GEB_RRFM_SETTER: '0x7acfc14dbf2decd1c9213db32ae7784626daeb48',
         GEB_RRFM_SETTER_RELAYER: '0xd52da90c20c4610fef8faade2a1281ffa54eb6fb',
         BASIC_ACTIONS: '0xd4878FAf0452659D8202a6E6b1f04F104477b0b7',
-        PROXY_ACTIONS_GLOBAL_SETTLEMENT:
-            '0x17b5d9914194a08c7Ef14451BA15E8aE4f92Cb93',
-        PROXY_DEBT_AUCTION_ACTIONS:
-            '0x943C6Bb9FD652f6e4a9dA32894075e5aBECAd394',
-        PROXY_SURPLUS_AUCTION_ACTIONS:
-            '0x16B0BF0Bf031A3691f4bD600e5340fEDd149C0ED',
+        PROXY_ACTIONS_GLOBAL_SETTLEMENT: '0x17b5d9914194a08c7Ef14451BA15E8aE4f92Cb93',
+        PROXY_DEBT_AUCTION_ACTIONS: '0x943C6Bb9FD652f6e4a9dA32894075e5aBECAd394',
+        PROXY_SURPLUS_AUCTION_ACTIONS: '0x16B0BF0Bf031A3691f4bD600e5340fEDd149C0ED',
         SAFE_MANAGER: '0xEfe0B4cA532769a3AE758fD82E1426a03A94F185',
         PROXY_FACTORY: '0xA26e15C895EFc0616177B7c1e7270A4C7D51C997',
         PROXY_REGISTRY: '0x4678f0a6958e4D2Bc4F1BAF7Bc52E8F3564f3fE4',
@@ -108,19 +104,15 @@ const addresses: Record<GebDeployment, ContractList> = {
         GEB_DEBT_AUCTION_HOUSE: '0x8F7cFe960F12710B1Fe1F3ef4352D3530209598A',
         GEB_ORACLE_RELAYER: '0xca53F197A4A3C72F9954e34906DFC59148Ce653f',
         GEB_GLOBAL_SETTLEMENT: '0xFd4fB8e5f11A3FD403761a832bC35F31d5579B83',
-        GEB_STABILITY_FEE_TREASURY:
-            '0xFAD4f858867D7aB4Bd7b80c611287abF4B139986',
+        GEB_STABILITY_FEE_TREASURY: '0xFAD4f858867D7aB4Bd7b80c611287abF4B139986',
         GEB_RRFM_CALCULATOR: '0x0000000000000000000000000000000000000114',
         GEB_DUMMY_RRFM_CALCULATOR: '0x0000000000000000000000000000000000000115',
         GEB_RRFM_SETTER: '0x0000000000000000000000000000000000000116',
         GEB_RRFM_SETTER_RELAYER: '0x0000000000000000000000000000000000000117',
         BASIC_ACTIONS: '0xf046d565170c41e87c29fb40b907fdcf26ac9ac6',
-        PROXY_ACTIONS_GLOBAL_SETTLEMENT:
-            '0x0000000000000000000000000000000000000000',
-        PROXY_DEBT_AUCTION_ACTIONS:
-            '0x0000000000000000000000000000000000000121',
-        PROXY_SURPLUS_AUCTION_ACTIONS:
-            '0x0000000000000000000000000000000000000122',
+        PROXY_ACTIONS_GLOBAL_SETTLEMENT: '0x0000000000000000000000000000000000000000',
+        PROXY_DEBT_AUCTION_ACTIONS: '0x7569063b892D7F0CDBDFF4d744799D71ACe6e850',
+        PROXY_SURPLUS_AUCTION_ACTIONS: '0x6c2857BCC96F0328faD1c1a839Bd18E1A364Aca0',
         SAFE_MANAGER: '0x5325A56148f67b26FaBDc7EbB30686120a98736c',
         PROXY_FACTORY: '0xC832Ea7C08c381b1F4726894684F7Bf1538E1dEa',
         PROXY_REGISTRY: '0x558Cd657b65b7DFb6B4c65d55F17247810b9C12a',
@@ -137,7 +129,7 @@ export type TokenData = {
     symbol: string
     bytes32String: string
     collateralJoin: string
-    collateralActionHouse: string
+    collateralAuctionHouse: string
     isCollateral: boolean
 }
 
@@ -146,35 +138,7 @@ export type TokenList = {
 }
 
 const tokens: Record<GebDeployment, TokenList> = {
-    mainnet: {
-        WETH: {
-            address: '0x0000000000000000000000000000000000000000',
-            decimals: 18,
-            symbol: 'WETH',
-            bytes32String: WETH,
-            collateralJoin: '0x0000000000000000000000000000000000000000',
-            collateralActionHouse: '0x0000000000000000000000000000000000000000',
-            isCollateral: true,
-        },
-        OP: {
-            address: '0x0000000000000000000000000000000000000000',
-            decimals: 18,
-            symbol: 'OP',
-            bytes32String: OP,
-            collateralJoin: '0x0000000000000000000000000000000000000000',
-            collateralActionHouse: '0x0000000000000000000000000000000000000000',
-            isCollateral: false,
-        },
-        HAI: {
-            address: '0x0000000000000000000000000000000000000000',
-            decimals: 18,
-            symbol: 'HAI',
-            bytes32String: '',
-            collateralJoin: '0x0000000000000000000000000000000000000000',
-            collateralActionHouse: '0x0000000000000000000000000000000000000000',
-            isCollateral: false,
-        },
-    },
+    mainnet: {},
     'optimism-goerli': {
         WETH: {
             address: '0x4200000000000000000000000000000000000006',
@@ -182,7 +146,7 @@ const tokens: Record<GebDeployment, TokenList> = {
             symbol: 'WETH',
             bytes32String: WETH,
             collateralJoin: '0x69DE387041C3056ec96aEFb432A546EAe4394da6',
-            collateralActionHouse: '0x80D7ED55d9f7623a21580adb6e4442C982Cb51aF',
+            collateralAuctionHouse: '0x80D7ED55d9f7623a21580adb6e4442C982Cb51aF',
             isCollateral: true,
         },
         OP: {
@@ -191,7 +155,7 @@ const tokens: Record<GebDeployment, TokenList> = {
             symbol: 'OP',
             bytes32String: OP,
             collateralJoin: '0xA59A8a069284e52B8c761d7e0AC2129733ACCBF6',
-            collateralActionHouse: '0x8C2Be56f48802c2E4B98a5a02ffD1BAC0925e213',
+            collateralAuctionHouse: '0x8C2Be56f48802c2E4B98a5a02ffD1BAC0925e213',
             isCollateral: true,
         },
         WBTC: {
@@ -200,7 +164,7 @@ const tokens: Record<GebDeployment, TokenList> = {
             symbol: 'WBTC',
             bytes32String: WBTC,
             collateralJoin: '0x187Bcd738ca9fDDfC2439A7Cd537C05F85C40429',
-            collateralActionHouse: '0x6F9c1a306108777e86e43dF6e8E9D8AB4d4Ee9fd',
+            collateralAuctionHouse: '0x6F9c1a306108777e86e43dF6e8E9D8AB4d4Ee9fd',
             isCollateral: true,
         },
         STN: {
@@ -209,7 +173,7 @@ const tokens: Record<GebDeployment, TokenList> = {
             symbol: 'STN',
             bytes32String: STONES,
             collateralJoin: '0x78c64A263F685f98A83412A6891706cFa7eA29BB',
-            collateralActionHouse: '0xa19FdEde94D4CFb89654b371f6b8e7e4ba19220d',
+            collateralAuctionHouse: '0xa19FdEde94D4CFb89654b371f6b8e7e4ba19220d',
             isCollateral: true,
         },
         TTM: {
@@ -218,7 +182,7 @@ const tokens: Record<GebDeployment, TokenList> = {
             symbol: 'TTM',
             bytes32String: TOTEM,
             collateralJoin: '0xC396AC5dc7e35c0BA7dca51b5eedbdd6055b91dB',
-            collateralActionHouse: '0xC7311B466073bC68b0ff160E179742b7De900681',
+            collateralAuctionHouse: '0xC7311B466073bC68b0ff160E179742b7De900681',
             isCollateral: true,
         },
         HAI: {
@@ -227,7 +191,16 @@ const tokens: Record<GebDeployment, TokenList> = {
             symbol: 'HAI',
             bytes32String: '',
             collateralJoin: '0x3217B0aBcaAC50898F4826f0C502dEd9AB8eae53',
-            collateralActionHouse: '0x0000000000000000000000000000000000000000',
+            collateralAuctionHouse: '0x0000000000000000000000000000000000000000',
+            isCollateral: false,
+        },
+        KITE: {
+            address: '0x64ff820bbD2947B2f2D4355D4852F17eb0156D9A',
+            decimals: 18,
+            symbol: 'KITE',
+            bytes32String: '',
+            collateralJoin: '',
+            collateralAuctionHouse: '',
             isCollateral: false,
         },
     },

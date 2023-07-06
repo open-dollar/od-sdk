@@ -47,17 +47,13 @@ export class Safe {
         if (this.debt.isZero()) {
             return null
         }
-        const { liquidationCRatio } =
-            await this.contracts.oracleRelayer.collateralTypes(
-                this.collateralType
-            )
+        const { liquidationCRatio } = await this.contracts.oracleRelayer.collateralTypes(this.collateralType)
 
-        const { accumulatedRate, safetyPrice } =
-            await this.contracts.safeEngine.collateralTypes(this.collateralType)
+        const { accumulatedRate, safetyPrice } = await this.contracts.safeEngine.collateralTypes(this.collateralType)
 
-        return FixedNumber.from(
-            this.collateral.mul(safetyPrice).mul(liquidationCRatio).div(RAY)
-        ).divUnsafe(FixedNumber.from(this.debt.mul(accumulatedRate)))
+        return FixedNumber.from(this.collateral.mul(safetyPrice).mul(liquidationCRatio).div(RAY)).divUnsafe(
+            FixedNumber.from(this.debt.mul(accumulatedRate))
+        )
     }
 
     /**
@@ -73,26 +69,14 @@ export class Safe {
             return null
         }
 
-        const { accumulatedRate } =
-            await this.contracts.safeEngine.collateralTypes(this.collateralType)
-        const redemptionPrice =
-            await this.contracts.oracleRelayer.callStatic.redemptionPrice()
-        const liqCRatio = (
-            await this.contracts.oracleRelayer.collateralTypes(
-                this.collateralType
-            )
-        ).liquidationCRatio
+        const { accumulatedRate } = await this.contracts.safeEngine.collateralTypes(this.collateralType)
+        const redemptionPrice = await this.contracts.oracleRelayer.callStatic.redemptionPrice()
+        const liqCRatio = (await this.contracts.oracleRelayer.collateralTypes(this.collateralType)).liquidationCRatio
 
         // Formula:
         // (debt x accumulatedRate x redemptionPrice x liquidationCRatio) / collateral
 
-        const numerator = this.debt
-            .mul(accumulatedRate)
-            .mul(redemptionPrice)
-            .mul(liqCRatio)
-            .div(RAY.pow(3)) // Make it a WAD
-        return FixedNumber.from(numerator).divUnsafe(
-            FixedNumber.from(this.collateral)
-        )
+        const numerator = this.debt.mul(accumulatedRate).mul(redemptionPrice).mul(liqCRatio).div(RAY.pow(3)) // Make it a WAD
+        return FixedNumber.from(numerator).divUnsafe(FixedNumber.from(this.collateral))
     }
 }

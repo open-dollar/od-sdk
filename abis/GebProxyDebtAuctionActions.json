@@ -56,9 +56,7 @@
     "type": "function"
   },
   {
-    "inputs": [
-      { "internalType": "address", "name": "coinJoin", "type": "address" }
-    ],
+    "inputs": [{ "internalType": "address", "name": "coinJoin", "type": "address" }],
     "name": "exitAllCoin",
     "outputs": [],
     "stateMutability": "nonpayable",

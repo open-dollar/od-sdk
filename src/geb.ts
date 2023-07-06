@@ -1,12 +1,13 @@
-import { ContractApis } from './api/contract-apis'
-import { ERC20__factory, ERC20 } from './typechained'
-import { getAddressList, ContractList, GebDeployment } from './contracts/index'
 import { ethers } from 'ethers'
+import { ContractApis } from './api/contract-apis'
+import { Auctions } from './auctions'
+import { TokenList, getTokenList } from './contracts/addreses'
+import { ContractList, GebDeployment, getAddressList } from './contracts/index'
 import { GebError, GebErrorTypes } from './errors'
 import { GebProxyActions } from './proxy-action'
-import { NULL_ADDRESS } from './utils'
 import { Safe } from './schema/safe'
-import { TokenList, getTokenList } from './contracts/addreses'
+import { ERC20, ERC20__factory } from './typechained'
+import { NULL_ADDRESS } from './utils'
 
 /**
  * The main package used to interact with the GEB system. Includes [[deployProxy |helper functions]] for safe
@@ -72,9 +73,11 @@ export class Geb {
      */
     public contracts: ContractApis
     public tokenList: TokenList
+    public auctions: Auctions
     public provider: ethers.providers.Provider
     public signer?: ethers.Signer
     protected addresses: ContractList
+
     /**
      * Constructor for the main Geb.js object.
      * @param  {GebDeployment} network Either `'kovan'`, `'mainnet'` or an actual list of contract addresses.
@@ -82,9 +85,7 @@ export class Geb {
      */
     constructor(
         public network: GebDeployment,
-        signerOrProvider:
-            | ethers.providers.JsonRpcSigner
-            | ethers.providers.Provider
+        signerOrProvider: ethers.providers.JsonRpcSigner | ethers.providers.Provider
     ) {
         if (ethers.providers.JsonRpcSigner.isSigner(signerOrProvider)) {
             this.signer = signerOrProvider
@@ -98,6 +99,7 @@ export class Geb {
         this.addresses = getAddressList(network)
         this.tokenList = getTokenList(network)
         this.contracts = new ContractApis(network, signerOrProvider)
+        this.auctions = new Auctions(this.contracts)
     }
 
     /**
@@ -125,10 +127,7 @@ export class Geb {
      * Get the SAFE object given a `safeManager` id or a `safeEngine` handler address.
      * @param idOrHandler Safe Id or SAFE handler
      */
-    public async getSafe(
-        idOrHandler: string | number,
-        collateralType?: string
-    ): Promise<Safe> {
+    public async getSafe(idOrHandler: string | number, collateralType?: string): Promise<Safe> {
         let handler: string
         let isManaged: boolean
         let safeId: number
@@ -148,21 +147,13 @@ export class Geb {
             isManaged = true
             safeId = idOrHandler
             handler = await this.contracts.safeManager.safes(idOrHandler)
-            collateralType = await this.contracts.safeManager.collateralTypes(
-                idOrHandler
-            )
+            collateralType = await this.contracts.safeManager.collateralTypes(idOrHandler)
 
             if (handler === NULL_ADDRESS) {
-                throw new GebError(
-                    GebErrorTypes.SAFE_DOES_NOT_EXIST,
-                    `Safe id ${idOrHandler} does not exist`
-                )
+                throw new GebError(GebErrorTypes.SAFE_DOES_NOT_EXIST, `Safe id ${idOrHandler} does not exist`)
             }
 
-            safeData = await this.contracts.safeEngine.safes(
-                collateralType,
-                handler
-            )
+            safeData = await this.contracts.safeEngine.safes(collateralType, handler)
         } else {
             // We're given a handler
             if (!collateralType) {
@@ -173,14 +164,8 @@ export class Geb {
             }
 
             handler = idOrHandler
-            safeData = await this.contracts.safeEngine.safes(
-                collateralType,
-                handler
-            )
-            const safeRights = await this.contracts.safeEngine.safeRights(
-                handler,
-                this.contracts.safeManager.address
-            )
+            safeData = await this.contracts.safeEngine.safes(collateralType, handler)
+            const safeRights = await this.contracts.safeEngine.safeRights(handler, this.contracts.safeManager.address)
 
             // If SafeManager has rights over the safe, it's a managed safe
             isManaged = !safeRights.isZero()
@@ -245,9 +230,6 @@ export class Geb {
      * @returns Erc20
      */
     public getErc20Contract(tokenAddress: string): ERC20 {
-        return ERC20__factory.connect(
-            tokenAddress,
-            this.signer || this.provider
-        )
+        return ERC20__factory.connect(tokenAddress, this.signer || this.provider)
     }
 }

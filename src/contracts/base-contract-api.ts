@@ -1,8 +1,4 @@
-import {
-    GebProviderInterface,
-    AbiDefinition,
-    Inputs,
-} from './chain-provider-interface'
+import { GebProviderInterface, AbiDefinition, Inputs } from './chain-provider-interface'
 import { BigNumber } from '@ethersproject/bignumber'
 
 export declare type TransactionRequest = {
@@ -27,15 +23,9 @@ export interface GebContractAPIConstructorInterface<T extends BaseContractAPI> {
 }
 
 export class BaseContractAPI {
-    constructor(
-        public address: string,
-        public chainProvider: GebProviderInterface
-    ) {}
+    constructor(public address: string, public chainProvider: GebProviderInterface) {}
 
-    protected async ethCall(
-        abiFragment: AbiDefinition,
-        params: Inputs
-    ): Promise<any> {
+    protected async ethCall(abiFragment: AbiDefinition, params: Inputs): Promise<any> {
         const data = this.chainProvider.encodeFunctionData(params, abiFragment)
 
         const hex = await this.chainProvider.ethCall({
@@ -59,10 +49,7 @@ export class BaseContractAPI {
         }
     }
 
-    protected getMulticallRequest(
-        abiFragment: AbiDefinition,
-        params: Inputs
-    ): MulticallRequest<any> {
+    protected getMulticallRequest(abiFragment: AbiDefinition, params: Inputs): MulticallRequest<any> {
         const data = this.chainProvider.encodeFunctionData(params, abiFragment)
         return {
             abi: abiFragment,

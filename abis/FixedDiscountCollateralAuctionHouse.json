@@ -223,9 +223,7 @@
     "type": "function"
   },
   {
-    "inputs": [
-      { "internalType": "address", "name": "account", "type": "address" }
-    ],
+    "inputs": [{ "internalType": "address", "name": "account", "type": "address" }],
     "name": "addAuthorization",
     "outputs": [],
     "stateMutability": "nonpayable",
@@ -615,9 +613,7 @@
     "type": "function"
   },
   {
-    "inputs": [
-      { "internalType": "address", "name": "account", "type": "address" }
-    ],
+    "inputs": [{ "internalType": "address", "name": "account", "type": "address" }],
     "name": "removeAuthorization",
     "outputs": [],
     "stateMutability": "nonpayable",

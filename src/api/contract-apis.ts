@@ -14,21 +14,20 @@ export class ContractApis {
     public oracleRelayer: types.OracleRelayer
     public globalSettlement: types.GlobalSettlement
     public debtAuctionHouse: types.DebtAuctionHouse
-    public surplusAuctionHouse: types.BurningSurplusAuctionHouse
+    public surplusAuctionHouse: types.RecyclingSurplusAuctionHouse
     public stabilityFeeTreasury: types.StabilityFeeTreasury
     public safeManager: types.GebSafeManager
     public getSafes: types.GetSafes
-    public joinETH_A: types.BasicCollateralJoin
     public joinCoin: types.CoinJoin
     public coin: types.ERC20
     public proxyRegistry: types.GebProxyRegistry
-    public collateralAuctionHouseETH_A: types.FixedDiscountCollateralAuctionHouse
     public protocolToken: types.ERC20
     public medianizerEth: types.IBaseOracle
     public medianizerCoin: types.IBaseOracle
     public rateSetter: types.PIRateSetter
     public piCalculator: types.PRawPerSecondCalculator
     public weth: types.WETH9_
+    public tokenCollateralAuctionHouse: { [key: string]: types.IncreasingDiscountCollateralAuctionHouse }
 
     constructor(
         network: GebDeployment,
@@ -45,7 +44,7 @@ export class ContractApis {
         this.oracleRelayer = types.OracleRelayer__factory.connect(addressList.GEB_ORACLE_RELAYER, signerOrProvider)
         this.globalSettlement = types.GlobalSettlement__factory.connect(addressList.GEB_GLOBAL_SETTLEMENT, signerOrProvider)
         this.debtAuctionHouse = types.DebtAuctionHouse__factory.connect(addressList.GEB_DEBT_AUCTION_HOUSE, signerOrProvider)
-        this.surplusAuctionHouse = types.BurningSurplusAuctionHouse__factory.connect(addressList.GEB_SURPLUS_AUCTION_HOUSE, signerOrProvider)
+        this.surplusAuctionHouse = types.RecyclingSurplusAuctionHouse__factory.connect(addressList.GEB_SURPLUS_AUCTION_HOUSE, signerOrProvider)
         this.stabilityFeeTreasury = types.StabilityFeeTreasury__factory.connect(addressList.GEB_STABILITY_FEE_TREASURY, signerOrProvider)
         this.safeManager = types.GebSafeManager__factory.connect(addressList.SAFE_MANAGER, signerOrProvider)
         this.getSafes = types.GetSafes__factory.connect(addressList.SAFE_MANAGER, signerOrProvider)
@@ -58,5 +57,10 @@ export class ContractApis {
         this.piCalculator = types.PRawPerSecondCalculator__factory.connect(addressList.GEB_RRFM_CALCULATOR, signerOrProvider)
         this.weth = types.WETH9___factory.connect(addressList.ETH, signerOrProvider)
         this.protocolToken = types.ERC20__factory.connect(addressList.GEB_PROT, signerOrProvider)
+
+        this.tokenCollateralAuctionHouse = Object.values(tokenList).filter(token => token.isCollateral).reduce((accum, token) => {
+            const collateralAuctionHouse = types.IncreasingDiscountCollateralAuctionHouse__factory.connect(token.collateralAuctionHouse, signerOrProvider)
+            return { ...accum, [token.symbol]: collateralAuctionHouse }
+        }, {})
     }
 }

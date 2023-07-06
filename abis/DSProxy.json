@@ -111,9 +111,7 @@
       { "internalType": "bytes", "name": "_data", "type": "bytes" }
     ],
     "name": "execute",
-    "outputs": [
-      { "internalType": "bytes", "name": "response", "type": "bytes" }
-    ],
+    "outputs": [{ "internalType": "bytes", "name": "response", "type": "bytes" }],
     "stateMutability": "payable",
     "type": "function"
   },
@@ -164,9 +162,7 @@
     "type": "function"
   },
   {
-    "inputs": [
-      { "internalType": "address", "name": "owner_", "type": "address" }
-    ],
+    "inputs": [{ "internalType": "address", "name": "owner_", "type": "address" }],
     "name": "setOwner",
     "outputs": [],
     "stateMutability": "nonpayable",

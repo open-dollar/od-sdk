@@ -295,9 +295,7 @@
     "type": "function"
   },
   {
-    "inputs": [
-      { "internalType": "address", "name": "account", "type": "address" }
-    ],
+    "inputs": [{ "internalType": "address", "name": "account", "type": "address" }],
     "name": "addAuthorization",
     "outputs": [],
     "stateMutability": "nonpayable",
@@ -344,9 +342,7 @@
     "type": "function"
   },
   {
-    "inputs": [
-      { "internalType": "address", "name": "saviour", "type": "address" }
-    ],
+    "inputs": [{ "internalType": "address", "name": "saviour", "type": "address" }],
     "name": "connectSAFESaviour",
     "outputs": [],
     "stateMutability": "nonpayable",
@@ -374,9 +370,7 @@
     "type": "function"
   },
   {
-    "inputs": [
-      { "internalType": "address", "name": "saviour", "type": "address" }
-    ],
+    "inputs": [{ "internalType": "address", "name": "saviour", "type": "address" }],
     "name": "disconnectSAFESaviour",
     "outputs": [],
     "stateMutability": "nonpayable",
@@ -515,9 +509,7 @@
     "type": "function"
   },
   {
-    "inputs": [
-      { "internalType": "address", "name": "account", "type": "address" }
-    ],
+    "inputs": [{ "internalType": "address", "name": "account", "type": "address" }],
     "name": "removeAuthorization",
     "outputs": [],
     "stateMutability": "nonpayable",

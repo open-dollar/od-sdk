@@ -497,9 +497,7 @@
       { "internalType": "uint256", "name": "deltaWad", "type": "uint256" }
     ],
     "name": "openLockETHAndGenerateDebt",
-    "outputs": [
-      { "internalType": "uint256", "name": "safe", "type": "uint256" }
-    ],
+    "outputs": [{ "internalType": "uint256", "name": "safe", "type": "uint256" }],
     "stateMutability": "payable",
     "type": "function"
   },
@@ -549,9 +547,7 @@
       }
     ],
     "name": "openLockETHGenerateDebtProvideLiquidityStake",
-    "outputs": [
-      { "internalType": "uint256", "name": "safe", "type": "uint256" }
-    ],
+    "outputs": [{ "internalType": "uint256", "name": "safe", "type": "uint256" }],
     "stateMutability": "payable",
     "type": "function"
   },
@@ -596,9 +592,7 @@
       }
     ],
     "name": "openLockETHGenerateDebtProvideLiquidityUniswap",
-    "outputs": [
-      { "internalType": "uint256", "name": "safe", "type": "uint256" }
-    ],
+    "outputs": [{ "internalType": "uint256", "name": "safe", "type": "uint256" }],
     "stateMutability": "payable",
     "type": "function"
   },
@@ -613,9 +607,7 @@
       { "internalType": "address", "name": "usr", "type": "address" }
     ],
     "name": "openSAFE",
-    "outputs": [
-      { "internalType": "uint256", "name": "safe", "type": "uint256" }
-    ],
+    "outputs": [{ "internalType": "uint256", "name": "safe", "type": "uint256" }],
     "stateMutability": "nonpayable",
     "type": "function"
   },

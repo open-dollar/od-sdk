@@ -20,26 +20,17 @@ function processEthersResults(results: Result): any {
     }
 }
 
-export async function ethCall(
-    provider: providers.Provider,
-    transaction: TransactionRequest
-): Promise<string> {
+export async function ethCall(provider: providers.Provider, transaction: TransactionRequest): Promise<string> {
     return provider.call(transaction)
 }
 
-export function decodeFunctionData(
-    data: string,
-    abiFragment: AbiDefinition
-): Outputs {
+export function decodeFunctionData(data: string, abiFragment: AbiDefinition): Outputs {
     const coder = new utils.Interface([abiFragment])
     const result = coder.decodeFunctionResult(abiFragment.name, data)
     return processEthersResults(result)
 }
 
-export function encodeFunctionData(
-    params: Inputs[],
-    abiFragment: AbiDefinition
-): string {
+export function encodeFunctionData(params: Inputs[], abiFragment: AbiDefinition): string {
     const coder = new utils.Interface([abiFragment])
     return coder.encodeFunctionData(abiFragment.name, params)
 }
@@ -48,10 +39,7 @@ export async function chainId(provider: providers.Provider): Promise<number> {
     return (await provider.getNetwork()).chainId
 }
 
-export async function extCodeHash(
-    provider: providers.Provider,
-    address: string
-): Promise<string> {
+export async function extCodeHash(provider: providers.Provider, address: string): Promise<string> {
     const code = await provider.getCode(address)
     return utils.keccak256(code)
 }

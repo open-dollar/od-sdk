@@ -338,9 +338,7 @@
       }
     ],
     "name": "makeCollateralBag",
-    "outputs": [
-      { "internalType": "address", "name": "bag", "type": "address" }
-    ],
+    "outputs": [{ "internalType": "address", "name": "bag", "type": "address" }],
     "stateMutability": "nonpayable",
     "type": "function"
   },
@@ -393,9 +391,7 @@
       { "internalType": "uint256", "name": "deltaWad", "type": "uint256" }
     ],
     "name": "openLockETHAndGenerateDebt",
-    "outputs": [
-      { "internalType": "uint256", "name": "safe", "type": "uint256" }
-    ],
+    "outputs": [{ "internalType": "uint256", "name": "safe", "type": "uint256" }],
     "stateMutability": "payable",
     "type": "function"
   },
@@ -431,9 +427,7 @@
       { "internalType": "address", "name": "saviour", "type": "address" }
     ],
     "name": "openLockETHGenerateDebtAndProtectSAFE",
-    "outputs": [
-      { "internalType": "uint256", "name": "safe", "type": "uint256" }
-    ],
+    "outputs": [{ "internalType": "uint256", "name": "safe", "type": "uint256" }],
     "stateMutability": "payable",
     "type": "function"
   },
@@ -551,9 +545,7 @@
       { "internalType": "bool", "name": "transferFrom", "type": "bool" }
     ],
     "name": "openLockTokenCollateralAndGenerateDebt",
-    "outputs": [
-      { "internalType": "uint256", "name": "safe", "type": "uint256" }
-    ],
+    "outputs": [{ "internalType": "uint256", "name": "safe", "type": "uint256" }],
     "stateMutability": "nonpayable",
     "type": "function"
   },
@@ -599,9 +591,7 @@
       { "internalType": "address", "name": "saviour", "type": "address" }
     ],
     "name": "openLockTokenCollateralGenerateDebtAndProtectSAFE",
-    "outputs": [
-      { "internalType": "uint256", "name": "safe", "type": "uint256" }
-    ],
+    "outputs": [{ "internalType": "uint256", "name": "safe", "type": "uint256" }],
     "stateMutability": "nonpayable",
     "type": "function"
   },
@@ -616,9 +606,7 @@
       { "internalType": "address", "name": "usr", "type": "address" }
     ],
     "name": "openSAFE",
-    "outputs": [
-      { "internalType": "uint256", "name": "safe", "type": "uint256" }
-    ],
+    "outputs": [{ "internalType": "uint256", "name": "safe", "type": "uint256" }],
     "stateMutability": "nonpayable",
     "type": "function"
   },
