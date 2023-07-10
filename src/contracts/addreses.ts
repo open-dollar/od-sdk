@@ -146,7 +146,7 @@ const tokens: Record<GebDeployment, TokenList> = {
             symbol: 'WETH',
             bytes32String: WETH,
             collateralJoin: '0x69DE387041C3056ec96aEFb432A546EAe4394da6',
-            collateralAuctionHouse: '0x80D7ED55d9f7623a21580adb6e4442C982Cb51aF',
+            collateralAuctionHouse: '0x46f7a52A5543cC5068dc7aF31aE49eBF0778eF8A',
             isCollateral: true,
         },
         OP: {
@@ -155,7 +155,7 @@ const tokens: Record<GebDeployment, TokenList> = {
             symbol: 'OP',
             bytes32String: OP,
             collateralJoin: '0xA59A8a069284e52B8c761d7e0AC2129733ACCBF6',
-            collateralAuctionHouse: '0x8C2Be56f48802c2E4B98a5a02ffD1BAC0925e213',
+            collateralAuctionHouse: '0x47C2c459c37FEF0c21dC8e945008E8A05346942d',
             isCollateral: true,
         },
         WBTC: {
@@ -164,7 +164,7 @@ const tokens: Record<GebDeployment, TokenList> = {
             symbol: 'WBTC',
             bytes32String: WBTC,
             collateralJoin: '0x187Bcd738ca9fDDfC2439A7Cd537C05F85C40429',
-            collateralAuctionHouse: '0x6F9c1a306108777e86e43dF6e8E9D8AB4d4Ee9fd',
+            collateralAuctionHouse: '0x36677aD304c296F9cb24943830E4540C702a63FF',
             isCollateral: true,
         },
         STN: {
@@ -173,7 +173,7 @@ const tokens: Record<GebDeployment, TokenList> = {
             symbol: 'STN',
             bytes32String: STONES,
             collateralJoin: '0x78c64A263F685f98A83412A6891706cFa7eA29BB',
-            collateralAuctionHouse: '0xa19FdEde94D4CFb89654b371f6b8e7e4ba19220d',
+            collateralAuctionHouse: '0xF2DFB982FaeDe09c2E1a0Fa5de026FaD25f75dC0',
             isCollateral: true,
         },
         TTM: {
@@ -182,7 +182,7 @@ const tokens: Record<GebDeployment, TokenList> = {
             symbol: 'TTM',
             bytes32String: TOTEM,
             collateralJoin: '0xC396AC5dc7e35c0BA7dca51b5eedbdd6055b91dB',
-            collateralAuctionHouse: '0xC7311B466073bC68b0ff160E179742b7De900681',
+            collateralAuctionHouse: '0x76aBf3D8Ab0e405f68aE991904A3b8F8E19647Bc',
             isCollateral: true,
         },
         HAI: {
