@@ -40,6 +40,7 @@ export class Auctions {
     protected debtDecreaseSoldAmountFilter: DebtDecreaseSoldAmountEventFilter
     protected debtRestartAuctionFilter: DebtRestartAuctonEventFilter
     protected debtSettleAuctionFilter: DebtSettleAuctionEventFilter
+
     /**
      * Constructor for the main Geb.js object.
      * @param  {GebDeployment} network Either `'kovan'`, `'mainnet'` or an actual list of contract addresses.
