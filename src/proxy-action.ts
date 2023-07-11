@@ -46,7 +46,7 @@ export class GebProxyActions {
     private proxyActionCore: types.GebProxyActions
     private proxyActionGlobalSettlement: types.GebProxyActionsGlobalSettlement
     private proxyActionDebtAuction: types.GebProxyDebtAuctionActions
-    private proxyActionSurplusAuction: types.GebProxySurplusAuctionActions
+    private proxyActionSurplusAuction: types.SurplusBidActions
 
     constructor(
         /**
@@ -79,7 +79,7 @@ export class GebProxyActions {
             this.chainProvider
         )
 
-        this.proxyActionSurplusAuction = types.GebProxySurplusAuctionActions__factory.connect(
+        this.proxyActionSurplusAuction = types.SurplusBidActions__factory.connect(
             this.proxyActionSurplusAuctionAddress,
             this.chainProvider
         )
