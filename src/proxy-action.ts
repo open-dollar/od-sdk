@@ -45,7 +45,7 @@ export class GebProxyActions {
     private tokenList: TokenList
     private proxyActionCore: types.GebProxyActions
     private proxyActionGlobalSettlement: types.GebProxyActionsGlobalSettlement
-    private proxyActionDebtAuction: types.GebProxyDebtAuctionActions
+    private proxyActionDebtAuction: types.DebtBidActions
     private proxyActionSurplusAuction: types.SurplusBidActions
 
     constructor(
@@ -74,7 +74,7 @@ export class GebProxyActions {
             this.chainProvider
         )
 
-        this.proxyActionDebtAuction = types.GebProxyDebtAuctionActions__factory.connect(
+        this.proxyActionDebtAuction = types.DebtBidActions__factory.connect(
             this.proxyActionDebtAuctionAddress,
             this.chainProvider
         )
@@ -518,13 +518,13 @@ export class GebProxyActions {
 
     exitAllCoin(): Promise<ethers.PopulatedTransaction> {
         return this.getProxiedTransactionRequest(
-            this.proxyActionDebtAuction.populateTransaction.exitAllCoin(this.addressList.GEB_COIN_JOIN)
+            this.proxyActionDebtAuction.populateTransaction.exitAllSystemCoins(this.addressList.GEB_COIN_JOIN)
         )
     }
 
     exitCoin(amount: BigNumberish): Promise<ethers.PopulatedTransaction> {
         return this.getProxiedTransactionRequest(
-            this.proxyActionDebtAuction.populateTransaction.exitCoin(this.addressList.GEB_COIN_JOIN, amount)
+            this.proxyActionDebtAuction.populateTransaction.exitSystemCoins(this.addressList.GEB_COIN_JOIN, amount)
         )
     }
 
