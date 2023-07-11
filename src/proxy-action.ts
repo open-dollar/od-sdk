@@ -528,6 +528,12 @@ export class GebProxyActions {
         )
     }
 
+    collectProtocolTokens(): Promise<ethers.PopulatedTransaction> {
+        return this.getProxiedTransactionRequest(
+            this.proxyActionDebtAuction.populateTransaction.collectProtocolTokens(this.addressList.GEB_PROT)
+        )
+    }
+
     // ==== Proxy Actions Surplus Auctions ====
 
     surplusStartAndIncreaseBidSize(bidSize: BigNumberish): Promise<ethers.PopulatedTransaction> {

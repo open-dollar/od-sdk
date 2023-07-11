@@ -1,7 +1,6 @@
 import { BigNumber } from 'ethers'
 import { ContractApis } from './api/contract-apis'
 import {
-    ICollateralAuction,
     ICollateralAuctionBidder,
     IDebtAuction,
     ISurplusAuction,
@@ -11,6 +10,7 @@ import {
     collateralStartAuctionEventToAuction,
     debtStartAuctionEventToAuction,
     surplusStartAuctionEventToAuction,
+    ICollateralAuction,
 } from './schema/auction'
 import {
     IncreaseBidSizeEventFilter as SurplusIncreaseBidSizeEventFilter,
@@ -153,28 +153,26 @@ export class Auctions {
         const buyCollateralFilter = collateralAuctionHouse.filters.BuyCollateral()
         const settleAuctionFilter = collateralAuctionHouse.filters.SettleAuction()
 
-        const startAuctionEvents = collateralAuctionHouse.queryFilter(startFilter, fromBlock)
-        const buyFilterEvents = collateralAuctionHouse.queryFilter(buyCollateralFilter, fromBlock)
-        const settledAuctionEvents = collateralAuctionHouse.queryFilter(settleAuctionFilter, fromBlock)
+        return Promise.all([
+            collateralAuctionHouse.queryFilter(startFilter, fromBlock),
+            collateralAuctionHouse.queryFilter(buyCollateralFilter, fromBlock),
+            collateralAuctionHouse.queryFilter(settleAuctionFilter, fromBlock),
+        ]).then(([startAuction, buyEvents, settleEvents]) => {
+            const bids = buyEvents.reduce((accum: { [key: string]: ICollateralAuctionBidder[] }, bid) => {
+                const parsedBid = collateralBidEventToBid(bid)
+                const id = bid.args._id.toString()
+                const bidsForId = accum[id]
+                return { ...accum, [id]: bidsForId ? bidsForId.concat(parsedBid) : [parsedBid] }
+            }, {})
 
-        return Promise.all([startAuctionEvents, buyFilterEvents, settledAuctionEvents]).then(
-            ([startAuction, buyEvents, settleEvents]) => {
-                const bids = buyEvents.reduce((accum: { [key: string]: ICollateralAuctionBidder[] }, bid) => {
-                    const parsedBid = collateralBidEventToBid(bid)
-                    const id = bid.args._id.toString()
-                    const bidsForId = accum[id]
-                    return { ...accum, [id]: bidsForId ? bidsForId.concat(parsedBid) : [parsedBid] }
-                }, {})
+            const settled = settleEvents.reduce((accum: { [key: string]: boolean }, settled) => {
+                const id = settled.args._id.toString()
+                return { ...accum, [id]: true }
+            }, {})
 
-                const settled = settleEvents.reduce((accum: { [key: string]: boolean }, settled) => {
-                    const id = settled.args._id.toString()
-                    return { ...accum, [id]: true }
-                }, {})
+            const auctions = startAuction.map((auc) => collateralStartAuctionEventToAuction(auc, bids, settled))
 
-                const auctions = startAuction.map((auc) => collateralStartAuctionEventToAuction(auc, bids, settled))
-
-                return { auctions }
-            }
-        )
+            return { auctions }
+        })
     }
 }
