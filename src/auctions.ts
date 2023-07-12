@@ -1,7 +1,6 @@
 import { BigNumber } from 'ethers'
 import { ContractApis } from './api/contract-apis'
 import {
-    ICollateralAuctionBidder,
     IDebtAuction,
     ISurplusAuction,
     IAuctionBidder,
@@ -159,7 +158,7 @@ export class Auctions {
             collateralAuctionHouse.queryFilter(buyCollateralFilter, fromBlock),
             collateralAuctionHouse.queryFilter(settleAuctionFilter, fromBlock),
         ]).then(([startAuction, buyEvents, settleEvents]) => {
-            const bids = buyEvents.reduce((accum: { [key: string]: ICollateralAuctionBidder[] }, bid) => {
+            const bids = buyEvents.reduce((accum: { [key: string]: IAuctionBidder[] }, bid) => {
                 const parsedBid = collateralBidEventToBid(bid)
                 const id = bid.args._id.toString()
                 const bidsForId = accum[id]

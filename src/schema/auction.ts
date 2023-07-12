@@ -45,12 +45,7 @@ export interface ICollateralAuction {
     forgoneCollateralReceiver: string
     auctionIncomeRecipient: string
     isClaimed: boolean
-    biddersList: Array<ICollateralAuctionBidder>
-}
-
-export interface ICollateralAuctionBidder {
-    bid: string
-    boughtCollateral: string
+    biddersList: Array<IAuctionBidder>
 }
 
 export interface IAuctionBidder {
@@ -75,7 +70,7 @@ export function surplusStartAuctionEventToAuction(
         initialBid: startAuction.args.initialBid.toString(),
         createdAt: startAuction.blockNumber.toString(),
         createdAtTransaction: startAuction.transactionHash.toString(),
-        biddersList: bids[id],
+        biddersList: bids[id] || [],
         isClaimed: settled[id] || false,
     }
 }
@@ -94,7 +89,7 @@ export function debtStartAuctionEventToAuction(
         initialBid: startAuction.args.initialBid.toString(),
         createdAt: startAuction.blockNumber.toString(),
         createdAtTransaction: startAuction.transactionHash.toString(),
-        biddersList: bids[id],
+        biddersList: bids[id] || [],
         isClaimed: settled[id] || false,
         incomeReceiver: startAuction.args.incomeReceiver.toString(),
     }
@@ -102,7 +97,7 @@ export function debtStartAuctionEventToAuction(
 
 export function collateralStartAuctionEventToAuction(
     startAuction: CollateralAuctionStartEvent,
-    bids: { [key: string]: ICollateralAuctionBidder[] },
+    bids: { [key: string]: IAuctionBidder[] },
     settled: { [key: string]: boolean }
 ): ICollateralAuction {
     return {
@@ -118,7 +113,7 @@ export function collateralStartAuctionEventToAuction(
         forgoneCollateralReceiver: startAuction.args._forgoneCollateralReceiver.toString(),
         auctionIncomeRecipient: startAuction.args._auctionIncomeRecipient.toString(),
         isClaimed: settled[startAuction.args._id.toString()] || false,
-        biddersList: bids[startAuction.args._id.toString()],
+        biddersList: bids[startAuction.args._id.toString()] || [],
     }
 }
 
@@ -132,9 +127,12 @@ export function bidEventToBid(bid: IncreaseBidSizeEvent): IAuctionBidder {
     }
 }
 
-export function collateralBidEventToBid(bid: BuyCollateralEvent): ICollateralAuctionBidder {
+export function collateralBidEventToBid(bid: BuyCollateralEvent): IAuctionBidder {
     return {
-        bid: bid.args._wad.toString(),
-        boughtCollateral: bid.args._boughtCollateral.toString(),
+        bidder: '0x0000000000000000000000000000000000000000', // TODO: change when new events come in
+        createdAt: '1689159421', // TODO: change when new events come in
+        bid: bid.args._boughtCollateral.toString(),
+        buyAmount: bid.args._wad.toString(),
+        createdAtTransaction: bid.transactionHash,
     }
 }
