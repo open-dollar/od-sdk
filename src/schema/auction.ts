@@ -45,7 +45,7 @@ export interface ICollateralAuction {
     forgoneCollateralReceiver: string
     auctionIncomeRecipient: string
     isClaimed: boolean
-    bids: Array<ICollateralAuctionBidder>
+    biddersList: Array<ICollateralAuctionBidder>
 }
 
 export interface ICollateralAuctionBidder {
@@ -118,7 +118,7 @@ export function collateralStartAuctionEventToAuction(
         forgoneCollateralReceiver: startAuction.args._forgoneCollateralReceiver.toString(),
         auctionIncomeRecipient: startAuction.args._auctionIncomeRecipient.toString(),
         isClaimed: settled[startAuction.args._id.toString()] || false,
-        bids: bids[startAuction.args._id.toString()],
+        biddersList: bids[startAuction.args._id.toString()],
     }
 }
 
