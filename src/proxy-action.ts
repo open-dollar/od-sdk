@@ -37,6 +37,11 @@ export class GebProxyActions {
     public proxyActionSurplusAuctionAddress: string
 
     /**
+     * Address of the proxy actions contract for collateral auctions.
+     */
+    public proxyActionCollateralAuctionAddress: string
+
+    /**
      * Address of the proxy actions contract for surplus auctions.
      */
     // public proxyActionSaviourAddress: string
@@ -47,6 +52,7 @@ export class GebProxyActions {
     private proxyActionGlobalSettlement: types.GebProxyActionsGlobalSettlement
     private proxyActionDebtAuction: types.DebtBidActions
     private proxyActionSurplusAuction: types.SurplusBidActions
+    private proxyActionCollateralAuction: types.CollateralBidActions
 
     constructor(
         /**
@@ -66,6 +72,7 @@ export class GebProxyActions {
         this.proxyActionGlobalSettlementAddress = this.addressList.PROXY_ACTIONS_GLOBAL_SETTLEMENT
         this.proxyActionDebtAuctionAddress = this.addressList.PROXY_DEBT_AUCTION_ACTIONS
         this.proxyActionSurplusAuctionAddress = this.addressList.PROXY_SURPLUS_AUCTION_ACTIONS
+        this.proxyActionCollateralAuctionAddress = this.addressList.PROXY_COLLATERAL_AUCTION_ACTIONS
 
         // Proxy contract APIs
         this.proxyActionCore = types.GebProxyActions__factory.connect(this.proxyActionCoreAddress, this.chainProvider)
@@ -81,6 +88,11 @@ export class GebProxyActions {
 
         this.proxyActionSurplusAuction = types.SurplusBidActions__factory.connect(
             this.proxyActionSurplusAuctionAddress,
+            this.chainProvider
+        )
+
+        this.proxyActionCollateralAuction = types.CollateralBidActions__factory.connect(
+            this.proxyActionCollateralAuctionAddress,
             this.chainProvider
         )
     }
@@ -561,6 +573,27 @@ export class GebProxyActions {
                 this.addressList.GEB_COIN_JOIN,
                 this.addressList.GEB_SURPLUS_AUCTION_HOUSE,
                 auctionId
+            )
+        )
+    }
+
+    // ==== Proxy Actions Collateral Auctions ====
+
+    buyCollateral(
+        collateral: string,
+        auctionId: BigNumberish,
+        minCollateralAmount: BigNumberish,
+        bidAmount: BigNumberish
+    ): Promise<ethers.PopulatedTransaction> {
+        const collateralData = this.tokenList[collateral]
+        return this.getProxiedTransactionRequest(
+            this.proxyActionCollateralAuction.populateTransaction.buyCollateral(
+                this.addressList.GEB_COIN_JOIN,
+                collateralData.collateralJoin,
+                collateralData.collateralAuctionHouse,
+                auctionId,
+                minCollateralAmount,
+                bidAmount
             )
         )
     }

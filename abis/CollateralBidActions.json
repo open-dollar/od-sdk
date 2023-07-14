@@ -1,0 +1,99 @@
+[
+  {
+    "inputs": [],
+    "name": "OnlyDelegateCalls",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_coinJoin",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_collateralJoin",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_collateralAuctionHouse",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_auctionId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_minCollateralAmount",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_bidAmount",
+        "type": "uint256"
+      }
+    ],
+    "name": "buyCollateral",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_coinJoin",
+        "type": "address"
+      }
+    ],
+    "name": "exitAllSystemCoins",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_coinJoin",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_coinsToExit",
+        "type": "uint256"
+      }
+    ],
+    "name": "exitSystemCoins",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_coinJoin",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_safeHandler",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_wad",
+        "type": "uint256"
+      }
+    ],
+    "name": "joinSystemCoins",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  }
+]
