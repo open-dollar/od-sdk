@@ -14,7 +14,7 @@ export class ContractApis {
     public oracleRelayer: types.OracleRelayer
     public globalSettlement: types.GlobalSettlement
     public debtAuctionHouse: types.DebtAuctionHouse
-    public surplusAuctionHouse: types.RecyclingSurplusAuctionHouse
+    public surplusAuctionHouse: types.SurplusAuctionHouse
     public stabilityFeeTreasury: types.StabilityFeeTreasury
     public safeManager: types.GebSafeManager
     public getSafes: types.GetSafes
@@ -27,7 +27,7 @@ export class ContractApis {
     public rateSetter: types.PIRateSetter
     public piCalculator: types.PRawPerSecondCalculator
     public weth: types.WETH9_
-    public tokenCollateralAuctionHouse: { [key: string]: types.IncreasingDiscountCollateralAuctionHouse }
+    public tokenCollateralAuctionHouse: { [key: string]: types.CollateralAuctionHouse }
 
     constructor(
         network: GebDeployment,
@@ -44,7 +44,7 @@ export class ContractApis {
         this.oracleRelayer = types.OracleRelayer__factory.connect(addressList.GEB_ORACLE_RELAYER, signerOrProvider)
         this.globalSettlement = types.GlobalSettlement__factory.connect(addressList.GEB_GLOBAL_SETTLEMENT, signerOrProvider)
         this.debtAuctionHouse = types.DebtAuctionHouse__factory.connect(addressList.GEB_DEBT_AUCTION_HOUSE, signerOrProvider)
-        this.surplusAuctionHouse = types.RecyclingSurplusAuctionHouse__factory.connect(addressList.GEB_SURPLUS_AUCTION_HOUSE, signerOrProvider)
+        this.surplusAuctionHouse = types.SurplusAuctionHouse__factory.connect(addressList.GEB_SURPLUS_AUCTION_HOUSE, signerOrProvider)
         this.stabilityFeeTreasury = types.StabilityFeeTreasury__factory.connect(addressList.GEB_STABILITY_FEE_TREASURY, signerOrProvider)
         this.safeManager = types.GebSafeManager__factory.connect(addressList.SAFE_MANAGER, signerOrProvider)
         this.getSafes = types.GetSafes__factory.connect(addressList.SAFE_MANAGER, signerOrProvider)
@@ -59,7 +59,7 @@ export class ContractApis {
         this.protocolToken = types.ERC20__factory.connect(addressList.GEB_PROT, signerOrProvider)
 
         this.tokenCollateralAuctionHouse = Object.values(tokenList).filter(token => token.isCollateral).reduce((accum, token) => {
-            const collateralAuctionHouse = types.IncreasingDiscountCollateralAuctionHouse__factory.connect(token.collateralAuctionHouse, signerOrProvider)
+            const collateralAuctionHouse = types.CollateralAuctionHouse__factory.connect(token.collateralAuctionHouse, signerOrProvider)
             return { ...accum, [token.symbol]: collateralAuctionHouse }
         }, {})
     }

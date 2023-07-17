@@ -1,57 +1,195 @@
 [
   {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_safeEngine",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "__oracleRelayer",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "__liquidationEngine",
+        "type": "address"
+      },
+      {
+        "internalType": "bytes32",
+        "name": "_cType",
+        "type": "bytes32"
+      },
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "minSystemCoinDeviation",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "lowerSystemCoinDeviation",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "upperSystemCoinDeviation",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct ICollateralAuctionHouse.CollateralAuctionHouseSystemCoinParams",
+        "name": "_cahParams",
+        "type": "tuple"
+      },
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "minimumBid",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "minDiscount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "maxDiscount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "perSecondDiscountUpdateRate",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "lowerCollateralDeviation",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "upperCollateralDeviation",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct ICollateralAuctionHouse.CollateralAuctionHouseParams",
+        "name": "_cahCParams",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
+  {
     "inputs": [],
     "name": "AlreadyAuthorized",
     "type": "error"
   },
   {
     "inputs": [],
-    "name": "IDCAH_CollateralFSMInvalidValue",
+    "name": "CAH_CollateralFSMInvalidValue",
     "type": "error"
   },
   {
     "inputs": [],
-    "name": "IDCAH_DustyAuction",
+    "name": "CAH_DustyAuction",
     "type": "error"
   },
   {
     "inputs": [],
-    "name": "IDCAH_InexistentAuction",
+    "name": "CAH_InexistentAuction",
     "type": "error"
   },
   {
     "inputs": [],
-    "name": "IDCAH_InvalidBid",
+    "name": "CAH_InvalidBid",
     "type": "error"
   },
   {
     "inputs": [],
-    "name": "IDCAH_InvalidLeftToRaise",
+    "name": "CAH_InvalidLeftToRaise",
     "type": "error"
   },
   {
     "inputs": [],
-    "name": "IDCAH_InvalidRedemptionPriceProvided",
+    "name": "CAH_InvalidRedemptionPriceProvided",
     "type": "error"
   },
   {
     "inputs": [],
-    "name": "IDCAH_NoCollateralForSale",
+    "name": "CAH_NoCollateralForSale",
     "type": "error"
   },
   {
     "inputs": [],
-    "name": "IDCAH_NothingToRaise",
+    "name": "CAH_NothingToRaise",
     "type": "error"
   },
   {
     "inputs": [],
-    "name": "IDCAH_NullBoughtAmount",
+    "name": "CAH_NullBoughtAmount",
     "type": "error"
   },
   {
     "inputs": [],
     "name": "NotAuthorized",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_x",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_y",
+        "type": "uint256"
+      }
+    ],
+    "name": "NotGreaterOrEqualThan",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_x",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_y",
+        "type": "uint256"
+      }
+    ],
+    "name": "NotGreaterThan",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_x",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_y",
+        "type": "uint256"
+      }
+    ],
+    "name": "NotLesserOrEqualThan",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "NullAddress",
     "type": "error"
   },
   {
@@ -61,7 +199,7 @@
   },
   {
     "inputs": [],
-    "name": "UnrecognizedCollateralType",
+    "name": "UnrecognizedCType",
     "type": "error"
   },
   {
@@ -92,15 +230,27 @@
         "type": "uint256"
       },
       {
+        "indexed": true,
+        "internalType": "address",
+        "name": "_bidder",
+        "type": "address"
+      },
+      {
         "indexed": false,
         "internalType": "uint256",
-        "name": "_wad",
+        "name": "_blockTimestamp",
         "type": "uint256"
       },
       {
         "indexed": false,
         "internalType": "uint256",
-        "name": "_boughtCollateral",
+        "name": "_raisedAmount",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "_soldAmount",
         "type": "uint256"
       }
     ],
@@ -157,6 +307,18 @@
       {
         "indexed": false,
         "internalType": "uint256",
+        "name": "_blockTimestamp",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "_leftoverReceiver",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
         "name": "_leftoverCollateral",
         "type": "uint256"
       }
@@ -168,7 +330,7 @@
     "anonymous": false,
     "inputs": [
       {
-        "indexed": false,
+        "indexed": true,
         "internalType": "uint256",
         "name": "_id",
         "type": "uint256"
@@ -176,7 +338,7 @@
       {
         "indexed": false,
         "internalType": "uint256",
-        "name": "_auctionsStarted",
+        "name": "_blockTimestamp",
         "type": "uint256"
       },
       {
@@ -188,19 +350,13 @@
       {
         "indexed": false,
         "internalType": "uint256",
-        "name": "_initialBid",
-        "type": "uint256"
-      },
-      {
-        "indexed": true,
-        "internalType": "uint256",
         "name": "_amountToRaise",
         "type": "uint256"
       },
       {
         "indexed": false,
         "internalType": "uint256",
-        "name": "_startingDiscount",
+        "name": "_initialDiscount",
         "type": "uint256"
       },
       {
@@ -214,18 +370,6 @@
         "internalType": "uint256",
         "name": "_perSecondDiscountUpdateRate",
         "type": "uint256"
-      },
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "_forgoneCollateralReceiver",
-        "type": "address"
-      },
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "_auctionIncomeRecipient",
-        "type": "address"
       }
     ],
     "name": "StartAuction",
@@ -242,19 +386,166 @@
       },
       {
         "indexed": false,
+        "internalType": "uint256",
+        "name": "_blockTimestamp",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
         "internalType": "address",
-        "name": "_sender",
+        "name": "_leftoverReceiver",
         "type": "address"
       },
       {
         "indexed": false,
         "internalType": "uint256",
-        "name": "_collateralAmount",
+        "name": "_leftoverCollateral",
         "type": "uint256"
       }
     ],
     "name": "TerminateAuctionPrematurely",
     "type": "event"
+  },
+  {
+    "inputs": [],
+    "name": "AUCTION_HOUSE_TYPE",
+    "outputs": [
+      {
+        "internalType": "bytes32",
+        "name": "",
+        "type": "bytes32"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "AUCTION_TYPE",
+    "outputs": [
+      {
+        "internalType": "bytes32",
+        "name": "",
+        "type": "bytes32"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_auctionId",
+        "type": "uint256"
+      }
+    ],
+    "name": "_auctions",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "amountToSell",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "amountToRaise",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "currentDiscount",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "maxDiscount",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "perSecondDiscountUpdateRate",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "latestDiscountUpdateTime",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "forgoneCollateralReceiver",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "auctionIncomeRecipient",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "_cParams",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "minimumBid",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "minDiscount",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "maxDiscount",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "perSecondDiscountUpdateRate",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "lowerCollateralDeviation",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "upperCollateralDeviation",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "_params",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "_minSystemCoinDeviation",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_lowerSystemCoinDeviation",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_upperSystemCoinDeviation",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
   },
   {
     "inputs": [
@@ -281,7 +572,7 @@
     "outputs": [
       {
         "internalType": "uint256",
-        "name": "_rad",
+        "name": "_amountToRaise",
         "type": "uint256"
       }
     ],
@@ -341,7 +632,7 @@
             "type": "address"
           }
         ],
-        "internalType": "struct IIncreasingDiscountCollateralAuctionHouse.Auction",
+        "internalType": "struct ICollateralAuctionHouse.Auction",
         "name": "_auction",
         "type": "tuple"
       }
@@ -355,7 +646,7 @@
     "outputs": [
       {
         "internalType": "uint256",
-        "name": "_auctionsStarted",
+        "name": "",
         "type": "uint256"
       }
     ],
@@ -398,7 +689,7 @@
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "_id",
+        "name": "",
         "type": "uint256"
       }
     ],
@@ -406,11 +697,11 @@
     "outputs": [
       {
         "internalType": "uint256",
-        "name": "_rad",
+        "name": "_bidAmount",
         "type": "uint256"
       }
     ],
-    "stateMutability": "view",
+    "stateMutability": "pure",
     "type": "function"
   },
   {
@@ -468,8 +759,8 @@
             "type": "uint256"
           }
         ],
-        "internalType": "struct IIncreasingDiscountCollateralAuctionHouse.CollateralAuctionHouseParams",
-        "name": "_cParams",
+        "internalType": "struct ICollateralAuctionHouse.CollateralAuctionHouseParams",
+        "name": "_cahCParams",
         "type": "tuple"
       }
     ],
@@ -482,7 +773,7 @@
     "outputs": [
       {
         "internalType": "bytes32",
-        "name": "_collateralType",
+        "name": "",
         "type": "bytes32"
       }
     ],
@@ -501,7 +792,7 @@
     "outputs": [
       {
         "internalType": "address",
-        "name": "_receiver",
+        "name": "_forgoneCollateralReceiver",
         "type": "address"
       }
     ],
@@ -554,12 +845,12 @@
     "outputs": [
       {
         "internalType": "uint256",
-        "name": "_collateralFsmPriceFeedValue",
+        "name": "_boughtCollateral",
         "type": "uint256"
       },
       {
         "internalType": "uint256",
-        "name": "_systemCoinPriceFeedValue",
+        "name": "_adjustedBid",
         "type": "uint256"
       }
     ],
@@ -583,12 +874,12 @@
     "outputs": [
       {
         "internalType": "uint256",
-        "name": "_collateralFsmPriceFeedValue",
+        "name": "_boughtCollateral",
         "type": "uint256"
       },
       {
         "internalType": "uint256",
-        "name": "_systemCoinPriceFeedValue",
+        "name": "_adjustedBid",
         "type": "uint256"
       }
     ],
@@ -790,7 +1081,7 @@
     "outputs": [
       {
         "internalType": "uint256",
-        "name": "_lastReadRedemptionPrice",
+        "name": "",
         "type": "uint256"
       }
     ],
@@ -803,7 +1094,7 @@
     "outputs": [
       {
         "internalType": "contract ILiquidationEngine",
-        "name": "_liquidationEngine",
+        "name": "__liquidationEngine",
         "type": "address"
       }
     ],
@@ -857,7 +1148,7 @@
     "outputs": [
       {
         "internalType": "contract IOracleRelayer",
-        "name": "_oracleRelayer",
+        "name": "__oracleRelayer",
         "type": "address"
       }
     ],
@@ -886,8 +1177,8 @@
             "type": "uint256"
           }
         ],
-        "internalType": "struct IIncreasingDiscountCollateralAuctionHouse.CollateralAuctionHouseSystemCoinParams",
-        "name": "_params",
+        "internalType": "struct ICollateralAuctionHouse.CollateralAuctionHouseSystemCoinParams",
+        "name": "_cahParams",
         "type": "tuple"
       }
     ],
@@ -898,7 +1189,7 @@
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "_id",
+        "name": "",
         "type": "uint256"
       }
     ],
@@ -906,11 +1197,11 @@
     "outputs": [
       {
         "internalType": "uint256",
-        "name": "_rad",
+        "name": "_raisedAmount",
         "type": "uint256"
       }
     ],
-    "stateMutability": "view",
+    "stateMutability": "pure",
     "type": "function"
   },
   {
@@ -925,7 +1216,7 @@
     "outputs": [
       {
         "internalType": "uint256",
-        "name": "_wad",
+        "name": "_remainingAmountToSell",
         "type": "uint256"
       }
     ],
@@ -951,7 +1242,7 @@
     "outputs": [
       {
         "internalType": "contract ISAFEEngine",
-        "name": "_safeEngine",
+        "name": "",
         "type": "address"
       }
     ],
@@ -962,13 +1253,13 @@
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "_id",
+        "name": "",
         "type": "uint256"
       }
     ],
     "name": "settleAuction",
     "outputs": [],
-    "stateMutability": "nonpayable",
+    "stateMutability": "pure",
     "type": "function"
   },
   {
@@ -1014,7 +1305,7 @@
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "_auctionId",
+        "name": "_id",
         "type": "uint256"
       }
     ],
