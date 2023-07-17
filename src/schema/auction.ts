@@ -122,8 +122,8 @@ export function collateralBidEventToBid(bid: BuyCollateralEvent): IAuctionBidder
     return {
         bidder: bid.args._bidder,
         createdAt: bid.args._blockTimestamp.toString(),
-        bid: bid.args._raisedAmount.toString(),
-        buyAmount: bid.args._soldAmount.toString(),
+        bid: bid.args._soldAmount.toString(),
+        buyAmount: bid.args._raisedAmount.toString(),
         createdAtTransaction: bid.transactionHash,
     }
 }
