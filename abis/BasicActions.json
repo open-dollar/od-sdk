@@ -1,0 +1,553 @@
+[
+  {
+    "inputs": [],
+    "name": "IntOverflow",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "OnlyDelegateCalls",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_coinJoin",
+        "type": "address"
+      }
+    ],
+    "name": "exitAllSystemCoins",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_coinJoin",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_coinsToExit",
+        "type": "uint256"
+      }
+    ],
+    "name": "exitSystemCoins",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_manager",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_collateralJoin",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_safeId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_wad",
+        "type": "uint256"
+      }
+    ],
+    "name": "exitTokenCollateral",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_manager",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_collateralJoin",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_safeId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_wad",
+        "type": "uint256"
+      }
+    ],
+    "name": "freeTokenCollateral",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_manager",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_taxCollector",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_coinJoin",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_safeId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_wad",
+        "type": "uint256"
+      }
+    ],
+    "name": "generateDebt",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_coinJoin",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_safeHandler",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_wad",
+        "type": "uint256"
+      }
+    ],
+    "name": "joinSystemCoins",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_manager",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_collateralJoin",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_safeId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_wad",
+        "type": "uint256"
+      },
+      {
+        "internalType": "bool",
+        "name": "_transferFrom",
+        "type": "bool"
+      }
+    ],
+    "name": "lockTokenCollateral",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_manager",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_taxCollector",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_collateralJoin",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_coinJoin",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_safe",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_collateralAmount",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_deltaWad",
+        "type": "uint256"
+      },
+      {
+        "internalType": "bool",
+        "name": "_transferFrom",
+        "type": "bool"
+      }
+    ],
+    "name": "lockTokenCollateralAndGenerateDebt",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_taxCollector",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_manager",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_safeId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "int256",
+        "name": "_deltaCollateral",
+        "type": "int256"
+      },
+      {
+        "internalType": "int256",
+        "name": "_deltaDebt",
+        "type": "int256"
+      }
+    ],
+    "name": "modifySAFECollateralization",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_manager",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_srcSafeId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_dstSafeId",
+        "type": "uint256"
+      }
+    ],
+    "name": "moveSAFE",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_manager",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_taxCollector",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_collateralJoin",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_coinJoin",
+        "type": "address"
+      },
+      {
+        "internalType": "bytes32",
+        "name": "_cType",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_collateralAmount",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_deltaWad",
+        "type": "uint256"
+      },
+      {
+        "internalType": "bool",
+        "name": "_transferFrom",
+        "type": "bool"
+      }
+    ],
+    "name": "openLockTokenCollateralAndGenerateDebt",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "_safe",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_manager",
+        "type": "address"
+      },
+      {
+        "internalType": "bytes32",
+        "name": "_cType",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "address",
+        "name": "_usr",
+        "type": "address"
+      }
+    ],
+    "name": "openSAFE",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "_safeId",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_manager",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_coinJoin",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_safeId",
+        "type": "uint256"
+      }
+    ],
+    "name": "repayAllDebt",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_manager",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_collateralJoin",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_coinJoin",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_safe",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_collateralWad",
+        "type": "uint256"
+      }
+    ],
+    "name": "repayAllDebtAndFreeTokenCollateral",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_manager",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_coinJoin",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_safeId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_wad",
+        "type": "uint256"
+      }
+    ],
+    "name": "repayDebt",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_manager",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_collateralJoin",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_coinJoin",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_safe",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_collateralWad",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_deltaWad",
+        "type": "uint256"
+      }
+    ],
+    "name": "repayDebtAndFreeTokenCollateral",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_manager",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_safeId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "_dst",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_wad",
+        "type": "uint256"
+      }
+    ],
+    "name": "transferCollateral",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_manager",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_safeId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "_dst",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_rad",
+        "type": "uint256"
+      }
+    ],
+    "name": "transferInternalCoins",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  }
+]

@@ -4,7 +4,7 @@ import { Auctions } from './auctions'
 import { TokenList, getTokenList } from './contracts/addreses'
 import { ContractList, GebDeployment, getAddressList } from './contracts/index'
 import { GebError, GebErrorTypes } from './errors'
-import { GebProxyActions } from './proxy-action'
+import { BasicActions } from './proxy-action'
 import { Safe } from './schema/safe'
 import { ERC20, ERC20__factory } from './typechained'
 import { NULL_ADDRESS } from './utils'
@@ -103,7 +103,7 @@ export class Geb {
     }
 
     /**
-     * Given an address, it returns a GebProxyActions object used to execute bundled operations.
+     * Given an address, it returns a BasicActions object used to execute bundled operations.
      * Important: This requires that the address deployed a GEB proxy through the proxy registry contract. It will throw a `DOES_NOT_OWN_HAVE_PROXY` error if the address specified does not have a proxy. Use the [[deployProxy]] function to get a new proxy.
      * @param ownerAddress Externally owned user account aka Ethereum address that owns a GEB proxy.
      */
@@ -113,7 +113,7 @@ export class Geb {
         if (address === NULL_ADDRESS) {
             throw new GebError(GebErrorTypes.DOES_NOT_OWN_HAVE_PROXY)
         }
-        return new GebProxyActions(address, this.network, this.signer.provider)
+        return new BasicActions(address, this.network, this.signer.provider)
     }
 
     /**
