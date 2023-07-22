@@ -1,6 +1,6 @@
 {
   "name": "@hai-on-op/sdk",
-  "version": "0.1.2-rc.1",
+  "version": "0.1.2-rc.2",
   "description": "Javascript client for GEB reflex indexes",
   "license": "MIT",
   "main": "./lib/index.js",
