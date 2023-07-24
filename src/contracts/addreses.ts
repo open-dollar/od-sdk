@@ -216,3 +216,12 @@ export const getTokenList = (network: GebDeployment): TokenList => {
 export const getAddressList = (network: GebDeployment): ContractList => {
     return addresses[network]
 }
+
+export const getTokenDetails = (network: GebDeployment, tokenSymbol: string): TokenData | null => {
+    const tokenList = getTokenList(network);
+    if (tokenSymbol in tokenList) {
+        return tokenList[tokenSymbol];
+    }
+    return null;
+};
+
