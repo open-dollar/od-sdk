@@ -180,7 +180,7 @@ const tokens: Record<GebDeployment, TokenList> = {
             isCollateral: true,
         },
         OD: {
-            address: '0x521f5663706b0B8322926Cdead069b57b484B81f',
+            address: '0xD0fbafe59e8af03C81b48ADbd3c3679E5D7Fa613',
             decimals: 18,
             symbol: 'OD',
             bytes32String: '',
@@ -189,7 +189,7 @@ const tokens: Record<GebDeployment, TokenList> = {
             isCollateral: false,
         },
         ODG: {
-            address: '0xcDBAc5A71370047d5bA191cC6569f2914a4c2cd2',
+            address: '0xe305D09d46bD6c9C0178799Bc1424282b798876C',
             decimals: 18,
             symbol: 'ODG',
             bytes32String: '',
@@ -209,10 +209,9 @@ export const getAddressList = (network: GebDeployment): ContractList => {
 }
 
 export const getTokenDetails = (network: GebDeployment, tokenSymbol: string): TokenData | null => {
-    const tokenList = getTokenList(network);
+    const tokenList = getTokenList(network)
     if (tokenSymbol in tokenList) {
-        return tokenList[tokenSymbol];
+        return tokenList[tokenSymbol]
     }
-    return null;
-};
-
+    return null
+}
