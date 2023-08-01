@@ -1,4 +1,4 @@
-name: Canary release
+name: Github Canary release
 
 on: workflow_dispatch
 
@@ -23,7 +23,6 @@ jobs:
           scope: '@hai-on-op'
 
       - run: yarn
-
       - run: yarn build
 
       - name: Set up Git user

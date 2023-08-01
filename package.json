@@ -1,6 +1,6 @@
 {
   "name": "@opendollar/sdk",
-  "version": "0.1.2-rc.2",
+  "version": "0.1.1-rc.17",
   "description": "Javascript client for GEB reflex indexes",
   "license": "MIT",
   "main": "./lib/index.js",
