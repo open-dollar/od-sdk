@@ -1,5 +1,5 @@
 {
-  "name": "@hai-on-op/sdk",
+  "name": "@opendollar/sdk",
   "version": "0.1.2-rc.2",
   "description": "Javascript client for GEB reflex indexes",
   "license": "MIT",

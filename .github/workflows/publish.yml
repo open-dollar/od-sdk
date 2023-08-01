@@ -15,7 +15,7 @@ env:
 jobs:
   publish:
     runs-on: ubuntu-latest
-    if: github.repository == 'hai-on-op/sdk'
+    if: github.repository == 'usekeyp/od-sdk'
 
     steps:
       - name: Check out code
@@ -54,7 +54,7 @@ jobs:
           body: ${{ steps.changelog.outputs.clean_changelog }}
 
       - name: Publish to NPM
-        if: ${{ github.repository == 'hai-on-op/sdk' && steps.changelog.outputs.skipped == 'false' }}
+        if: ${{ github.repository == 'usekeyp/od-sdk' && steps.changelog.outputs.skipped == 'false' }}
         run: |
           if [ "${{ env.IS_RC }}" = "true" ]; then
             npm publish --tag rc --access public
@@ -62,4 +62,4 @@ jobs:
             npm publish --access public
           fi
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_PAT }}
