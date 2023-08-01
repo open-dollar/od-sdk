@@ -1,40 +1,22 @@
-name: Canary release
+name: NPM Canary release
 
 on: workflow_dispatch
-
-permissions:
-  packages: write
-  contents: read
 
 jobs:
   canary-publish:
     name: Publish Packages (canary)
-    if: github.repository == 'hai-on-op/sdk-private'
+    if: github.repository == 'usekeyp/od-sdk'
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v3
-
       - uses: actions/setup-node@v3
         with:
-          node-version: '16'
-          cache: 'yarn'
-          registry-url: 'https://npm.pkg.github.com'
-          scope: '@hai-on-op'
-
+          node-version: 16
+          registry-url: 'https://registry.npmjs.org'
       - run: yarn
-
       - run: yarn build
-
-      - name: Set up Git user
-        run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-
-      - name: Publish Canary Version
-        run: |
-          echo "Publishing canary version..."
-          npm version prerelease --preid "${GITHUB_SHA::8}" --no-git-tag-version
-          npm publish --tag canary
+      - run: npm version prerelease --preid "${GITHUB_SHA::8}" --no-git-tag-version
+      - run: npm publish --access public --tag canary
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
