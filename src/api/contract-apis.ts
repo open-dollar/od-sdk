@@ -49,7 +49,7 @@ export class ContractApis {
         this.safeManager = types.GebSafeManager__factory.connect(addressList.SAFE_MANAGER, signerOrProvider)
         this.getSafes = types.GetSafes__factory.connect(addressList.SAFE_MANAGER, signerOrProvider)
         this.joinCoin = types.CoinJoin__factory.connect(addressList.GEB_COIN_JOIN, signerOrProvider)
-        this.coin = types.ERC20__factory.connect(tokenList.HAI.address, signerOrProvider)
+        this.coin = types.ERC20__factory.connect(tokenList.OD.address, signerOrProvider)
         this.proxyRegistry = types.GebProxyRegistry__factory.connect(addressList.PROXY_REGISTRY, signerOrProvider)
         this.medianizerEth = types.IBaseOracle__factory.connect(addressList.MEDIANIZER_ETH, signerOrProvider)
         this.medianizerCoin = types.IBaseOracle__factory.connect(addressList.MEDIANIZER_RAI, signerOrProvider)
