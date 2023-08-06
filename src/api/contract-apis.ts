@@ -16,17 +16,17 @@ export class ContractApis {
     public debtAuctionHouse: types.DebtAuctionHouse
     public surplusAuctionHouse: types.SurplusAuctionHouse
     public stabilityFeeTreasury: types.StabilityFeeTreasury
-    public safeManager: types.GebSafeManager
-    public getSafes: types.GetSafes
+    public safeManager: types.HaiSafeManager
     public joinCoin: types.CoinJoin
-    public coin: types.ERC20
-    public proxyRegistry: types.GebProxyRegistry
+    public proxyRegistry: types.HaiProxyRegistry
+    public rateSetter: types.PIDRateSetter
+    public piCalculator: types.PIDController
+    
     public protocolToken: types.ERC20
-    public medianizerEth: types.IBaseOracle
-    public medianizerCoin: types.IBaseOracle
-    public rateSetter: types.PIRateSetter
-    public piCalculator: types.PRawPerSecondCalculator
-    public weth: types.WETH9_
+    public systemCoin: types.ERC20
+    public weth: types.WETH9
+
+    public tokenCollateralJoin: { [key: string]: types.CoinJoin }
     public tokenCollateralAuctionHouse: { [key: string]: types.CollateralAuctionHouse }
 
     constructor(
@@ -46,17 +46,15 @@ export class ContractApis {
         this.debtAuctionHouse = types.DebtAuctionHouse__factory.connect(addressList.GEB_DEBT_AUCTION_HOUSE, signerOrProvider)
         this.surplusAuctionHouse = types.SurplusAuctionHouse__factory.connect(addressList.GEB_SURPLUS_AUCTION_HOUSE, signerOrProvider)
         this.stabilityFeeTreasury = types.StabilityFeeTreasury__factory.connect(addressList.GEB_STABILITY_FEE_TREASURY, signerOrProvider)
-        this.safeManager = types.GebSafeManager__factory.connect(addressList.SAFE_MANAGER, signerOrProvider)
-        this.getSafes = types.GetSafes__factory.connect(addressList.SAFE_MANAGER, signerOrProvider)
+        this.safeManager = types.HaiSafeManager__factory.connect(addressList.SAFE_MANAGER, signerOrProvider)
         this.joinCoin = types.CoinJoin__factory.connect(addressList.GEB_COIN_JOIN, signerOrProvider)
-        this.coin = types.ERC20__factory.connect(tokenList.HAI.address, signerOrProvider)
-        this.proxyRegistry = types.GebProxyRegistry__factory.connect(addressList.PROXY_REGISTRY, signerOrProvider)
-        this.medianizerEth = types.IBaseOracle__factory.connect(addressList.MEDIANIZER_ETH, signerOrProvider)
-        this.medianizerCoin = types.IBaseOracle__factory.connect(addressList.MEDIANIZER_RAI, signerOrProvider)
-        this.rateSetter = types.PIRateSetter__factory.connect(addressList.GEB_RRFM_SETTER, signerOrProvider)
-        this.piCalculator = types.PRawPerSecondCalculator__factory.connect(addressList.GEB_RRFM_CALCULATOR, signerOrProvider)
-        this.weth = types.WETH9___factory.connect(addressList.ETH, signerOrProvider)
-        this.protocolToken = types.ERC20__factory.connect(addressList.GEB_PROT, signerOrProvider)
+        this.proxyRegistry = types.HaiProxyRegistry__factory.connect(addressList.PROXY_REGISTRY, signerOrProvider)
+        this.rateSetter = types.PIDRateSetter__factory.connect(addressList.GEB_RRFM_SETTER, signerOrProvider)
+        this.piCalculator = types.PIDController__factory.connect(addressList.GEB_RRFM_CALCULATOR, signerOrProvider)
+        this.weth = types.WETH9__factory.connect(addressList.ETH, signerOrProvider)
+        
+        this.systemCoin = types.ERC20__factory.connect(addressList.GEB_SYSTEM_COIN, signerOrProvider)
+        this.protocolToken = types.ERC20__factory.connect(addressList.GEB_PROTOCOL_TOKEN, signerOrProvider)
 
         this.tokenCollateralAuctionHouse = Object.values(tokenList).filter(token => token.isCollateral).reduce((accum, token) => {
             const collateralAuctionHouse = types.CollateralAuctionHouse__factory.connect(token.collateralAuctionHouse, signerOrProvider)
