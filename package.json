@@ -1,7 +1,7 @@
 {
   "name": "@usekeyp/od-sdk",
   "description": "Javascript client for GEB reflex indexes",
-  "version": "1.1.0-rc.2",
+  "version": "1.1.0-rc.3",
   "license": "MIT",
   "main": "./lib/index.js",
   "files": [
