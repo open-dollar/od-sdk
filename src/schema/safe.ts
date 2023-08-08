@@ -34,49 +34,4 @@ export class Safe {
          */
         public safeId?: number
     ) {}
-
-    /**
-     * Ratio used to calculate the amount of debt that can be drawn. Returns null is ratio is +Infinity. !! Uses unsafe division that can lead to precision loss.
-     * @returns Promise<FixedNumber> CRatio
-     */
-    public async getCRatio(): Promise<FixedNumber | null> {
-        if (this.collateral.isZero()) {
-            return FixedNumber.from('0')
-        }
-
-        if (this.debt.isZero()) {
-            return null
-        }
-        const { liquidationCRatio } = await this.contracts.oracleRelayer.collateralTypes(this.collateralType)
-
-        const { accumulatedRate, safetyPrice } = await this.contracts.safeEngine.collateralTypes(this.collateralType)
-
-        return FixedNumber.from(this.collateral.mul(safetyPrice).mul(liquidationCRatio).div(RAY)).divUnsafe(
-            FixedNumber.from(this.debt.mul(accumulatedRate))
-        )
-    }
-
-    /**
-     * Price at which the SAFE will get liquidated.
-     * @returns <FixedNumber> Liquidation price
-     */
-    public async liquidationPrice(): Promise<FixedNumber | null> {
-        if (this.collateral.isZero()) {
-            return FixedNumber.from('0')
-        }
-
-        if (this.debt.isZero()) {
-            return null
-        }
-
-        const { accumulatedRate } = await this.contracts.safeEngine.collateralTypes(this.collateralType)
-        const redemptionPrice = await this.contracts.oracleRelayer.callStatic.redemptionPrice()
-        const liqCRatio = (await this.contracts.oracleRelayer.collateralTypes(this.collateralType)).liquidationCRatio
-
-        // Formula:
-        // (debt x accumulatedRate x redemptionPrice x liquidationCRatio) / collateral
-
-        const numerator = this.debt.mul(accumulatedRate).mul(redemptionPrice).mul(liqCRatio).div(RAY.pow(3)) // Make it a WAD
-        return FixedNumber.from(numerator).divUnsafe(FixedNumber.from(this.collateral))
-    }
 }

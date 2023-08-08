@@ -81,7 +81,7 @@ await wallet.sendTransaction(tx)
 const proxy = await geb.getProxyAction("0xdefidream...")
 
 // You first need to approve your proxy to spend your RAI
-let tx =  geb.contracts.coin.approve(proxy.proxyAddress, ethers.constants.MaxUint256)
+let tx =  geb.contracts.systemCoin.approve(proxy.proxyAddress, ethers.constants.MaxUint256)
 await wallet.sendTransaction(tx)
 
 // Repay 1 RAI of debt to SAFE #4
@@ -94,7 +94,7 @@ await wallet.sendTransaction(tx)
 const proxy = await geb.getProxyAction("0xdefidream...")
 
 // You first need to approve your proxy to spend your RAI
-let tx =  geb.contracts.coin.approve(proxy.proxyAddress, ethers.constants.MaxUint256)
+let tx =  geb.contracts.systemCoin.approve(proxy.proxyAddress, ethers.constants.MaxUint256)
 await wallet.sendTransaction(tx)
 
 // Repay all debt of SAFE #4
@@ -115,7 +115,7 @@ const proxy = await geb.getProxyAction("0xdefidream...")
 const safe = await geb.getSafe(4)
 
 // You first need to approve your proxy to spend your RAI
-let tx =  geb.contracts.coin.approve(proxy.proxyAddress, ethers.constants.MaxUint256)
+let tx =  geb.contracts.systemCoin.approve(proxy.proxyAddress, ethers.constants.MaxUint256)
 await wallet.sendTransaction(tx)
 
 // Pay back everything and get your ETH back into your wallet
