@@ -14,7 +14,7 @@ export class BasicActions {
      * Underlying proxy object. Can be use to make custom calls to the proxy using `proxy.execute()` function.
      * For the details of each function
      */
-    public proxy: types.DSProxy
+    public proxy: types.HaiProxy
 
     /**
      * Address of the base proxy actions contract.
@@ -42,17 +42,18 @@ export class BasicActions {
     public proxyActionCollateralAuctionAddress: string
 
     /**
-     * Address of the proxy actions contract for surplus auctions.
+     * Address of the proxy actions contract for rewarded actions.
      */
-    // public proxyActionSaviourAddress: string
+    public proxyRewardedActionsAddress: string
 
     private addressList: ContractList
     private tokenList: TokenList
     private proxyActionCore: types.BasicActions
-    private proxyActionGlobalSettlement: types.GebProxyActionsGlobalSettlement
+    // private proxyActionGlobalSettlement: types.GebProxyActionsGlobalSettlement
     private proxyActionDebtAuction: types.DebtBidActions
     private proxyActionSurplusAuction: types.SurplusBidActions
     private proxyActionCollateralAuction: types.CollateralBidActions
+    private proxyActionRewarded: types.RewardedActions
 
     constructor(
         /**
@@ -65,21 +66,22 @@ export class BasicActions {
         this.addressList = getAddressList(network)
         this.tokenList = getTokenList(network)
 
-        this.proxy = types.DSProxy__factory.connect(proxyAddress, this.chainProvider)
+        this.proxy = types.HaiProxy__factory.connect(proxyAddress, this.chainProvider)
 
         // Set proxy action contract addresses
-        this.proxyActionCoreAddress = this.addressList.BASIC_ACTIONS
-        this.proxyActionGlobalSettlementAddress = this.addressList.PROXY_ACTIONS_GLOBAL_SETTLEMENT
+        this.proxyActionCoreAddress = this.addressList.PROXY_BASIC_ACTIONS
+        // this.proxyActionGlobalSettlementAddress = this.addressList.PROXY_GLOBAL_SETTLEMENT_ACTIONS
         this.proxyActionDebtAuctionAddress = this.addressList.PROXY_DEBT_AUCTION_ACTIONS
         this.proxyActionSurplusAuctionAddress = this.addressList.PROXY_SURPLUS_AUCTION_ACTIONS
         this.proxyActionCollateralAuctionAddress = this.addressList.PROXY_COLLATERAL_AUCTION_ACTIONS
+        this.proxyRewardedActionsAddress = this.addressList.PROXY_REWARDED_ACTIONS
 
         // Proxy contract APIs
         this.proxyActionCore = types.BasicActions__factory.connect(this.proxyActionCoreAddress, this.chainProvider)
-        this.proxyActionGlobalSettlement = types.GebProxyActionsGlobalSettlement__factory.connect(
-            this.proxyActionGlobalSettlementAddress,
-            this.chainProvider
-        )
+        // this.proxyActionGlobalSettlement = types.GebProxyActionsGlobalSettlement__factory.connect(
+        //     this.proxyActionGlobalSettlementAddress,
+        //     this.chainProvider
+        // )
 
         this.proxyActionDebtAuction = types.DebtBidActions__factory.connect(
             this.proxyActionDebtAuctionAddress,
@@ -93,6 +95,11 @@ export class BasicActions {
 
         this.proxyActionCollateralAuction = types.CollateralBidActions__factory.connect(
             this.proxyActionCollateralAuctionAddress,
+            this.chainProvider
+        )
+
+        this.proxyActionRewarded = types.RewardedActions__factory.connect(
+            this.proxyRewardedActionsAddress,
             this.chainProvider
         )
     }
@@ -110,23 +117,14 @@ export class BasicActions {
             throw Error('This proxy action is not supported on this network')
         }
 
-        return this.proxy.populateTransaction['execute(address,bytes)'](tx.to, tx.data, { value: ethValue })
+        return this.proxy.populateTransaction.execute(tx.to, tx.data)
     }
 
     // ==== Basic Actions ====
 
-    exitTokenCollateral(
-        collateralJoin: string,
-        safe: BigNumberish,
-        amt: BigNumberish
-    ): Promise<ethers.PopulatedTransaction> {
+    exitTokenCollateral(collateralJoin: string, amt: BigNumberish): Promise<ethers.PopulatedTransaction> {
         return this.getProxiedTransactionRequest(
-            this.proxyActionCore.populateTransaction.exitTokenCollateral(
-                this.addressList.SAFE_MANAGER,
-                collateralJoin,
-                safe,
-                amt
-            )
+            this.proxyActionCore.populateTransaction.exitCollateral(collateralJoin, amt)
         )
     }
 
@@ -161,8 +159,7 @@ export class BasicActions {
     lockTokenCollateral(
         collateralName: string,
         safe: BigNumberish,
-        amt: BigNumberish,
-        transferFrom: boolean
+        amt: BigNumberish
     ): Promise<ethers.PopulatedTransaction> {
         let collateralJoin = this.tokenList[collateralName].collateralJoin
         return this.getProxiedTransactionRequest(
@@ -170,8 +167,7 @@ export class BasicActions {
                 this.addressList.SAFE_MANAGER,
                 collateralJoin,
                 safe,
-                amt,
-                transferFrom
+                amt
             )
         )
     }
@@ -180,8 +176,7 @@ export class BasicActions {
         collateralName: string,
         safe: BigNumberish,
         collateralAmount: BigNumberish,
-        deltaWad: BigNumberish,
-        transferFrom: boolean
+        deltaWad: BigNumberish
     ): Promise<ethers.PopulatedTransaction> {
         let collateralJoin = this.tokenList[collateralName].collateralJoin
         return this.getProxiedTransactionRequest(
@@ -192,39 +187,15 @@ export class BasicActions {
                 this.addressList.GEB_COIN_JOIN,
                 safe,
                 collateralAmount,
-                deltaWad,
-                transferFrom
+                deltaWad
             )
-        )
-    }
-
-    modifySAFECollateralization(
-        safe: BigNumberish,
-        deltaCollateral: BigNumberish,
-        deltaDebt: BigNumberish
-    ): Promise<ethers.PopulatedTransaction> {
-        return this.getProxiedTransactionRequest(
-            this.proxyActionCore.populateTransaction.modifySAFECollateralization(
-                this.addressList.GEB_TAX_COLLECTOR,
-                this.addressList.SAFE_MANAGER,
-                safe,
-                deltaCollateral,
-                deltaDebt
-            )
-        )
-    }
-
-    moveSAFE(safeSrc: BigNumberish, safeDst: BigNumberish): Promise<ethers.PopulatedTransaction> {
-        return this.getProxiedTransactionRequest(
-            this.proxyActionCore.populateTransaction.moveSAFE(this.addressList.SAFE_MANAGER, safeSrc, safeDst)
         )
     }
 
     openLockTokenCollateralAndGenerateDebt(
         collateralName: string,
         collateralAmount: BigNumberish,
-        deltaWad: BigNumberish,
-        transferFrom: boolean
+        deltaWad: BigNumberish
     ): Promise<ethers.PopulatedTransaction> {
         let collateralJoin = this.tokenList[collateralName].collateralJoin
         let collateralType = this.tokenList[collateralName].bytes32String
@@ -236,8 +207,7 @@ export class BasicActions {
                 this.addressList.GEB_COIN_JOIN,
                 collateralType,
                 collateralAmount,
-                deltaWad,
-                transferFrom
+                deltaWad
             )
         )
     }
@@ -253,6 +223,7 @@ export class BasicActions {
         return this.getProxiedTransactionRequest(
             this.proxyActionCore.populateTransaction.repayAllDebt(
                 this.addressList.SAFE_MANAGER,
+                this.addressList.GEB_TAX_COLLECTOR,
                 this.addressList.GEB_COIN_JOIN,
                 safe
             )
@@ -268,6 +239,7 @@ export class BasicActions {
         return this.getProxiedTransactionRequest(
             this.proxyActionCore.populateTransaction.repayAllDebtAndFreeTokenCollateral(
                 this.addressList.SAFE_MANAGER,
+                this.addressList.GEB_TAX_COLLECTOR,
                 collateralJoin,
                 this.addressList.GEB_COIN_JOIN,
                 safe,
@@ -280,6 +252,7 @@ export class BasicActions {
         return this.getProxiedTransactionRequest(
             this.proxyActionCore.populateTransaction.repayDebt(
                 this.addressList.SAFE_MANAGER,
+                this.addressList.GEB_TAX_COLLECTOR,
                 this.addressList.GEB_COIN_JOIN,
                 safe,
                 wad
@@ -297,6 +270,7 @@ export class BasicActions {
         return this.getProxiedTransactionRequest(
             this.proxyActionCore.populateTransaction.repayDebtAndFreeTokenCollateral(
                 this.addressList.SAFE_MANAGER,
+                this.addressList.GEB_TAX_COLLECTOR,
                 collateralJoin,
                 this.addressList.GEB_COIN_JOIN,
                 safe,
@@ -306,24 +280,8 @@ export class BasicActions {
         )
     }
 
-    transferCollateral(safe: BigNumberish, dst: string, wad: BigNumberish): Promise<ethers.PopulatedTransaction> {
-        return this.getProxiedTransactionRequest(
-            this.proxyActionCore.populateTransaction.transferCollateral(this.addressList.SAFE_MANAGER, safe, dst, wad)
-        )
-    }
-
-    transferInternalCoins(safe: BigNumberish, dst: string, rad: BigNumberish): Promise<ethers.PopulatedTransaction> {
-        return this.getProxiedTransactionRequest(
-            this.proxyActionCore.populateTransaction.transferInternalCoins(
-                this.addressList.SAFE_MANAGER,
-                safe,
-                dst,
-                rad
-            )
-        )
-    }
-
     // ==== Proxy Actions Global Settlement ====
+    /* TODO: implement Global Settlement actions
 
     prepareCoinsForRedeemingGlobalSettlement(wad: BigNumberish): Promise<ethers.PopulatedTransaction> {
         return this.getProxiedTransactionRequest(
@@ -381,17 +339,20 @@ export class BasicActions {
         )
     }
 
+     */
+
     // ==== Proxy Actions Debt Auctions ====
 
-    debtAuctionStartAndDecreaseSoldAmount(amountToBuy: BigNumberish): Promise<ethers.PopulatedTransaction> {
-        return this.getProxiedTransactionRequest(
-            this.proxyActionDebtAuction.populateTransaction.startAndDecreaseSoldAmount(
-                this.addressList.GEB_COIN_JOIN,
-                this.addressList.GEB_ACCOUNTING_ENGINE,
-                amountToBuy
-            )
-        )
-    }
+    // TODO: implement rewarded action (debtStartAuction)
+    // debtAuctionStart(): Promise<ethers.PopulatedTransaction> {
+    //     return this.getProxiedTransactionRequest(
+    //         this.proxyActionDebtAuction.populateTransaction.startAndDecreaseSoldAmount(
+    //             this.addressList.GEB_COIN_JOIN,
+    //             this.addressList.GEB_ACCOUNTING_ENGINE,
+    //             amountToBuy
+    //         )
+    //     )
+    // }
 
     debtAuctionDecreaseSoldAmount(
         amountToBuy: BigNumberish,
@@ -431,20 +392,21 @@ export class BasicActions {
 
     collectProtocolTokens(): Promise<ethers.PopulatedTransaction> {
         return this.getProxiedTransactionRequest(
-            this.proxyActionDebtAuction.populateTransaction.collectProtocolTokens(this.addressList.GEB_PROT)
+            this.proxyActionDebtAuction.populateTransaction.collectProtocolTokens(this.addressList.GEB_PROTOCOL_TOKEN)
         )
     }
 
     // ==== Proxy Actions Surplus Auctions ====
 
-    surplusStartAndIncreaseBidSize(bidSize: BigNumberish): Promise<ethers.PopulatedTransaction> {
-        return this.getProxiedTransactionRequest(
-            this.proxyActionSurplusAuction.populateTransaction.startAndIncreaseBidSize(
-                this.addressList.GEB_ACCOUNTING_ENGINE,
-                bidSize
-            )
-        )
-    }
+    // TODO: implement rewarded action (surplusStartAuction)
+    // surplusStartAndIncreaseBidSize(bidSize: BigNumberish): Promise<ethers.PopulatedTransaction> {
+    //     return this.getProxiedTransactionRequest(
+    //         this.proxyActionSurplusAuction.populateTransaction.startAndIncreaseBidSize(
+    //             this.addressList.GEB_ACCOUNTING_ENGINE,
+    //             bidSize
+    //         )
+    //     )
+    // }
 
     surplusIncreaseBidSize(bidSize: BigNumberish, auctionId: BigNumberish): Promise<ethers.PopulatedTransaction> {
         return this.getProxiedTransactionRequest(
@@ -486,237 +448,4 @@ export class BasicActions {
             )
         )
     }
-
-    // ==== Proxy Actions Saviour ====
-    /*
-    transferTokensToCaller(
-        tokens: string[]
-    ): Promise<ethers.PopulatedTransaction> {
-        return this.getProxiedTransactionRequest(
-            this.proxyActionSaviour.transferTokensToCaller(tokens)
-        )
-    }
-
-    protectSAFE(
-        saviour: string,
-        safe: BigNumberish
-    ): Promise<ethers.PopulatedTransaction> {
-        return this.getProxiedTransactionRequest(
-            this.proxyActionSaviour.protectSAFE(
-                saviour,
-                this.addressList.SAFE_MANAGER,
-                safe,
-                this.addressList.GEB_LIQUIDATION_ENGINE
-            )
-        )
-    }
-
-    setDesiredCollateralizationRatio(
-        collateralType: string,
-        safe: BigNumberish,
-        cRatio: BigNumberish
-    ): Promise<ethers.PopulatedTransaction> {
-        return this.getProxiedTransactionRequest(
-            this.proxyActionSaviour.setDesiredCollateralizationRatio(
-                this.addressList.GEB_SAVIOUR_CRATIO_SETTER,
-                collateralType,
-                safe,
-                cRatio
-            )
-        )
-    }
-    deposit(
-        collateralSpecific: boolean,
-        saviour: string,
-        token: string,
-        safe: BigNumberish,
-        tokenAmount: BigNumberish
-    ): Promise<ethers.PopulatedTransaction> {
-        return this.getProxiedTransactionRequest(
-            this.proxyActionSaviour.deposit(
-                collateralSpecific,
-                saviour,
-                this.addressList.SAFE_MANAGER,
-                token,
-                safe,
-                tokenAmount
-            )
-        )
-    }
-    setDesiredCRatioDeposit(
-        collateralSpecific: boolean,
-        saviour: string,
-        token: string,
-        safe: BigNumberish,
-        tokenAmount: BigNumberish,
-        cRatio: BigNumberish
-    ): Promise<ethers.PopulatedTransaction> {
-        return this.getProxiedTransactionRequest(
-            this.proxyActionSaviour.setDesiredCRatioDeposit(
-                collateralSpecific,
-                saviour,
-                this.addressList.GEB_SAVIOUR_CRATIO_SETTER,
-                this.addressList.SAFE_MANAGER,
-                token,
-                safe,
-                tokenAmount,
-                cRatio
-            )
-        )
-    }
-    withdraw(
-        collateralSpecific: boolean,
-        saviour: string,
-        safe: BigNumberish,
-        tokenAmount: BigNumberish,
-        dst: string
-    ): Promise<ethers.PopulatedTransaction> {
-        return this.getProxiedTransactionRequest(
-            this.proxyActionSaviour.withdraw(
-                collateralSpecific,
-                saviour,
-                this.addressList.SAFE_MANAGER,
-                safe,
-                tokenAmount,
-                dst
-            )
-        )
-    }
-    setDesiredCRatioWithdraw(
-        collateralSpecific: boolean,
-        saviour: string,
-        safe: BigNumberish,
-        tokenAmount: BigNumberish,
-        cRatio: BigNumberish,
-        dst: string
-    ): Promise<ethers.PopulatedTransaction> {
-        return this.getProxiedTransactionRequest(
-            this.proxyActionSaviour.setDesiredCRatioWithdraw(
-                collateralSpecific,
-                saviour,
-                this.addressList.GEB_SAVIOUR_CRATIO_SETTER,
-                this.addressList.SAFE_MANAGER,
-                safe,
-                tokenAmount,
-                cRatio,
-                dst
-            )
-        )
-    }
-    protectSAFEDeposit(
-        collateralSpecific: boolean,
-        saviour: string,
-        token: string,
-        safe: BigNumberish,
-        tokenAmount: BigNumberish
-    ): Promise<ethers.PopulatedTransaction> {
-        return this.getProxiedTransactionRequest(
-            this.proxyActionSaviour.protectSAFEDeposit(
-                collateralSpecific,
-                saviour,
-                this.addressList.SAFE_MANAGER,
-                token,
-                this.addressList.GEB_LIQUIDATION_ENGINE,
-                safe,
-                tokenAmount
-            )
-        )
-    }
-    protectSAFESetDesiredCRatioDeposit(
-        collateralSpecific: boolean,
-        saviour: string,
-        token: string,
-        safe: BigNumberish,
-        tokenAmount: BigNumberish,
-        cRatio: BigNumberish
-    ): Promise<ethers.PopulatedTransaction> {
-        return this.getProxiedTransactionRequest(
-            this.proxyActionSaviour.protectSAFESetDesiredCRatioDeposit(
-                collateralSpecific,
-                saviour,
-                this.addressList.GEB_SAVIOUR_CRATIO_SETTER,
-                this.addressList.SAFE_MANAGER,
-                token,
-                this.addressList.GEB_LIQUIDATION_ENGINE,
-                safe,
-                tokenAmount,
-                cRatio
-            )
-        )
-    }
-    withdrawUncoverSAFE(
-        collateralSpecific: boolean,
-        saviour: string,
-        token: string,
-        safe: BigNumberish,
-        tokenAmount: BigNumberish,
-        dst: string
-    ): Promise<ethers.PopulatedTransaction> {
-        return this.getProxiedTransactionRequest(
-            this.proxyActionSaviour.withdrawUncoverSAFE(
-                collateralSpecific,
-                saviour,
-                this.addressList.SAFE_MANAGER,
-                token,
-                this.addressList.GEB_LIQUIDATION_ENGINE,
-                safe,
-                tokenAmount,
-                dst
-            )
-        )
-    }
-    withdrawProtectSAFEDeposit(
-        withdrawCollateralSpecific: boolean,
-        depositCollateralSpecific: boolean,
-        withdrawSaviour: string,
-        depositSaviour: string,
-        depositToken: string,
-        safe: BigNumberish,
-        withdrawTokenAmount: BigNumberish,
-        depositTokenAmount: BigNumberish,
-        withdrawDst: string
-    ): Promise<ethers.PopulatedTransaction> {
-        return this.getProxiedTransactionRequest(
-            this.proxyActionSaviour.withdrawProtectSAFEDeposit(
-                withdrawCollateralSpecific,
-                depositCollateralSpecific,
-                withdrawSaviour,
-                depositSaviour,
-                this.addressList.SAFE_MANAGER,
-                depositToken,
-                this.addressList.GEB_LIQUIDATION_ENGINE,
-                safe,
-                withdrawTokenAmount,
-                depositTokenAmount,
-                withdrawDst
-            )
-        )
-    }
-    getReserves(
-        saviour: string,
-        safe: BigNumberish,
-        dst: string
-    ): Promise<ethers.PopulatedTransaction> {
-        return this.getProxiedTransactionRequest(
-            this.proxyActionSaviour.getReserves(saviour, safe, dst)
-        )
-    }
-
-    getReservesAndUncover(
-        saviour: string,
-        safe: BigNumberish,
-        dst: string
-    ): Promise<ethers.PopulatedTransaction> {
-        return this.getProxiedTransactionRequest(
-            this.proxyActionSaviour.getReservesAndUncover(
-                saviour,
-                this.addressList.SAFE_MANAGER,
-                this.addressList.GEB_LIQUIDATION_ENGINE,
-                safe,
-                dst
-            )
-        )
-    }
-    
-    */
 }
