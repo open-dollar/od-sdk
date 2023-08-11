@@ -8,8 +8,10 @@
     "lib"
   ],
   "scripts": {
+    "prebuild": "yarn --cwd ./solidity compile",
     "build": "yarn generate-types && tsc",
     "generate-types": "yarn typechain --target ethers-v5 --out-dir src/typechained './abis/*.json'",
+    "preinstall": "yarn --cwd ./solidity install",
     "lint:check": "prettier --check .",
     "lint:fix": "sort-package-json && prettier --write .",
     "prepare": "husky install",
