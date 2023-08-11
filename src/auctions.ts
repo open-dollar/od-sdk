@@ -46,7 +46,7 @@ export class Auctions {
      * @param  {GebProviderInterface|ethers.providers.Provider} provider Either a Ethers.js provider or a Geb provider (support for Web3 will be added in the future)
      */
     constructor(public contracts: ContractApis) {
-        // // Surplus Auctions
+        // Surplus Auctions
         this.surplusStartAuctionFilter = this.contracts.surplusAuctionHouse.filters.StartAuction()
         this.surplusBidFilter = this.contracts.surplusAuctionHouse.filters.IncreaseBidSize()
         this.surplusRestartAuctionFilter = this.contracts.surplusAuctionHouse.filters.RestartAuction()

@@ -49,7 +49,7 @@ export class BasicActions {
     private addressList: ContractList
     private tokenList: TokenList
     private proxyActionCore: types.BasicActions
-    // private proxyActionGlobalSettlement: types.GebProxyActionsGlobalSettlement
+    private proxyActionGlobalSettlement: types.GlobalSettlementActions
     private proxyActionDebtAuction: types.DebtBidActions
     private proxyActionSurplusAuction: types.SurplusBidActions
     private proxyActionCollateralAuction: types.CollateralBidActions
@@ -70,18 +70,14 @@ export class BasicActions {
 
         // Set proxy action contract addresses
         this.proxyActionCoreAddress = this.addressList.PROXY_BASIC_ACTIONS
-        // this.proxyActionGlobalSettlementAddress = this.addressList.PROXY_GLOBAL_SETTLEMENT_ACTIONS
         this.proxyActionDebtAuctionAddress = this.addressList.PROXY_DEBT_AUCTION_ACTIONS
         this.proxyActionSurplusAuctionAddress = this.addressList.PROXY_SURPLUS_AUCTION_ACTIONS
         this.proxyActionCollateralAuctionAddress = this.addressList.PROXY_COLLATERAL_AUCTION_ACTIONS
+        this.proxyActionGlobalSettlementAddress = this.addressList.PROXY_GLOBAL_SETTLEMENT_ACTIONS
         this.proxyRewardedActionsAddress = this.addressList.PROXY_REWARDED_ACTIONS
 
         // Proxy contract APIs
         this.proxyActionCore = types.BasicActions__factory.connect(this.proxyActionCoreAddress, this.chainProvider)
-        // this.proxyActionGlobalSettlement = types.GebProxyActionsGlobalSettlement__factory.connect(
-        //     this.proxyActionGlobalSettlementAddress,
-        //     this.chainProvider
-        // )
 
         this.proxyActionDebtAuction = types.DebtBidActions__factory.connect(
             this.proxyActionDebtAuctionAddress,
@@ -95,6 +91,11 @@ export class BasicActions {
 
         this.proxyActionCollateralAuction = types.CollateralBidActions__factory.connect(
             this.proxyActionCollateralAuctionAddress,
+            this.chainProvider
+        )
+
+        this.proxyActionGlobalSettlement = types.GlobalSettlementActions__factory.connect(
+            this.proxyActionGlobalSettlementAddress,
             this.chainProvider
         )
 
@@ -281,78 +282,40 @@ export class BasicActions {
     }
 
     // ==== Proxy Actions Global Settlement ====
-    /* TODO: implement Global Settlement actions
 
-    prepareCoinsForRedeemingGlobalSettlement(wad: BigNumberish): Promise<ethers.PopulatedTransaction> {
+    freeCollateralGlobalSettlement(collateralName: string, safe: BigNumberish): Promise<ethers.PopulatedTransaction> {
+        const collateralData = this.tokenList[collateralName]
         return this.getProxiedTransactionRequest(
-            this.proxyActionGlobalSettlement.populateTransaction.prepareCoinsForRedeeming(
-                this.addressList.GEB_COIN_JOIN,
-                this.addressList.GEB_GLOBAL_SETTLEMENT,
-                wad
-            )
-        )
-    }
-
-    freeTokenCollateralGlobalSettlement(
-        collateralJoin: string,
-        safe: BigNumberish
-    ): Promise<ethers.PopulatedTransaction> {
-        return this.getProxiedTransactionRequest(
-            this.proxyActionGlobalSettlement.populateTransaction.freeTokenCollateral(
+            this.proxyActionGlobalSettlement.populateTransaction.freeCollateral(
                 this.addressList.SAFE_MANAGER,
-                collateralJoin,
                 this.addressList.GEB_GLOBAL_SETTLEMENT,
+                collateralData.collateralJoin,
                 safe
             )
         )
     }
 
-    redeemETHGlobalSettlement(
-        ethJoin: string,
-        collateralName: string,
-        wad: BigNumberish
-    ): Promise<ethers.PopulatedTransaction> {
-        let collateralType = this.tokenList[collateralName].bytes32String
+    prepareCoinsForRedeemingGlobalSettlement(wad: BigNumberish): Promise<ethers.PopulatedTransaction> {
         return this.getProxiedTransactionRequest(
-            this.proxyActionGlobalSettlement.populateTransaction.redeemETH(
-                ethJoin,
+            this.proxyActionGlobalSettlement.populateTransaction.prepareCoinsForRedeeming(
                 this.addressList.GEB_GLOBAL_SETTLEMENT,
-                collateralType,
+                this.addressList.GEB_COIN_JOIN,
                 wad
             )
         )
     }
 
-    redeemTokenCollateralGlobalSettlement(
-        collateralJoin: string,
-        collateralName: string,
-        wad: BigNumberish
-    ): Promise<ethers.PopulatedTransaction> {
-        let collateralType = this.tokenList[collateralName].bytes32String
+    redeemTokenCollateralGlobalSettlement(collateralName: string): Promise<ethers.PopulatedTransaction> {
+        const collateralData = this.tokenList[collateralName]
         return this.getProxiedTransactionRequest(
-            this.proxyActionGlobalSettlement.populateTransaction.redeemTokenCollateral(
-                collateralJoin,
+            this.proxyActionGlobalSettlement.populateTransaction.redeemCollateral(
                 this.addressList.GEB_GLOBAL_SETTLEMENT,
-                collateralType,
-                wad
+                collateralData.collateralJoin
             )
         )
     }
-
-     */
 
     // ==== Proxy Actions Debt Auctions ====
-
-    // TODO: implement rewarded action (debtStartAuction)
-    // debtAuctionStart(): Promise<ethers.PopulatedTransaction> {
-    //     return this.getProxiedTransactionRequest(
-    //         this.proxyActionDebtAuction.populateTransaction.startAndDecreaseSoldAmount(
-    //             this.addressList.GEB_COIN_JOIN,
-    //             this.addressList.GEB_ACCOUNTING_ENGINE,
-    //             amountToBuy
-    //         )
-    //     )
-    // }
 
     debtAuctionDecreaseSoldAmount(
         amountToBuy: BigNumberish,
@@ -398,16 +361,6 @@ export class BasicActions {
 
     // ==== Proxy Actions Surplus Auctions ====
 
-    // TODO: implement rewarded action (surplusStartAuction)
-    // surplusStartAndIncreaseBidSize(bidSize: BigNumberish): Promise<ethers.PopulatedTransaction> {
-    //     return this.getProxiedTransactionRequest(
-    //         this.proxyActionSurplusAuction.populateTransaction.startAndIncreaseBidSize(
-    //             this.addressList.GEB_ACCOUNTING_ENGINE,
-    //             bidSize
-    //         )
-    //     )
-    // }
-
     surplusIncreaseBidSize(bidSize: BigNumberish, auctionId: BigNumberish): Promise<ethers.PopulatedTransaction> {
         return this.getProxiedTransactionRequest(
             this.proxyActionSurplusAuction.populateTransaction.increaseBidSize(
@@ -431,12 +384,12 @@ export class BasicActions {
     // ==== Proxy Actions Collateral Auctions ====
 
     buyCollateral(
-        collateral: string,
+        collateralName: string,
         auctionId: BigNumberish,
         minCollateralAmount: BigNumberish,
         bidAmount: BigNumberish
     ): Promise<ethers.PopulatedTransaction> {
-        const collateralData = this.tokenList[collateral]
+        const collateralData = this.tokenList[collateralName]
         return this.getProxiedTransactionRequest(
             this.proxyActionCollateralAuction.populateTransaction.buyCollateral(
                 this.addressList.GEB_COIN_JOIN,
@@ -445,6 +398,75 @@ export class BasicActions {
                 auctionId,
                 minCollateralAmount,
                 bidAmount
+            )
+        )
+    }
+
+    // ==== Proxy Actions Rewarded ====
+
+    popDebtFromQueue(debtTimestamp: BigNumberish): Promise<ethers.PopulatedTransaction> {
+        return this.getProxiedTransactionRequest(
+            this.proxyActionRewarded.populateTransaction.popDebtFromQueue(
+                this.addressList.JOB_ACCOUNTING,
+                this.addressList.GEB_COIN_JOIN,
+                debtTimestamp
+            )
+        )
+    }
+
+    debtAuctionStart(): Promise<ethers.PopulatedTransaction> {
+        return this.getProxiedTransactionRequest(
+            this.proxyActionRewarded.populateTransaction.startDebtAuction(
+                this.addressList.JOB_ACCOUNTING,
+                this.addressList.GEB_COIN_JOIN
+            )
+        )
+    }
+
+    surplusAuctionStart(): Promise<ethers.PopulatedTransaction> {
+        return this.getProxiedTransactionRequest(
+            this.proxyActionRewarded.populateTransaction.startSurplusAuction(
+                this.addressList.JOB_ACCOUNTING,
+                this.addressList.GEB_COIN_JOIN
+            )
+        )
+    }
+
+    transferExtraSurplus(): Promise<ethers.PopulatedTransaction> {
+        return this.getProxiedTransactionRequest(
+            this.proxyActionRewarded.populateTransaction.transferExtraSurplus(
+                this.addressList.JOB_ACCOUNTING,
+                this.addressList.GEB_COIN_JOIN
+            )
+        )
+    }
+
+    liquidateSAFE(collateralName: string, safeAddress: string): Promise<ethers.PopulatedTransaction> {
+        console.log(collateralName)
+        return this.proxyActionRewarded.populateTransaction.liquidateSAFE(
+            this.addressList.JOB_LIQUIDATION,
+            this.addressList.GEB_COIN_JOIN,
+            this.tokenList[collateralName].bytes32String,
+            safeAddress
+        )
+    }
+
+    updateOraclePrice(collateralName: string): Promise<ethers.PopulatedTransaction> {
+        const collateralData = this.tokenList[collateralName]
+        return this.getProxiedTransactionRequest(
+            this.proxyActionRewarded.populateTransaction.updateCollateralPrice(
+                this.addressList.JOB_ORACLES,
+                this.addressList.GEB_COIN_JOIN,
+                collateralData.bytes32String
+            )
+        )
+    }
+
+    updateRedemptionRate(): Promise<ethers.PopulatedTransaction> {
+        return this.getProxiedTransactionRequest(
+            this.proxyActionRewarded.populateTransaction.updateRedemptionRate(
+                this.addressList.JOB_ORACLES,
+                this.addressList.GEB_COIN_JOIN
             )
         )
     }

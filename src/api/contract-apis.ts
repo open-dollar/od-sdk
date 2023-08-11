@@ -37,6 +37,8 @@ export class ContractApis {
         const addressList = getAddressList(network)
         const tokenList = getTokenList(network)
 
+        this.systemCoin = types.ERC20__factory.connect(addressList.GEB_SYSTEM_COIN, signerOrProvider)
+        this.protocolToken = types.ERC20__factory.connect(addressList.GEB_PROTOCOL_TOKEN, signerOrProvider)
         this.safeEngine = types.SAFEEngine__factory.connect(addressList.GEB_SAFE_ENGINE, signerOrProvider)
         this.accountingEngine = types.AccountingEngine__factory.connect(addressList.GEB_ACCOUNTING_ENGINE, signerOrProvider)
         this.taxCollector = types.TaxCollector__factory.connect(addressList.GEB_TAX_COLLECTOR, signerOrProvider)
@@ -46,15 +48,14 @@ export class ContractApis {
         this.debtAuctionHouse = types.DebtAuctionHouse__factory.connect(addressList.GEB_DEBT_AUCTION_HOUSE, signerOrProvider)
         this.surplusAuctionHouse = types.SurplusAuctionHouse__factory.connect(addressList.GEB_SURPLUS_AUCTION_HOUSE, signerOrProvider)
         this.stabilityFeeTreasury = types.StabilityFeeTreasury__factory.connect(addressList.GEB_STABILITY_FEE_TREASURY, signerOrProvider)
-        this.safeManager = types.HaiSafeManager__factory.connect(addressList.SAFE_MANAGER, signerOrProvider)
         this.joinCoin = types.CoinJoin__factory.connect(addressList.GEB_COIN_JOIN, signerOrProvider)
-        this.proxyRegistry = types.HaiProxyRegistry__factory.connect(addressList.PROXY_REGISTRY, signerOrProvider)
         this.rateSetter = types.PIDRateSetter__factory.connect(addressList.GEB_RRFM_SETTER, signerOrProvider)
         this.piCalculator = types.PIDController__factory.connect(addressList.GEB_RRFM_CALCULATOR, signerOrProvider)
-        this.weth = types.WETH9__factory.connect(addressList.ETH, signerOrProvider)
         
-        this.systemCoin = types.ERC20__factory.connect(addressList.GEB_SYSTEM_COIN, signerOrProvider)
-        this.protocolToken = types.ERC20__factory.connect(addressList.GEB_PROTOCOL_TOKEN, signerOrProvider)
+        this.safeManager = types.HaiSafeManager__factory.connect(addressList.SAFE_MANAGER, signerOrProvider)
+        this.proxyRegistry = types.HaiProxyRegistry__factory.connect(addressList.PROXY_REGISTRY, signerOrProvider)
+        
+        this.weth = types.WETH9__factory.connect(addressList.ETH, signerOrProvider)
 
         this.tokenCollateralAuctionHouse = Object.values(tokenList).filter(token => token.isCollateral).reduce((accum, token) => {
             const collateralAuctionHouse = types.CollateralAuctionHouse__factory.connect(token.collateralAuctionHouse, signerOrProvider)
