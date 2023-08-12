@@ -87,7 +87,7 @@ export class Geb {
      */
     constructor(
         public network: GebDeployment,
-        signerOrProvider: ethers.providers.JsonRpcSigner | ethers.providers.Provider
+        signerOrProvider: ethers.Wallet | ethers.providers.JsonRpcSigner | ethers.providers.Provider
     ) {
         if (ethers.providers.JsonRpcSigner.isSigner(signerOrProvider)) {
             this.signer = signerOrProvider
@@ -122,8 +122,8 @@ export class Geb {
     /**
      * Deploy a new proxy owned by the sender.
      */
-    public deployProxy() {
-        return this.contracts.proxyRegistry['build()']()
+    public async deployProxy() {
+        return await this.contracts.proxyRegistry['build()']()
     }
 
     /**

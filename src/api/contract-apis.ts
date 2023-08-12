@@ -21,6 +21,10 @@ export class ContractApis {
     public proxyRegistry: types.HaiProxyRegistry
     public rateSetter: types.PIDRateSetter
     public piCalculator: types.PIDController
+
+    public oracleJob: types.OracleJob
+    public accountingJob: types.AccountingJob
+    public liquidationJob: types.LiquidationJob
     
     public protocolToken: types.ERC20
     public systemCoin: types.ERC20
@@ -31,7 +35,7 @@ export class ContractApis {
 
     constructor(
         network: GebDeployment,
-        signerOrProvider: ethers.providers.JsonRpcSigner | ethers.providers.Provider,
+        signerOrProvider: ethers.Wallet | ethers.providers.JsonRpcSigner | ethers.providers.Provider,
     ) {
         // Set the contract address list
         const addressList = getAddressList(network)
@@ -52,6 +56,10 @@ export class ContractApis {
         this.rateSetter = types.PIDRateSetter__factory.connect(addressList.GEB_RRFM_SETTER, signerOrProvider)
         this.piCalculator = types.PIDController__factory.connect(addressList.GEB_RRFM_CALCULATOR, signerOrProvider)
         
+        this.oracleJob = types.OracleJob__factory.connect(addressList.JOB_ORACLES, signerOrProvider)
+        this.accountingJob = types.AccountingJob__factory.connect(addressList.JOB_ACCOUNTING, signerOrProvider)
+        this.liquidationJob = types.LiquidationJob__factory.connect(addressList.JOB_LIQUIDATION, signerOrProvider)
+
         this.safeManager = types.HaiSafeManager__factory.connect(addressList.SAFE_MANAGER, signerOrProvider)
         this.proxyRegistry = types.HaiProxyRegistry__factory.connect(addressList.PROXY_REGISTRY, signerOrProvider)
         
