@@ -442,12 +442,13 @@ export class BasicActions {
     }
 
     liquidateSAFE(collateralName: string, safeAddress: string): Promise<ethers.PopulatedTransaction> {
-        console.log(collateralName)
-        return this.proxyActionRewarded.populateTransaction.liquidateSAFE(
-            this.addressList.JOB_LIQUIDATION,
-            this.addressList.GEB_COIN_JOIN,
-            this.tokenList[collateralName].bytes32String,
-            safeAddress
+        return this.getProxiedTransactionRequest(
+            this.proxyActionRewarded.populateTransaction.liquidateSAFE(
+                this.addressList.JOB_LIQUIDATION,
+                this.addressList.GEB_COIN_JOIN,
+                this.tokenList[collateralName].bytes32String,
+                safeAddress
+            )
         )
     }
 
