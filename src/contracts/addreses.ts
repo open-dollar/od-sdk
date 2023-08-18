@@ -1,4 +1,4 @@
-import { WETH, OP, WBTC, STONES } from '../utils'
+import { WETH, OP, WBTC, STONES, FTRG } from '../utils'
 
 // All keys are mandatory
 export type ContractKey =
@@ -32,9 +32,36 @@ export type ContractList = {
     [key in ContractKey]: string
 }
 
-export declare type GebDeployment = 'mainnet' | 'optimism-goerli'
+export declare type GebDeployment = 'mainnet' | 'optimism-goerli' | 'arbitrum-goerli'
 
 const addresses: Record<GebDeployment, ContractList> = {
+    'arbitrum-goerli': {
+        MULTICALL: '',
+        ETH: '',
+        GEB_SYSTEM_COIN: '0x3a35bF1Cf9fa82B216F1f7E25C3b6eFCCc3d031B',
+        GEB_PROTOCOL_TOKEN: '0x95BC1cAe012b7F084BECEa8162F13e4a7292F7e1',
+        GEB_SAFE_ENGINE: '0x18F501460f2eD907f12621678d676014138094AC',
+        GEB_ORACLE_RELAYER: '0x14f9D7feA518890E431afCf01B70818fbf30D97d',
+        GEB_SURPLUS_AUCTION_HOUSE: '0x9c857d5B0508e312b015Ee300Ac11857b6875Ce3',
+        GEB_DEBT_AUCTION_HOUSE: '0x28D76996ff24C8Bb174242A79dfD860B0Da7b173',
+        GEB_ACCOUNTING_ENGINE: '0x0987F0270778A901fB58cA90fb7545d13D463261',
+        GEB_LIQUIDATION_ENGINE: '0xA11974F58bC2B55Bb45B4104a8b07B93210f8eBa',
+        GEB_COIN_JOIN: '0x479e3B7da96a3cF7235831641Db95A8eCb98BBEB',
+        GEB_TAX_COLLECTOR: '0xa6859040ff2f4fC41F5e3Cd9300887768FbEeEE1',
+        GEB_STABILITY_FEE_TREASURY: '0x5DAE4245CfA26788B9f23B7EaA5C5d9DA2eE123e',
+        GEB_RRFM_CALCULATOR: '0xf373598b2E0E936216EDeDd9Ee52cC2AF25ff23E',
+        GEB_RRFM_SETTER: '0xE9A8cD9A7a6Eb4b1E722911fCd98E6B39FAaB300',
+        GEB_GLOBAL_SETTLEMENT: '0x48133Deba716dCa3E9AcB2210E72FF8Ea56D603e',
+        SAFE_MANAGER: '0x43b5D6FF641C5db02fe3890b3ef714044cf9193c',
+        PROXY_FACTORY: '0x79a83634268127b99639af392D48F0Ab0a55E73F',
+        PROXY_REGISTRY: '0x1eeA49507De4b482F002Db8AD75663EA1b443E28',
+        PROXY_BASIC_ACTIONS: '0x0Ef74400C4fBE8979da6658De6464A2197abE841',
+        PROXY_DEBT_AUCTION_ACTIONS: '0xE6AB752cFdD1B8310f5B125E69Cd5D35eDC8C14b',
+        PROXY_SURPLUS_AUCTION_ACTIONS: '0xA283ADDB70d15033d3c16630EA16F644cb5048AA',
+        PROXY_COLLATERAL_AUCTION_ACTIONS: '0xE6B66f657B4E61c046621215C71c56C85239B074',
+        PROXY_REWARDED_ACTIONS: '0x4900ed8E641ca7671e94Ad2Ca640a964C944ea3e',
+        PROXY_GLOBAL_SETTLEMENT_ACTIONS: '',
+    },
     mainnet: {
         MULTICALL: '0x0000000000000000000000000000000000000000',
         ETH: '0x0000000000000000000000000000000000000000',
@@ -106,6 +133,53 @@ export type TokenList = {
 }
 
 const tokens: Record<GebDeployment, TokenList> = {
+    'arbitrum-goerli': {
+        WETH: {
+            address: '',
+            decimals: 18,
+            symbol: 'WETH',
+            bytes32String: WETH,
+            collateralJoin: '0xe18DDcf644e36f4d232CDbE8330C8BF2Bb2aa200',
+            collateralAuctionHouse: '0x81dd2cc191a8ECE5FF7858aC9946043B34d1f7B7',
+            isCollateral: true,
+        },
+        FTRG: {
+            address: '',
+            decimals: 18,
+            symbol: 'FTRG',
+            bytes32String: FTRG,
+            collateralJoin: '0x8b0711fED18a947a3BF46b7356f1Ab8D416074df',
+            collateralAuctionHouse: '0x323D952a9bA1bE39AF824C79107D97A39487c3a1',
+            isCollateral: true,
+        },
+        WBTC: {
+            address: '0xa793Aea0A3B0D200f4C3b20B877b43dc5bf9c17c',
+            decimals: 8,
+            symbol: 'WBTC',
+            bytes32String: WBTC,
+            collateralJoin: '0xb7E52601250357C1FCE47954c6a7D24B4113a774',
+            collateralAuctionHouse: '0xF1AeB8F15812B50498a30CD570a71bb921E9cb5E',
+            isCollateral: true,
+        },
+        STN: {
+            address: '0x2C3E2E6cd0DD83C7233Af5a13172974F00AcFE23',
+            decimals: 3,
+            symbol: 'STN',
+            bytes32String: STONES,
+            collateralJoin: '0x08F8e63EC811a56B7227AE8772d87D9672727fa8',
+            collateralAuctionHouse: '0x73c2DB6Dc83a2Dc62139ac89e9014F669d85Ea17',
+            isCollateral: true,
+        },
+        TOTEM: {
+            address: '0xa65E8F7e398B82899C83412Ab552593b67da1b83',
+            decimals: 3,
+            symbol: 'TOTEM',
+            bytes32String: STONES,
+            collateralJoin: '0xee7DC58C7A911dB8770D85b68549537455b9241E',
+            collateralAuctionHouse: '0x54867Db0aF2FcAb98BbC054A37a121f6e9f85E19',
+            isCollateral: true,
+        },
+    },
     mainnet: {},
     'optimism-goerli': {
         WETH: {
