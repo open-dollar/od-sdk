@@ -26,7 +26,6 @@ export type ContractKey =
     | 'PROXY_SURPLUS_AUCTION_ACTIONS'
     | 'PROXY_COLLATERAL_AUCTION_ACTIONS'
     | 'PROXY_REWARDED_ACTIONS'
-    | 'PROXY_GLOBAL_SETTLEMENT_ACTIONS'
 
 export type ContractList = {
     [key in ContractKey]: string
@@ -37,7 +36,7 @@ export declare type GebDeployment = 'mainnet' | 'optimism-goerli' | 'arbitrum-go
 const addresses: Record<GebDeployment, ContractList> = {
     'arbitrum-goerli': {
         MULTICALL: '',
-        ETH: '',
+        ETH: '0xEe01c0CD76354C383B8c7B4e65EA88D00B06f36f',
         GEB_SYSTEM_COIN: '0x3a35bF1Cf9fa82B216F1f7E25C3b6eFCCc3d031B',
         GEB_PROTOCOL_TOKEN: '0x95BC1cAe012b7F084BECEa8162F13e4a7292F7e1',
         GEB_SAFE_ENGINE: '0x18F501460f2eD907f12621678d676014138094AC',
@@ -60,7 +59,6 @@ const addresses: Record<GebDeployment, ContractList> = {
         PROXY_SURPLUS_AUCTION_ACTIONS: '0xA283ADDB70d15033d3c16630EA16F644cb5048AA',
         PROXY_COLLATERAL_AUCTION_ACTIONS: '0xE6B66f657B4E61c046621215C71c56C85239B074',
         PROXY_REWARDED_ACTIONS: '0x4900ed8E641ca7671e94Ad2Ca640a964C944ea3e',
-        PROXY_GLOBAL_SETTLEMENT_ACTIONS: '',
     },
     mainnet: {
         MULTICALL: '0x0000000000000000000000000000000000000000',
@@ -87,7 +85,6 @@ const addresses: Record<GebDeployment, ContractList> = {
         PROXY_SURPLUS_AUCTION_ACTIONS: '0x0000000000000000000000000000000000000000',
         PROXY_COLLATERAL_AUCTION_ACTIONS: '0x0000000000000000000000000000000000000000',
         PROXY_REWARDED_ACTIONS: '0x0000000000000000000000000000000000000000',
-        PROXY_GLOBAL_SETTLEMENT_ACTIONS: '0x0000000000000000000000000000000000000000',
     },
     'optimism-goerli': {
         MULTICALL: '0xcA11bde05977b3631167028862bE2a173976CA11',
@@ -114,7 +111,6 @@ const addresses: Record<GebDeployment, ContractList> = {
         PROXY_SURPLUS_AUCTION_ACTIONS: '0x85f9a28F7F7e343e1806E112272bd783eA73b4B9',
         PROXY_COLLATERAL_AUCTION_ACTIONS: '0x85f9a28F7F7e343e1806E112272bd783eA73b4B9',
         PROXY_REWARDED_ACTIONS: '0xdD481aF67e8dfee190545Ae1b97c36373BfA1a7e',
-        PROXY_GLOBAL_SETTLEMENT_ACTIONS: '0x0000000000000000000000000000000000000000',
     },
 }
 
@@ -135,7 +131,7 @@ export type TokenList = {
 const tokens: Record<GebDeployment, TokenList> = {
     'arbitrum-goerli': {
         WETH: {
-            address: '',
+            address: '0xEe01c0CD76354C383B8c7B4e65EA88D00B06f36f',
             decimals: 18,
             symbol: 'WETH',
             bytes32String: WETH,

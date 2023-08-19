@@ -23,7 +23,7 @@ const WBTC = '0x5742544300000000000000000000000000000000000000000000000000000000
 /**
  * byte32 value for the "FTRG" collateral
  */
-const FTRG = ''
+const FTRG = '0x4654524700000000000000000000000000000000000000000000000000000000'
 
 /**
  * byte32 value for the "STONES" collateral
@@ -130,6 +130,7 @@ export {
     OP,
     ETH_A,
     WBTC,
+    FTRG,
     STONES,
     TOTEM,
     NULL_ADDRESS,
