@@ -31,11 +31,11 @@ export type ContractList = {
     [key in ContractKey]: string
 }
 
-export declare type GebDeployment = 'mainnet' | 'optimism-goerli' | 'arbitrum-goerli'
+export declare type GebDeployment = 'arbitrum' | 'optimism-goerli' | 'arbitrum-goerli'
 
 const addresses: Record<GebDeployment, ContractList> = {
     'arbitrum-goerli': {
-        MULTICALL: '',
+        MULTICALL: '0xcA11bde05977b3631167028862bE2a173976CA11',
         ETH: '0xEe01c0CD76354C383B8c7B4e65EA88D00B06f36f',
         GEB_SYSTEM_COIN: '0x007b1aC6B1894351cD5B025470119cf07a719d5b',
         GEB_PROTOCOL_TOKEN: '0x1A095c17f8503A79E754371EfBb232c1C0D9cb07',
@@ -60,8 +60,8 @@ const addresses: Record<GebDeployment, ContractList> = {
         PROXY_COLLATERAL_AUCTION_ACTIONS: '0x92A093f53360ffc42f75f6D00af51E26138725b4',
         PROXY_REWARDED_ACTIONS: '0xA2C86fBae73C2672ace63a732274a1D4c0FE938F',
     },
-    mainnet: {
-        MULTICALL: '0x0000000000000000000000000000000000000000',
+    arbitrum: {
+        MULTICALL: '0xcA11bde05977b3631167028862bE2a173976CA11',
         ETH: '0x0000000000000000000000000000000000000000',
         GEB_SYSTEM_COIN: '0x0000000000000000000000000000000000000000',
         GEB_PROTOCOL_TOKEN: '0x0000000000000000000000000000000000000000',
@@ -129,7 +129,26 @@ export type TokenList = {
 }
 
 const tokens: Record<GebDeployment, TokenList> = {
+    arbitrum: {},
     'arbitrum-goerli': {
+        OD: {
+            address: '0x007b1aC6B1894351cD5B025470119cf07a719d5b',
+            decimals: 18,
+            symbol: 'OD',
+            bytes32String: '',
+            collateralJoin: '',
+            collateralAuctionHouse: '',
+            isCollateral: false,
+        },
+        ODG: {
+            address: '0x1A095c17f8503A79E754371EfBb232c1C0D9cb07',
+            decimals: 18,
+            symbol: 'ODG',
+            bytes32String: '',
+            collateralJoin: '',
+            collateralAuctionHouse: '',
+            isCollateral: false,
+        },
         WETH: {
             address: '0xEe01c0CD76354C383B8c7B4e65EA88D00B06f36f',
             decimals: 18,
@@ -176,7 +195,6 @@ const tokens: Record<GebDeployment, TokenList> = {
             isCollateral: true,
         },
     },
-    mainnet: {},
     'optimism-goerli': {
         WETH: {
             address: '0x4200000000000000000000000000000000000006',
