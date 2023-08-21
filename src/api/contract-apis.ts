@@ -15,6 +15,8 @@ export class ContractApis {
     public globalSettlement: types.GlobalSettlement
     public debtAuctionHouse: types.DebtAuctionHouse
     public surplusAuctionHouse: types.SurplusAuctionHouse
+    public postSettlementSurplusAuctionHouse: types.PostSettlementSurplusAuctionHouse
+    public postSettlementSurplusAuctioneer: types.SettlementSurplusAuctioneer
     public stabilityFeeTreasury: types.StabilityFeeTreasury
     public safeManager: types.HaiSafeManager
     public joinCoin: types.CoinJoin
@@ -51,6 +53,8 @@ export class ContractApis {
         this.globalSettlement = types.GlobalSettlement__factory.connect(addressList.GEB_GLOBAL_SETTLEMENT, signerOrProvider)
         this.debtAuctionHouse = types.DebtAuctionHouse__factory.connect(addressList.GEB_DEBT_AUCTION_HOUSE, signerOrProvider)
         this.surplusAuctionHouse = types.SurplusAuctionHouse__factory.connect(addressList.GEB_SURPLUS_AUCTION_HOUSE, signerOrProvider)
+        this.postSettlementSurplusAuctionHouse = types.PostSettlementSurplusAuctionHouse__factory.connect(addressList.GEB_POST_SETTLEMENT_SURPLUS_AUCTION_HOUSE, signerOrProvider)
+        this.postSettlementSurplusAuctioneer = types.SettlementSurplusAuctioneer__factory.connect(addressList.GEB_POST_SETTLEMENT_SURPLUS_AUCTIONEER, signerOrProvider)
         this.stabilityFeeTreasury = types.StabilityFeeTreasury__factory.connect(addressList.GEB_STABILITY_FEE_TREASURY, signerOrProvider)
         this.joinCoin = types.CoinJoin__factory.connect(addressList.GEB_COIN_JOIN, signerOrProvider)
         this.rateSetter = types.PIDRateSetter__factory.connect(addressList.GEB_RRFM_SETTER, signerOrProvider)

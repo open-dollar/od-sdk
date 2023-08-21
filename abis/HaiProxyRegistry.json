@@ -318,7 +318,7 @@
     "absolutePath": "src/contracts/proxies/HaiProxyRegistry.sol",
     "id": 55256,
     "exportedSymbols": {
-      "Assertions": [66356],
+      "Assertions": [66383],
       "HaiProxy": [55054],
       "HaiProxyFactory": [55136],
       "HaiProxyRegistry": [55255]
@@ -394,7 +394,7 @@
         "file": "@libraries/Assertions.sol",
         "nameLocation": "-1:-1:-1",
         "scope": 55256,
-        "sourceUnit": 66357,
+        "sourceUnit": 66384,
         "symbolAliases": [
           {
             "foreign": {
@@ -402,7 +402,7 @@
               "name": "Assertions",
               "nodeType": "Identifier",
               "overloadedDeclarations": [],
-              "referencedDeclaration": 66356,
+              "referencedDeclaration": 66383,
               "src": "199:10:120",
               "typeDescriptions": {}
             },
@@ -427,7 +427,7 @@
               "name": "Assertions",
               "nameLocations": ["282:10:120"],
               "nodeType": "IdentifierPath",
-              "referencedDeclaration": 66356,
+              "referencedDeclaration": 66383,
               "src": "282:10:120"
             },
             "typeName": {
@@ -672,7 +672,7 @@
                             "memberLocation": "535:13:120",
                             "memberName": "assertNonNull",
                             "nodeType": "MemberAccess",
-                            "referencedDeclaration": 66355,
+                            "referencedDeclaration": 66382,
                             "src": "526:22:120",
                             "typeDescriptions": {
                               "typeIdentifier": "t_function_internal_pure$_t_address_$returns$_t_address_$attached_to$_t_address_$",
@@ -1411,7 +1411,7 @@
                               "memberLocation": "1143:5:120",
                               "memberName": "owner",
                               "nodeType": "MemberAccess",
-                              "referencedDeclaration": 61548,
+                              "referencedDeclaration": 61575,
                               "src": "1127:21:120",
                               "typeDescriptions": {
                                 "typeIdentifier": "t_function_external_view$__$returns$_t_address_$",
@@ -1863,7 +1863,7 @@
         "name": "HaiProxyRegistry",
         "nameLocation": "255:16:120",
         "scope": 55256,
-        "usedErrors": [66150]
+        "usedErrors": [66177]
       }
     ],
     "license": "GPL-3.0"

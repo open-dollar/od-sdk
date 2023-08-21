@@ -402,6 +402,31 @@ export class BasicActions {
         )
     }
 
+    // ==== Proxy Actions Post Settlement Surplus Auctions ====
+
+    postSettlementSurplusIncreaseBidSize(
+        bidSize: BigNumberish,
+        auctionId: BigNumberish
+    ): Promise<ethers.PopulatedTransaction> {
+        return this.getProxiedTransactionRequest(
+            this.proxyActionSurplusAuction.populateTransaction.increaseBidSize(
+                this.addressList.GEB_POST_SETTLEMENT_SURPLUS_AUCTION_HOUSE,
+                auctionId,
+                bidSize
+            )
+        )
+    }
+
+    postSettlementSurplusSettleAuction(auctionId: BigNumberish): Promise<ethers.PopulatedTransaction> {
+        return this.getProxiedTransactionRequest(
+            this.proxyActionSurplusAuction.populateTransaction.settleAuction(
+                this.addressList.GEB_COIN_JOIN,
+                this.addressList.GEB_POST_SETTLEMENT_SURPLUS_AUCTION_HOUSE,
+                auctionId
+            )
+        )
+    }
+
     // ==== Proxy Actions Rewarded ====
 
     popDebtFromQueue(debtTimestamp: BigNumberish): Promise<ethers.PopulatedTransaction> {

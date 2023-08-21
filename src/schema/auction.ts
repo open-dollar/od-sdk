@@ -7,8 +7,9 @@ import {
 } from '../typechained/CollateralAuctionHouse'
 
 export interface ISurplusAuction {
-    auctionDeadline: string
     auctionId: string
+    auctioneer: string
+    auctionDeadline: string
     createdAt: string
     createdAtTransaction: string
     biddersList: Array<IAuctionBidder>
@@ -18,8 +19,9 @@ export interface ISurplusAuction {
 }
 
 export interface IDebtAuction {
-    auctionDeadline: string
     auctionId: string
+    auctioneer: string
+    auctionDeadline: string
     createdAt: string
     createdAtTransaction: string
     biddersList: Array<IAuctionBidder>
@@ -30,14 +32,12 @@ export interface IDebtAuction {
 
 export interface ICollateralAuction {
     auctionId: string
+    auctioneer: string
     createdAt: string
     createdAtTransaction: string
     amountToSell: string
     initialBid: string
     amountToRaise: string
-    startingDiscount: string
-    maxDiscount: string
-    perSecondDiscountUpdateRate: string
     isClaimed: boolean
     biddersList: Array<IAuctionBidder>
 }
@@ -58,8 +58,9 @@ export function surplusStartAuctionEventToAuction(
 ): ISurplusAuction {
     const id = startAuction.args._id.toString()
     return {
-        auctionDeadline: restarts[id] ? restarts[id].toString() : startAuction.args._auctionDeadline.toString(),
         auctionId: id,
+        auctioneer: startAuction.args._auctioneer,
+        auctionDeadline: restarts[id] ? restarts[id].toString() : startAuction.args._auctionDeadline.toString(),
         amount: startAuction.args._amountToSell.toString(),
         initialBid: startAuction.args._amountToRaise.toString(),
         createdAt: startAuction.args._blockTimestamp.toString(),
@@ -77,8 +78,9 @@ export function debtStartAuctionEventToAuction(
 ): IDebtAuction {
     const id = startAuction.args._id.toString()
     return {
-        auctionDeadline: restarts[id] ? restarts[id].toString() : startAuction.args._auctionDeadline.toString(),
         auctionId: id,
+        auctioneer: startAuction.args._auctioneer,
+        auctionDeadline: restarts[id] ? restarts[id].toString() : startAuction.args._auctionDeadline.toString(),
         amount: startAuction.args._amountToSell.toString(),
         initialBid: startAuction.args._amountToRaise.toString(),
         createdAt: startAuction.args._blockTimestamp.toString(),
@@ -95,14 +97,12 @@ export function collateralStartAuctionEventToAuction(
 ): ICollateralAuction {
     return {
         auctionId: startAuction.args._id.toString(),
+        auctioneer: startAuction.args._auctioneer,
         createdAt: startAuction.args._blockTimestamp.toString(),
         createdAtTransaction: startAuction.transactionHash.toString(),
         amountToSell: startAuction.args._amountToSell.toString(),
         initialBid: startAuction.args._amountToRaise.toString(),
         amountToRaise: startAuction.args._amountToRaise.toString(),
-        startingDiscount: startAuction.args._initialDiscount.toString(),
-        maxDiscount: startAuction.args._maxDiscount.toString(),
-        perSecondDiscountUpdateRate: startAuction.args._perSecondDiscountUpdateRate.toString(),
         isClaimed: settled[startAuction.args._id.toString()] || false,
         biddersList: bids[startAuction.args._id.toString()] || [],
     }

@@ -285,7 +285,7 @@
     "id": 55055,
     "exportedSymbols": {
       "HaiProxy": [55054],
-      "Ownable": [61598]
+      "Ownable": [61625]
     },
     "nodeType": "SourceUnit",
     "src": "36:578:118",
@@ -306,7 +306,7 @@
         "file": "@contracts/utils/Ownable.sol",
         "nameLocation": "-1:-1:-1",
         "scope": 55055,
-        "sourceUnit": 61599,
+        "sourceUnit": 61626,
         "symbolAliases": [
           {
             "foreign": {
@@ -314,7 +314,7 @@
               "name": "Ownable",
               "nodeType": "Identifier",
               "overloadedDeclarations": [],
-              "referencedDeclaration": 61598,
+              "referencedDeclaration": 61625,
               "src": "69:7:118",
               "typeDescriptions": {}
             },
@@ -423,7 +423,7 @@
                   "name": "Ownable",
                   "nameLocations": ["254:7:118"],
                   "nodeType": "IdentifierPath",
-                  "referencedDeclaration": 61598,
+                  "referencedDeclaration": 61625,
                   "src": "254:7:118"
                 },
                 "nodeType": "ModifierInvocation",
@@ -886,7 +886,7 @@
                   "name": "onlyOwner",
                   "nameLocations": ["347:9:118"],
                   "nodeType": "IdentifierPath",
-                  "referencedDeclaration": 61597,
+                  "referencedDeclaration": 61624,
                   "src": "347:9:118"
                 },
                 "nodeType": "ModifierInvocation",
@@ -1005,7 +1005,7 @@
               "name": "Ownable",
               "nameLocations": ["137:7:118"],
               "nodeType": "IdentifierPath",
-              "referencedDeclaration": 61598,
+              "referencedDeclaration": 61625,
               "src": "137:7:118"
             },
             "id": 54996,
@@ -1017,11 +1017,11 @@
         "contractDependencies": [],
         "contractKind": "contract",
         "fullyImplemented": true,
-        "linearizedBaseContracts": [55054, 61598, 66096],
+        "linearizedBaseContracts": [55054, 61625, 66123],
         "name": "HaiProxy",
         "nameLocation": "125:8:118",
         "scope": 55055,
-        "usedErrors": [54998, 55002, 66085]
+        "usedErrors": [54998, 55002, 66112]
       }
     ],
     "license": "GPL-3.0"
