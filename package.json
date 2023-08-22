@@ -1,7 +1,7 @@
 {
   "name": "@usekeyp/od-sdk",
   "description": "Javascript client for Open Dollar",
-  "version": "1.2.0-rc.1",
+  "version": "1.2.0-rc.2",
   "license": "MIT",
   "workspaces": {
     "packages": [
