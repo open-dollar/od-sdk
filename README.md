@@ -17,6 +17,7 @@ npm install @usekeyp/od-sdk
 ```typescript
 import { ethers, utils as ethersUtils } from 'ethers'
 import { Geb, utils } from '@usekeyp/od-sdk'
+import { fetchUserSafes } from '@usekeyp/od-sdk/lib/virtual/virtualUserSafes.js'
 
 // Setup Ether.js
 const provider = new ethers.providers.JsonRpcProvider(
@@ -25,10 +26,13 @@ const provider = new ethers.providers.JsonRpcProvider(
 const wallet = new ethers.Wallet('0xdefiisawesome...', provider)
 
 // Create the main GEB object
-const geb = new Geb('kovan', provider)
+const geb = new Geb('arbitrum', provider)
 
-// Get a SAFE
-const safe = await geb.getSafe(4)
+// Get a Vault by ID
+let safe = await geb.getSafe(4)
+
+// Get a Vault by user address
+safes = await fetchUserSafes(geb, wallet.address)
 ```
 
 # Contributing 
