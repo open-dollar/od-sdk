@@ -1,13 +1,14 @@
 {
   "name": "@usekeyp/od-sdk",
-  "description": "Javascript client for GEB reflex indexes",
-  "version": "1.1.0-rc.2",
+  "description": "Javascript client for Open Dollar",
+  "version": "1.2.0-rc.1",
   "license": "MIT",
   "main": "./lib/index.js",
   "files": [
     "lib"
   ],
   "scripts": {
+    "prebuild": "yarn --cwd ./solidity install && yarn --cwd ./solidity compile",
     "build": "yarn generate-types && tsc",
     "generate-types": "yarn typechain --target ethers-v5 --out-dir src/typechained './abis/*.json'",
     "lint:check": "prettier --check .",

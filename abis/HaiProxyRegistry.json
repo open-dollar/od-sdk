@@ -88,7 +88,7 @@
           "type": "address"
         }
       ],
-      "name": "getProxy",
+      "name": "proxies",
       "outputs": [
         {
           "internalType": "contract HaiProxy",
@@ -114,9 +114,9 @@
     "build()": "8e1a55fc",
     "build(address)": "f3701da2",
     "factory()": "c45a0155",
-    "getProxy(address)": "c4552791"
+    "proxies(address)": "c4552791"
   },
-  "rawMetadata": "{\"compiler\":{\"version\":\"0.8.19+commit.7dd6d404\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_factory\",\"type\":\"address\"}],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"inputs\":[],\"name\":\"NullAddress\",\"type\":\"error\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"_usr\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"_proxy\",\"type\":\"address\"}],\"name\":\"Build\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"build\",\"outputs\":[{\"internalType\":\"address payable\",\"name\":\"_proxy\",\"type\":\"address\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_owner\",\"type\":\"address\"}],\"name\":\"build\",\"outputs\":[{\"internalType\":\"address payable\",\"name\":\"_proxy\",\"type\":\"address\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"factory\",\"outputs\":[{\"internalType\":\"contract HaiProxyFactory\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_owner\",\"type\":\"address\"}],\"name\":\"getProxy\",\"outputs\":[{\"internalType\":\"contract HaiProxy\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"src/contracts/proxies/HaiProxyRegistry.sol\":\"HaiProxyRegistry\"},\"evmVersion\":\"paris\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":10000},\"remappings\":[\":@contracts/=src/contracts/\",\":@defi-wonderland/solidity-utils/=node_modules/@defi-wonderland/solidity-utils/solidity/\",\":@interfaces/=src/interfaces/\",\":@libraries/=src/libraries/\",\":@openzeppelin/=node_modules/@openzeppelin/contracts/\",\":@script/=src/script/\",\":@test/=src/test/\",\":@uniswap/=node_modules/@uniswap/\",\":ds-test/=lib/ds-test/src/\",\":forge-std/=lib/forge-std/src/\",\":isolmate/=lib/isolmate/src/\",\":prb-test/=lib/prb-test/src/\"]},\"sources\":{\"src/contracts/proxies/HaiProxy.sol\":{\"keccak256\":\"0x1944adfa2023f76e1fff587af0dd394d00564ee709e470c23fcf68b6044edecb\",\"license\":\"GPL-3.0\",\"urls\":[\"bzz-raw://feffddf8823cc0ff7a39286c2b5851a310fb1bd470852e6fa1bad31d2bcd2a4d\",\"dweb:/ipfs/QmUE5KpUo8yp8MtXDgQVuaHYB7WksDXWZwfsr2LwmMmj8d\"]},\"src/contracts/proxies/HaiProxyFactory.sol\":{\"keccak256\":\"0x55451d90772b808aa7563782fa42127746fd8ae62c36a0ddefc04a8c1cdbd8f1\",\"license\":\"GPL-3.0\",\"urls\":[\"bzz-raw://b5539058ba0bf268f54e296307c59d697c78fc9741722bf7a6f20c174643696c\",\"dweb:/ipfs/QmRZo67fv8AxZZM5tT1RVWvEraQXMzVhuPsKbBApHj538n\"]},\"src/contracts/proxies/HaiProxyRegistry.sol\":{\"keccak256\":\"0x86d34b5f142df319ba4efc939e04f2010477aa1ff69236ceb71b1c9f9778db94\",\"license\":\"GPL-3.0\",\"urls\":[\"bzz-raw://bc59d4ca29cc11bde72f66a9ecacc35f204754a71d7362d5199b61c5b0839d88\",\"dweb:/ipfs/QmTNPECfiVCNaLd835nSBWoRDdcVeLRwLneHRZ4GmSRMt2\"]},\"src/contracts/utils/Ownable.sol\":{\"keccak256\":\"0x8ea310a4885d456bc1cb0006371da56dba2b9c5e8522206aa9368e92494e5af1\",\"license\":\"GPL-3.0\",\"urls\":[\"bzz-raw://8efc957ff950c8bad45bfec63c429ec6f00a5fc3193a47cda9699dc767535a80\",\"dweb:/ipfs/Qma681P5CsoLiCRys5tp2QK6ExCQHeLwJ8X4Pz1xDv53MN\"]},\"src/interfaces/utils/IOwnable.sol\":{\"keccak256\":\"0xcbea9fb39c2fbc3c8c69a8f49390646ef0bd9d1c3d705b6da899d9093c5b15dd\",\"license\":\"GPL-3.0\",\"urls\":[\"bzz-raw://969d874458d435c24ed924bf932226e0ec7b47f23ffb3f1e1c64e3d34e478d34\",\"dweb:/ipfs/QmRtmbRBEtd1YYoggUc3gXZqdXnpLD4b9BL9YyHyNX19bH\"]},\"src/libraries/Assertions.sol\":{\"keccak256\":\"0xd476ae3f327a9c92cdf3cf2de717c9b5f5614d3064354ecc06f1a970d51ed4ab\",\"license\":\"GPL-3.0\",\"urls\":[\"bzz-raw://85473da01ab5ae7d95c2473d482428679f62efa4f56cf72b11c53df9f75ea35d\",\"dweb:/ipfs/QmQiyxsWYmnx8YJPUxT4dScrCtqovneNA47gq1w81zVd2W\"]}},\"version\":1}",
+  "rawMetadata": "{\"compiler\":{\"version\":\"0.8.19+commit.7dd6d404\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_factory\",\"type\":\"address\"}],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"inputs\":[],\"name\":\"NullAddress\",\"type\":\"error\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"_usr\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"_proxy\",\"type\":\"address\"}],\"name\":\"Build\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"build\",\"outputs\":[{\"internalType\":\"address payable\",\"name\":\"_proxy\",\"type\":\"address\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_owner\",\"type\":\"address\"}],\"name\":\"build\",\"outputs\":[{\"internalType\":\"address payable\",\"name\":\"_proxy\",\"type\":\"address\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"factory\",\"outputs\":[{\"internalType\":\"contract HaiProxyFactory\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_owner\",\"type\":\"address\"}],\"name\":\"proxies\",\"outputs\":[{\"internalType\":\"contract HaiProxy\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"src/contracts/proxies/HaiProxyRegistry.sol\":\"HaiProxyRegistry\"},\"evmVersion\":\"paris\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":10000},\"remappings\":[\":@contracts/=src/contracts/\",\":@defi-wonderland/solidity-utils/=node_modules/@defi-wonderland/solidity-utils/solidity/\",\":@interfaces/=src/interfaces/\",\":@libraries/=src/libraries/\",\":@openzeppelin/=node_modules/@openzeppelin/contracts/\",\":@script/=src/script/\",\":@test/=src/test/\",\":@uniswap/=node_modules/@uniswap/\",\":ds-test/=lib/ds-test/src/\",\":forge-std/=lib/forge-std/src/\",\":isolmate/=lib/isolmate/src/\",\":prb-test/=lib/prb-test/src/\"]},\"sources\":{\"src/contracts/proxies/HaiProxy.sol\":{\"keccak256\":\"0x1944adfa2023f76e1fff587af0dd394d00564ee709e470c23fcf68b6044edecb\",\"license\":\"GPL-3.0\",\"urls\":[\"bzz-raw://feffddf8823cc0ff7a39286c2b5851a310fb1bd470852e6fa1bad31d2bcd2a4d\",\"dweb:/ipfs/QmUE5KpUo8yp8MtXDgQVuaHYB7WksDXWZwfsr2LwmMmj8d\"]},\"src/contracts/proxies/HaiProxyFactory.sol\":{\"keccak256\":\"0x55451d90772b808aa7563782fa42127746fd8ae62c36a0ddefc04a8c1cdbd8f1\",\"license\":\"GPL-3.0\",\"urls\":[\"bzz-raw://b5539058ba0bf268f54e296307c59d697c78fc9741722bf7a6f20c174643696c\",\"dweb:/ipfs/QmRZo67fv8AxZZM5tT1RVWvEraQXMzVhuPsKbBApHj538n\"]},\"src/contracts/proxies/HaiProxyRegistry.sol\":{\"keccak256\":\"0x86d34b5f142df319ba4efc939e04f2010477aa1ff69236ceb71b1c9f9778db94\",\"license\":\"GPL-3.0\",\"urls\":[\"bzz-raw://bc59d4ca29cc11bde72f66a9ecacc35f204754a71d7362d5199b61c5b0839d88\",\"dweb:/ipfs/QmTNPECfiVCNaLd835nSBWoRDdcVeLRwLneHRZ4GmSRMt2\"]},\"src/contracts/utils/Ownable.sol\":{\"keccak256\":\"0x8ea310a4885d456bc1cb0006371da56dba2b9c5e8522206aa9368e92494e5af1\",\"license\":\"GPL-3.0\",\"urls\":[\"bzz-raw://8efc957ff950c8bad45bfec63c429ec6f00a5fc3193a47cda9699dc767535a80\",\"dweb:/ipfs/Qma681P5CsoLiCRys5tp2QK6ExCQHeLwJ8X4Pz1xDv53MN\"]},\"src/interfaces/utils/IOwnable.sol\":{\"keccak256\":\"0xcbea9fb39c2fbc3c8c69a8f49390646ef0bd9d1c3d705b6da899d9093c5b15dd\",\"license\":\"GPL-3.0\",\"urls\":[\"bzz-raw://969d874458d435c24ed924bf932226e0ec7b47f23ffb3f1e1c64e3d34e478d34\",\"dweb:/ipfs/QmRtmbRBEtd1YYoggUc3gXZqdXnpLD4b9BL9YyHyNX19bH\"]},\"src/libraries/Assertions.sol\":{\"keccak256\":\"0xd476ae3f327a9c92cdf3cf2de717c9b5f5614d3064354ecc06f1a970d51ed4ab\",\"license\":\"GPL-3.0\",\"urls\":[\"bzz-raw://85473da01ab5ae7d95c2473d482428679f62efa4f56cf72b11c53df9f75ea35d\",\"dweb:/ipfs/QmQiyxsWYmnx8YJPUxT4dScrCtqovneNA47gq1w81zVd2W\"]}},\"version\":1}",
   "metadata": {
     "compiler": {
       "version": "0.8.19+commit.7dd6d404"
@@ -214,7 +214,7 @@
           ],
           "stateMutability": "view",
           "type": "function",
-          "name": "getProxy",
+          "name": "proxies",
           "outputs": [
             {
               "internalType": "contract HaiProxy",
@@ -318,7 +318,7 @@
     "absolutePath": "src/contracts/proxies/HaiProxyRegistry.sol",
     "id": 55256,
     "exportedSymbols": {
-      "Assertions": [66356],
+      "Assertions": [66383],
       "HaiProxy": [55054],
       "HaiProxyFactory": [55136],
       "HaiProxyRegistry": [55255]
@@ -394,7 +394,7 @@
         "file": "@libraries/Assertions.sol",
         "nameLocation": "-1:-1:-1",
         "scope": 55256,
-        "sourceUnit": 66357,
+        "sourceUnit": 66384,
         "symbolAliases": [
           {
             "foreign": {
@@ -402,7 +402,7 @@
               "name": "Assertions",
               "nodeType": "Identifier",
               "overloadedDeclarations": [],
-              "referencedDeclaration": 66356,
+              "referencedDeclaration": 66383,
               "src": "199:10:120",
               "typeDescriptions": {}
             },
@@ -427,7 +427,7 @@
               "name": "Assertions",
               "nameLocations": ["282:10:120"],
               "nodeType": "IdentifierPath",
-              "referencedDeclaration": 66356,
+              "referencedDeclaration": 66383,
               "src": "282:10:120"
             },
             "typeName": {
@@ -450,7 +450,7 @@
             "constant": false,
             "functionSelector": "c4552791",
             "mutability": "mutable",
-            "name": "getProxy",
+            "name": "proxies",
             "nameLocation": "352:7:120",
             "scope": 55255,
             "stateVariable": true,
@@ -672,7 +672,7 @@
                             "memberLocation": "535:13:120",
                             "memberName": "assertNonNull",
                             "nodeType": "MemberAccess",
-                            "referencedDeclaration": 66355,
+                            "referencedDeclaration": 66382,
                             "src": "526:22:120",
                             "typeDescriptions": {
                               "typeIdentifier": "t_function_internal_pure$_t_address_$returns$_t_address_$attached_to$_t_address_$",
@@ -1164,7 +1164,7 @@
                           "leftExpression": {
                             "baseExpression": {
                               "id": 55210,
-                              "name": "getProxy",
+                              "name": "proxies",
                               "nodeType": "Identifier",
                               "overloadedDeclarations": [],
                               "referencedDeclaration": 55152,
@@ -1369,7 +1369,7 @@
                               "expression": {
                                 "baseExpression": {
                                   "id": 55223,
-                                  "name": "getProxy",
+                                  "name": "proxies",
                                   "nodeType": "Identifier",
                                   "overloadedDeclarations": [],
                                   "referencedDeclaration": 55152,
@@ -1411,7 +1411,7 @@
                               "memberLocation": "1143:5:120",
                               "memberName": "owner",
                               "nodeType": "MemberAccess",
-                              "referencedDeclaration": 61548,
+                              "referencedDeclaration": 61575,
                               "src": "1127:21:120",
                               "typeDescriptions": {
                                 "typeIdentifier": "t_function_external_view$__$returns$_t_address_$",
@@ -1605,7 +1605,7 @@
                     "leftHandSide": {
                       "baseExpression": {
                         "id": 55240,
-                        "name": "getProxy",
+                        "name": "proxies",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
                         "referencedDeclaration": 55152,
@@ -1863,7 +1863,7 @@
         "name": "HaiProxyRegistry",
         "nameLocation": "255:16:120",
         "scope": 55256,
-        "usedErrors": [66150]
+        "usedErrors": [66177]
       }
     ],
     "license": "GPL-3.0"
