@@ -41,7 +41,7 @@ jobs:
 
       - name: Build
         if: ${{ steps.changelog.outputs.skipped == 'false' }}
-        run: yarn build
+        run: yarn prebuild && yarn build
 
       - name: Create Release
         if: ${{ steps.changelog.outputs.skipped == 'false' }}
