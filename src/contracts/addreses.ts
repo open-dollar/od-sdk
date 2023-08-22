@@ -75,10 +75,8 @@ const addresses: Record<GebDeployment, ContractList> = {
         GEB_COLLATERAL_JOIN_FACTORY: '0x7c0BA91c3eca439Fc4b638e1392DCF8D5E0115ba',
         GEB_POST_SETTLEMENT_SURPLUS_AUCTION_HOUSE: '0x40C9110a953c0378e8cD940bd9A9Cfd83840A9f6',
         GEB_POST_SETTLEMENT_SURPLUS_AUCTIONEER: '0xf5BCf3Ba14541B60764BbC6BbF3072430Fd18645',
-        // ??
-        PROXY_POST_SETTLEMENT_SURPLUS_AUCTION_ACTIONS: '0x0000000000000000000000000000000000000000',
-        PROXY_GLOBAL_SETTLEMENT_ACTIONS: '0x0000000000000000000000000000000000000000',
-        // ??
+        PROXY_POST_SETTLEMENT_SURPLUS_AUCTION_ACTIONS: '0x3b0156CB12A3eac5Cdb0AbDbE90a32e66fE4AEB1',
+        PROXY_GLOBAL_SETTLEMENT_ACTIONS: '0x173C75bc966FBF33191919B68fFfC688B91859c8',
         JOB_ACCOUNTING: '0x6Bd60DC7DdC59Dd6859381f82D25D787fc7D6174',
         JOB_LIQUIDATION: '0x6FCB78970cA8A026f940C8c1adeEd5Bc1D6Cda4d',
         JOB_ORACLES: '0x0e0A3d34dB3990F6D1cC42895bfb107a81D29d58',
@@ -199,15 +197,15 @@ const tokens: Record<GebDeployment, TokenList> = {
             collateralAuctionHouse: '0x74B840D4B626e9bD174F74eFF8a59dE30Fc03eF9',
             isCollateral: true,
         },
-        // FTRG: {
-        //     address: '',
-        //     decimals: 18,
-        //     symbol: 'FTRG',
-        //     bytes32String: FTRG,
-        //     collateralJoin: '0x01c9E717B10605163D5B0beB45ab93497C34E77A',
-        //     collateralAuctionHouse: '0xEc467776f0D8FF8FDE41057b8b2D0ed298072edF',
-        //     isCollateral: true,
-        // },
+        FTRG: {
+            address: '0x0Ed89D4655b2fE9f99EaDC3116b223527165452D',
+            decimals: 18,
+            symbol: 'FTRG',
+            bytes32String: FTRG,
+            collateralJoin: '0x01c9E717B10605163D5B0beB45ab93497C34E77A',
+            collateralAuctionHouse: '0xEc467776f0D8FF8FDE41057b8b2D0ed298072edF',
+            isCollateral: true,
+        },
         WBTC: {
             address: '0xAcFb9e6FD04FE18c56995C8d58C0785042766736',
             decimals: 8,
