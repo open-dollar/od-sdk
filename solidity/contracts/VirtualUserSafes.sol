@@ -6,14 +6,13 @@ interface IERC20 {
 }
 
 interface IProxyRegistry {
-    function proxies(address guy) external view returns (address);
+    function getProxy(address guy) external view returns (address);
 }
 
 interface ISafeManager {
-    function getSafesData(address guy)
-        external
-        view
-        returns (uint256[] memory ids, address[] memory safes, bytes32[] memory collateralTypes);
+    function getSafesData(
+        address guy
+    ) external view returns (uint256[] memory ids, address[] memory safes, bytes32[] memory collateralTypes);
 }
 
 interface ISAFEEngine {
@@ -42,20 +41,27 @@ contract VirtualUserSafes {
         address user
     ) {
         uint256 coinBalance = coin.balanceOf(user);
-        address userProxy = proxyRegistry.proxies(user);
+        address userProxy = proxyRegistry.getProxy(user);
 
         SafeData[] memory safesData;
 
         if (userProxy == address(0)) {
             safesData = new SafeData[](0);
         } else {
-            (uint256[] memory ids, address[] memory safes, bytes32[] memory _cTypes) =
-                safeManager.getSafesData(userProxy);
+            (uint256[] memory ids, address[] memory safes, bytes32[] memory _cTypes) = safeManager.getSafesData(
+                userProxy
+            );
 
             safesData = new SafeData[](safes.length);
             for (uint256 i = 0; i < safes.length; i++) {
                 ISAFEEngine.SafeDeposit memory _safeData = safeEngine.safes(_cTypes[i], safes[i]);
-                safesData[i] = SafeData(safes[i], ids[i], _safeData.lockedCollateral, _safeData.generatedDebt, _cTypes[i]);
+                safesData[i] = SafeData(
+                    safes[i],
+                    ids[i],
+                    _safeData.lockedCollateral,
+                    _safeData.generatedDebt,
+                    _cTypes[i]
+                );
             }
         }
 
