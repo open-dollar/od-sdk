@@ -15,7 +15,7 @@ jobs:
           node-version: 16
           registry-url: 'https://registry.npmjs.org'
       - run: yarn
-      - run: yarn build
+      - run: yarn prebuild && yarn build
       - run: npm version prerelease --preid "${GITHUB_SHA::8}" --no-git-tag-version
       - run: npm publish --access public --tag canary
         env:
