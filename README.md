@@ -1,18 +1,27 @@
-[![image](https://img.shields.io/npm/v/@hai-on-op/sdk.svg?style=flat-square)](https://www.npmjs.org/package/@hai-on-op/sdk)
 
-# SDK
+<h1 align="center">Weclome to @usekeyp/od-sdk 👋</h1>
+<p align="center">
+   <a href="https://www.npmjs.org/package/@usekeyp/od-sdk" target="_blank">
+    <img alt="npm package" src="https://img.shields.io/npm/v/@usekeyp/od-sdk.svg?style=flat-square" />
+  </a>
+  <a href="#" target="_blank">
+    <img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-blue.svg" />
+  </a>
+  <a href="https://twitter.com/UseKeyp" target="_blank">
+    <img alt="Twitter: UseKeyp" src="https://img.shields.io/twitter/follow/UseKeyp.svg?style=social" />
+  </a>
+</p>
 
-Library to interact with the GEB smart contracts. Manage your safes, mint RAI, inspect the system state, and much more.
+Library to interact with the Open Dollar smart contracts. Manage your vaults, mint OD, inspect the system state, and much more.
 
 The library is written in Typescript with full typing support. It allows access to the low level API to directly interact with the contracts.
 
-## Install
+## Usage 📖
 
-```
-npm install @usekeyp/od-sdk
+```bash
+yarn add @usekeyp/od-sdk
 ```
 
-## Examples
 
 ```typescript
 import { ethers, utils as ethersUtils } from 'ethers'
@@ -33,21 +42,26 @@ let safe = await geb.getSafe(4)
 
 // Get a Vault by user address
 safes = await fetchUserSafes(geb, wallet.address)
+
+// Create a proxy 
+const txData = await geb.contracts.proxyRegistry.populateTransaction['build()']()
+const tx = await wallet.sendTransaction(txData)
+console.log(`Transaction ${tx.hash} waiting to be mined...`)
+await tx.wait()
+
+// Open a vault
+// TODO
 ```
 
-# Contributing 
+## Resources 🧑‍💻
 
-### Install
+Documentation
+
+## Contributing 💡  
+
+Running `prebuild` is required to generate the solidity artifacts files
 
 ```bash
 yarn
-
-# Generate artifacts from solidity/
 yarn prebuild
-```
-
-Create the built package with
-
-```bash
-yarn build
 ```
