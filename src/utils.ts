@@ -3,6 +3,16 @@ import { BigNumberish, BigNumber, FixedNumber } from '@ethersproject/bignumber'
 // === Constants ===
 
 /**
+ * byte32 value for the "OD" collateral
+ */
+const OD = '0x4f44000000000000000000000000000000000000000000000000000000000000'
+
+/**
+ * byte32 value for the "ODG" collateral
+ */
+const ODG = '0x4f44470000000000000000000000000000000000000000000000000000000000'
+
+/**
  * byte32 value for the "ETH-A" collateral
  */
 const ETH_A = '0x4554482d41000000000000000000000000000000000000000000000000000000'
@@ -126,6 +136,8 @@ const getRequireString = (error: any): string | null => {
 
 export {
     // Constants
+    OD,
+    ODG,
     WETH,
     OP,
     ETH_A,

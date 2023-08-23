@@ -1,4 +1,4 @@
-import { WETH, OP, WBTC, STONES, FTRG, TOTEM } from '../utils'
+import {WETH, WBTC, STONES, FTRG, ODG, OD} from '../utils'
 
 // All keys are mandatory
 export type ContractKey =
@@ -139,7 +139,7 @@ const tokens: Record<GebDeployment, TokenList> = {
             address: '0x007b1aC6B1894351cD5B025470119cf07a719d5b',
             decimals: 18,
             symbol: 'OD',
-            bytes32String: '',
+            bytes32String: OD,
             collateralJoin: '',
             collateralAuctionHouse: '',
             isCollateral: false,
@@ -148,7 +148,7 @@ const tokens: Record<GebDeployment, TokenList> = {
             address: '0x1A095c17f8503A79E754371EfBb232c1C0D9cb07',
             decimals: 18,
             symbol: 'ODG',
-            bytes32String: '',
+            bytes32String: ODG,
             collateralJoin: '',
             collateralAuctionHouse: '',
             isCollateral: false,

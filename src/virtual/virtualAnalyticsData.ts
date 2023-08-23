@@ -1,6 +1,7 @@
 import { BigNumber, ethers } from 'ethers'
 import { Geb } from '../geb'
 import VirtualAnalyticsData from '../artifacts/contracts/VirtualAnalyticsData.sol/VirtualAnalyticsData.json'
+import { getTokenDetails } from "../contracts/addreses";
 
 interface TokenAnalyticsData {
     [key: string]: {
@@ -98,6 +99,44 @@ export async function fetchAnalyticsData(geb: Geb): Promise<AnalyticsData> {
             {}
         )
 
+    //TODO: Update liquidity pool addresses to reflect accurate contract addresses
+    const OD_ETH_LIQUIDITY_POOL = '0xEe01c0CD76354C383B8c7B4e65EA88D00B06f36f'
+    const ODG_ETH_LIQUIDITY_POOL = '0xEe01c0CD76354C383B8c7B4e65EA88D00B06f36f'
+
+    const tokenDetailsOD = getTokenDetails('arbitrum-goerli', 'OD');
+    const tokenDetailsODG = getTokenDetails('arbitrum-goerli', 'ODG');
+    const tokenDetailsWETH = getTokenDetails('arbitrum-goerli', 'WETH');
+
+    const tokenAddressOD = tokenDetailsOD.address;
+    const tokenAddressODG = tokenDetailsODG.address;
+    const tokenAddressWETH = tokenDetailsWETH.address;
+
+    const getBalanceOfTokenInLiquidityPool = async (tokenAddress: string, liquidityPoolAddress: string) => {
+        try {
+            const tokenContract = geb.getErc20Contract(tokenAddress)
+            return await tokenContract.balanceOf(liquidityPoolAddress);
+        } catch (e) {
+            console.log(e);
+            return null;
+        }
+    };
+
+    const ODBalance = await getBalanceOfTokenInLiquidityPool(tokenAddressOD, OD_ETH_LIQUIDITY_POOL);
+    const ODGBalance = await getBalanceOfTokenInLiquidityPool(tokenAddressODG, ODG_ETH_LIQUIDITY_POOL);
+    const wETHBalance_OD = await getBalanceOfTokenInLiquidityPool(tokenAddressWETH, OD_ETH_LIQUIDITY_POOL);
+
+    const ODMarketPrice = decoded?.tokenAnalyticsData['OD']?.currentPrice
+    const ODGMarketPrice = decoded?.tokenAnalyticsData['ODG']?.currentPrice
+    const wETHMarketPrice = decoded?.tokenAnalyticsData['WETH']?.currentPrice
+
+
+    // @ts-ignore
+    const odLiquidityCamelotUSD: number = (ODBalance * ODMarketPrice) +  (wETHBalance_OD * wETHMarketPrice)
+    // @ts-ignore
+    const odgLiquidityCamelotUSD: number = (ODGBalance * ODGMarketPrice) +  (wETHBalance_OD * wETHMarketPrice)
+
+
+
     const parsedResult = {
         erc20Supply: decoded.erc20Supply.toString(),
         globalDebt: decoded.globalDebt.toString(),
@@ -110,6 +149,8 @@ export async function fetchAnalyticsData(geb: Geb): Promise<AnalyticsData> {
         redemptionRateITerm: decoded.redemptionRateITerm.toString(),
         surplusInTreasury: decoded.surplusInTreasury.toString(),
         tokenAnalyticsData: result,
+        odLiquidityCamelotUSD: odLiquidityCamelotUSD,
+        odgLiquidityCamelotUSD: odgLiquidityCamelotUSD,
     }
 
     return parsedResult
