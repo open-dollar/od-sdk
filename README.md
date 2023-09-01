@@ -44,7 +44,7 @@ let safe = await geb.getSafe(4)
 safes = await fetchUserSafes(geb, wallet.address)
 
 // Create a proxy 
-const txData = await geb.contracts.proxyRegistry.populateTransaction['build()']()
+const txData = await geb.deployProxy()
 const tx = await wallet.sendTransaction(txData)
 console.log(`Transaction ${tx.hash} waiting to be mined...`)
 await tx.wait()
