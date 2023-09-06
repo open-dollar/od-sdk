@@ -49,7 +49,7 @@ const addresses: Record<GebDeployment, ContractList> = {
     'arbitrum-goerli': {
         MULTICALL: '0xcA11bde05977b3631167028862bE2a173976CA11',
         ETH: '0xEe01c0CD76354C383B8c7B4e65EA88D00B06f36f',
-        GEB_SYSTEM_COIN: '0x1214fC79f895060fAA48e3CAf0C212E3D48B9696',
+        GEB_SYSTEM_COIN: '0xd210B8C5329f6Bba85a3cce2bf7C1829A0f2A04f',
         GEB_PROTOCOL_TOKEN: '0xC6d32056a6AF761c6ecAA2CC89A82e140a9a6774',
         GEB_SAFE_ENGINE: '0x04b4A62152DaB552f976461bA7a490349a72Fe66',
         GEB_ORACLE_RELAYER: '0x6453154B95B74ee7daDE7490D1A6398e94673AF1',
@@ -209,7 +209,7 @@ const tokens: Record<GebDeployment, TokenList> = {
     arbitrum: {},
     'arbitrum-goerli': {
         OD: {
-            address: '0x007b1aC6B1894351cD5B025470119cf07a719d5b',
+            address: '0xd210B8C5329f6Bba85a3cce2bf7C1829A0f2A04f',
             decimals: 18,
             symbol: 'OD',
             bytes32String: '',
