@@ -266,7 +266,7 @@ const tokens: Record<GebDeployment, TokenList> = {
             address: '0x0Da1F0E501b20f963Ce671e62E11B09259f714c4',
             decimals: 3,
             symbol: 'TOTEM',
-            bytes32String: STONES,
+            bytes32String: TOTEM,
             collateralJoin: '0xC458429Fc706E4d6eA4852592d4d0F3E19563469',
             collateralAuctionHouse: '0x50298A8cAFdB116700Ba84189Ca426464fE872d5',
             isCollateral: true,
