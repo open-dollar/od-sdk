@@ -8,6 +8,51 @@ export interface TokenFetchData {
     decimals: string
 }
 
+export interface PoolData {
+    OD_balance: string;
+    WETH_balance: string;
+    totalLiquidity: string;
+}
+
+/**
+ * Fetches the liquidity data for an OD-WETH pool
+ * @param geb
+ * @returns Promise<PoolData>
+ */
+export async function fetchPoolData(geb: Geb): Promise<PoolData> {
+
+    const oracleAddress = await geb.contracts.oracleRelayer.systemCoinOracle();
+
+    const oracleContract = new ethers.Contract(
+        oracleAddress,
+        ['function priceSource() external view returns (IBaseOracle)'],
+        geb.provider
+    );
+
+    const uniV3RelayerAddress = await oracleContract.priceSource();
+
+    //TODO: check ABI for uniV3Relayer and replace function uniV3Pool()
+    const uniV3RelayerContract = new ethers.Contract(
+        uniV3RelayerAddress,
+        ['function uniV3Pool() external view returns (address)'],
+        geb.provider
+    );
+
+    const uniV3PoolAddress = await uniV3RelayerContract.uniV3Pool();
+
+    const OD_balance = await geb.contracts.systemCoin.balanceOf(uniV3PoolAddress);
+
+    const WETH_balance = await geb.contracts.weth.balanceOf(uniV3PoolAddress);
+
+    const totalLiquidity = OD_balance.add(WETH_balance);
+
+    return {
+        OD_balance: OD_balance.toString(),
+        WETH_balance: WETH_balance.toString(),
+        totalLiquidity: totalLiquidity.toString(),
+    };
+}
+
 export async function fetchTokenData(
     geb: Geb,
     user: string,
