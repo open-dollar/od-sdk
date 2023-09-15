@@ -73,7 +73,7 @@ export class BasicActions {
         this.proxyActionDebtAuctionAddress = this.addressList.PROXY_DEBT_AUCTION_ACTIONS
         this.proxyActionSurplusAuctionAddress = this.addressList.PROXY_SURPLUS_AUCTION_ACTIONS
         this.proxyActionCollateralAuctionAddress = this.addressList.PROXY_COLLATERAL_AUCTION_ACTIONS
-        // this.proxyActionGlobalSettlementAddress = this.addressList.PROXY_GLOBAL_SETTLEMENT_ACTIONS
+        this.proxyActionGlobalSettlementAddress = this.addressList.PROXY_GLOBAL_SETTLEMENT_ACTIONS
         this.proxyRewardedActionsAddress = this.addressList.PROXY_REWARDED_ACTIONS
 
         // Proxy contract APIs

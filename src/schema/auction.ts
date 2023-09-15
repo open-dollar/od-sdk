@@ -112,7 +112,6 @@ export function collateralStartAuctionEventToAuction(
     bids: { [key: string]: IAuctionBidder[] },
     settled: { [key: string]: boolean }
 ): ICollateralAuction {
-    console.log(startAuction)
     return {
         auctionId: startAuction._id.toString(),
         auctioneer: startAuction._auctioneer,
