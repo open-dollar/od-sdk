@@ -42,7 +42,7 @@ const fetchCollateralAuctionHouseEvents = async (address: string, query: string)
         },
         body: JSON.stringify(graphqlQuery),
     }
-    const response = await fetch('https://api.studio.thegraph.com/query/52770/od-test/v0.0.6', options)
+    const response = await fetch('https://api.studio.thegraph.com/query/52770/od-test/v0.0.8', options)
     const data = await response.json()
     if (data.errors) console.log(data.errors)
     if (data?.data?.collateralAuctionHouseStartAuctions) return data?.data?.collateralAuctionHouseStartAuctions
@@ -61,9 +61,6 @@ const fetchStartEvents = async (address: string): Promise<Array<StartAuctionEven
             _amountToRaise
             _amountToSell
             _auctionId
-            _initialDiscount
-            _maxDiscount
-            _perSecondDiscountUpdateRate
             transactionHash
             blockTimestamp
         }
