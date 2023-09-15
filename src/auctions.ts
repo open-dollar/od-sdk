@@ -1,5 +1,7 @@
 import { BigNumber } from 'ethers'
 import { ContractApis } from './api/contract-apis'
+import { TokenList } from './contracts/addreses'
+
 import {
     IDebtAuction,
     ISurplusAuction,
@@ -10,6 +12,8 @@ import {
     debtStartAuctionEventToAuction,
     surplusStartAuctionEventToAuction,
     ICollateralAuction,
+    BuyCollateralEventQuery,
+    StartAuctionEventQuery,
 } from './schema/auction'
 import {
     IncreaseBidSizeEventFilter as SurplusIncreaseBidSizeEventFilter,
@@ -24,6 +28,81 @@ import {
     SettleAuctionEventFilter as DebtSettleAuctionEventFilter,
     StartAuctionEventFilter as DebtStartAuctionEventFilter,
 } from './typechained/DebtAuctionHouse'
+
+const fetchCollateralAuctionHouseEvents = async (address: string, query: string): Promise<Array<any>> => {
+    const graphqlQuery = {
+        operationName: 'CollateralAuctionEvents',
+        query,
+    }
+    const options = {
+        method: 'POST',
+        headers: {
+            'content-type': 'application/json',
+            Authorization: '<token>',
+        },
+        body: JSON.stringify(graphqlQuery),
+    }
+    const response = await fetch('https://api.studio.thegraph.com/query/52770/od-test/v0.0.6', options)
+    const data = await response.json()
+    if (data.errors) console.log(data.errors)
+    if (data?.data?.collateralAuctionHouseStartAuctions) return data?.data?.collateralAuctionHouseStartAuctions
+    return []
+}
+
+const fetchStartEvents = async (address: string): Promise<Array<StartAuctionEventQuery>> => {
+    const query = `query CollateralAuctionHouseStartAuctions {
+        collateralAuctionHouseStartAuctions(
+            orderBy: blockNumber
+            orderDirection: desc
+            where: {address: "${address}"}
+        ) {
+            address
+            _id: _auctionId
+            _amountToRaise
+            _amountToSell
+            _auctionId
+            _initialDiscount
+            _maxDiscount
+            _perSecondDiscountUpdateRate
+            transactionHash
+            blockTimestamp
+        }
+    }`
+    return fetchCollateralAuctionHouseEvents(address, query)
+}
+const fetchBuyEvents = async (address: string): Promise<Array<BuyCollateralEventQuery>> => {
+    const query = `query CollateralAuctionHouseBuyCollaterals {
+        collateralAuctionHouseBuyCollaterals(
+            orderBy: blockNumber
+            orderDirection: desc
+            where: {address: "${address}"}
+        ){
+            _id: _auctionId
+            _bidder
+            _raisedAmount
+            _soldAmount
+            transactionHash
+            blockTimestamp
+          }
+    }`
+    return fetchCollateralAuctionHouseEvents(address, query)
+}
+const fetchSettleEvents = async (address: string): Promise<Array<BuyCollateralEventQuery | StartAuctionEventQuery>> => {
+    const query = `query CollateralAuctionHouseStartEvents {
+        collateralAuctionHouseSettleAuctions(
+            orderBy: blockNumber
+            orderDirection: desc
+            where: {address: "${address}"}
+          ){
+            blockTimestamp
+            _leftoverReceiver
+            _leftoverCollateral
+            _auctionId
+            transactionHash
+          }
+    }`
+    return fetchCollateralAuctionHouseEvents(address, query)
+}
 
 /**
  * The main package used to interact with the GEB system. Includes [[deployProxy |helper functions]] for safe
@@ -45,7 +124,9 @@ export class Auctions {
      * @param  {GebDeployment} network Either `'kovan'`, `'mainnet'` or an actual list of contract addresses.
      * @param  {GebProviderInterface|ethers.providers.Provider} provider Either a Ethers.js provider or a Geb provider (support for Web3 will be added in the future)
      */
-    constructor(public contracts: ContractApis) {
+    constructor(public contracts: ContractApis, public tokenList: TokenList) {
+        this.tokenList = tokenList
+
         // Surplus Auctions
         this.surplusStartAuctionFilter = this.contracts.surplusAuctionHouse.filters.StartAuction()
         this.surplusBidFilter = this.contracts.surplusAuctionHouse.filters.IncreaseBidSize()
@@ -152,25 +233,24 @@ export class Auctions {
         const startFilter = collateralAuctionHouse.filters.StartAuction()
         const buyCollateralFilter = collateralAuctionHouse.filters.BuyCollateral()
         const settleAuctionFilter = collateralAuctionHouse.filters.SettleAuction()
-
         return Promise.all([
-            collateralAuctionHouse.queryFilter(startFilter, fromBlock),
-            collateralAuctionHouse.queryFilter(buyCollateralFilter, fromBlock),
-            collateralAuctionHouse.queryFilter(settleAuctionFilter, fromBlock),
+            fetchStartEvents(this.tokenList[collateral].collateralAuctionHouse),
+            fetchBuyEvents(this.tokenList[collateral].collateralAuctionHouse),
+            fetchSettleEvents(this.tokenList[collateral].collateralAuctionHouse),
         ]).then(([startAuction, buyEvents, settleEvents]) => {
             const bids = buyEvents.reduce((accum: { [key: string]: IAuctionBidder[] }, bid) => {
                 const parsedBid = collateralBidEventToBid(bid)
-                const id = bid.args._id.toString()
+                const id = bid._id.toString()
                 const bidsForId = accum[id]
                 return { ...accum, [id]: bidsForId ? bidsForId.concat(parsedBid) : [parsedBid] }
             }, {})
 
             const settled = settleEvents.reduce((accum: { [key: string]: boolean }, settled) => {
-                const id = settled.args._id.toString()
+                const id = settled._id.toString()
                 return { ...accum, [id]: true }
             }, {})
 
-            const auctions = startAuction.map((auc) => collateralStartAuctionEventToAuction(auc, bids, settled))
+            const auctions = startAuction.map((auc: any) => collateralStartAuctionEventToAuction(auc, bids, settled))
 
             return { auctions }
         })
