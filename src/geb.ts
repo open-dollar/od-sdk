@@ -101,7 +101,7 @@ export class Geb {
         this.addresses = getAddressList(network)
         this.tokenList = getTokenList(network)
         this.contracts = new ContractApis(network, signerOrProvider)
-        this.auctions = new Auctions(this.contracts)
+        this.auctions = new Auctions(this.contracts, this.tokenList)
         this.liquidations = new LiquidationActions(this.contracts, this.tokenList)
     }
 
