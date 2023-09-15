@@ -42,7 +42,7 @@ const fetchCollateralAuctionHouseEvents = async (address: string, query: string)
         },
         body: JSON.stringify(graphqlQuery),
     }
-    const response = await fetch('https://api.studio.thegraph.com/query/52770/od-test/v0.0.8', options)
+    const response = await fetch('https://api.studio.thegraph.com/query/52770/od-test/v0.0.10', options)
     const data = await response.json()
     if (data.errors) console.log(data.errors)
     if (data?.data?.collateralAuctionHouseStartAuctions) return data?.data?.collateralAuctionHouseStartAuctions
