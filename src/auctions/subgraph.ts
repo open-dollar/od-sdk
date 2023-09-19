@@ -13,16 +13,16 @@ export const querySubgraph = async (query: string): Promise<Array<any>> => {
         },
         body: JSON.stringify(graphqlQuery),
     }
-    const response = await fetch('https://api.studio.thegraph.com/query/52770/hai-test/v0.0.1', options)
+    const response = await fetch('https://api.studio.thegraph.com/query/52770/hai-test/v0.0.3', options)
     const data = await response.json()
     if (data.errors) console.log(data.errors)
     if (data?.data) return data?.data
     return []
 }
 
-export const fetchStartEvents = async (address: string): Promise<Array<StartAuctionEventQuery>> => {
-    const query = `query CollateralAuctionHouseStartAuctions {
-        collateralAuctionHouseStartAuctions(
+export const fetchCollateralAuctionEvents = async (address: string): Promise<any> => {
+    const query = `query CollateralAuctionEvents {
+        startAuction: collateralAuctionHouseStartAuctions(
             orderBy: blockNumber
             orderDirection: desc
             where: {address: "${address}"}
@@ -35,12 +35,7 @@ export const fetchStartEvents = async (address: string): Promise<Array<StartAuct
             transactionHash
             blockTimestamp
         }
-    }`
-    return querySubgraph(query)
-}
-export const fetchBuyEvents = async (address: string): Promise<Array<BuyCollateralEventQuery>> => {
-    const query = `query CollateralAuctionHouseBuyCollaterals {
-        collateralAuctionHouseBuyCollaterals(
+        buyEvents: collateralAuctionHouseBuyCollaterals(
             orderBy: blockNumber
             orderDirection: desc
             where: {address: "${address}"}
@@ -51,15 +46,8 @@ export const fetchBuyEvents = async (address: string): Promise<Array<BuyCollater
             _soldAmount
             transactionHash
             blockTimestamp
-          }
-    }`
-    return querySubgraph(query)
-}
-export const fetchSettleEvents = async (
-    address: string
-): Promise<Array<BuyCollateralEventQuery | StartAuctionEventQuery>> => {
-    const query = `query CollateralAuctionHouseStartEvents {
-        collateralAuctionHouseSettleAuctions(
+        }
+        settleEvents: collateralAuctionHouseSettleAuctions(
             orderBy: blockNumber
             orderDirection: desc
             where: {address: "${address}"}
@@ -69,10 +57,11 @@ export const fetchSettleEvents = async (
             _leftoverCollateral
             _auctionId
             transactionHash
-          }
+        }
     }`
     return querySubgraph(query)
 }
+
 export const fetchDebtAuctionEvents = async (fromBlock: number): Promise<any> => {
     const query = `query DebtAuctionEvents {
         restartAuctions: debtAuctionHouseRestartAuctions(orderBy: blockNumber, orderDirection: desc) {
