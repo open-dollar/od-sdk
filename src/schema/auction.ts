@@ -59,19 +59,19 @@ export interface IAuctionBidder {
 }
 
 export function surplusStartAuctionEventToAuction(
-    startAuction: SurplusStartAuctionEvent,
+    startAuction: any,
     bids: { [key: string]: IAuctionBidder[] },
     restarts: { [key: string]: BigNumber },
     settled: { [key: string]: boolean }
 ): ISurplusAuction {
-    const id = startAuction.args._id.toString()
+    const id = startAuction._id.toString()
     return {
         auctionId: id,
-        auctioneer: startAuction.args._auctioneer,
-        auctionDeadline: restarts[id] ? restarts[id].toString() : startAuction.args._auctionDeadline.toString(),
-        amount: startAuction.args._amountToSell.toString(),
-        initialBid: startAuction.args._amountToRaise.toString(),
-        createdAt: startAuction.args._blockTimestamp.toString(),
+        auctioneer: startAuction._auctioneer,
+        auctionDeadline: restarts[id] ? restarts[id].toString() : startAuction._auctionDeadline.toString(),
+        amount: startAuction._amountToSell.toString(),
+        initialBid: startAuction._amountToRaise.toString(),
+        createdAt: startAuction._blockTimestamp.toString(),
         createdAtTransaction: startAuction.transactionHash.toString(),
         biddersList: bids[id] || [],
         isClaimed: settled[id] || false,
@@ -79,19 +79,19 @@ export function surplusStartAuctionEventToAuction(
 }
 
 export function debtStartAuctionEventToAuction(
-    startAuction: DebtStartAuctionEvent,
+    startAuction: any,
     bids: { [key: string]: IAuctionBidder[] },
     restarts: { [key: string]: BigNumber },
     settled: { [key: string]: boolean }
 ): IDebtAuction {
-    const id = startAuction.args._id.toString()
+    const id = startAuction._id.toString()
     return {
         auctionId: id,
-        auctioneer: startAuction.args._auctioneer,
-        auctionDeadline: restarts[id] ? restarts[id].toString() : startAuction.args._auctionDeadline.toString(),
-        amount: startAuction.args._amountToSell.toString(),
-        initialBid: startAuction.args._amountToRaise.toString(),
-        createdAt: startAuction.args._blockTimestamp.toString(),
+        auctioneer: startAuction._auctioneer,
+        auctionDeadline: restarts[id] ? restarts[id].toString() : startAuction._auctionDeadline.toString(),
+        amount: startAuction._amountToSell.toString(),
+        initialBid: startAuction._amountToRaise.toString(),
+        createdAt: startAuction._blockTimestamp.toString(),
         createdAtTransaction: startAuction.transactionHash.toString(),
         biddersList: bids[id] || [],
         isClaimed: settled[id] || false,
@@ -103,7 +103,7 @@ export interface StartAuctionEventQuery {
     _auctioneer: string
     _amountToSell: BigNumber
     _amountToRaise: BigNumber
-    blockTimestamp: BigNumber
+    _blockTimestamp: BigNumber
     transactionHash: string
 }
 
@@ -115,7 +115,7 @@ export function collateralStartAuctionEventToAuction(
     return {
         auctionId: startAuction._id.toString(),
         auctioneer: startAuction._auctioneer,
-        createdAt: startAuction.blockTimestamp.toString(),
+        createdAt: startAuction._blockTimestamp.toString(),
         createdAtTransaction: startAuction.transactionHash.toString(),
         amountToSell: startAuction._amountToSell.toString(),
         initialBid: startAuction._amountToRaise.toString(),
@@ -125,12 +125,12 @@ export function collateralStartAuctionEventToAuction(
     }
 }
 
-export function bidEventToBid(bid: IncreaseBidSizeEvent): IAuctionBidder {
+export function bidEventToBid(bid: any): IAuctionBidder {
     return {
-        bidder: bid.args._bidder,
-        bid: bid.args._raisedAmount.toString(),
-        createdAt: bid.args._blockTimestamp.toString(),
-        buyAmount: bid.args._soldAmount.toString(),
+        bidder: bid._bidder,
+        bid: bid._raisedAmount.toString(),
+        createdAt: bid._blockTimestamp.toString(),
+        buyAmount: bid._soldAmount.toString(),
         createdAtTransaction: bid.transactionHash,
     }
 }

@@ -35,20 +35,20 @@ export class Auctions {
             ({ startAuction, bidEvents, restartAuctions, settledAuctions }) => {
                 const bids = bidEvents.reduce((accum: { [key: string]: IAuctionBidder[] }, bid: any) => {
                     const parsedBid = bidEventToBid(bid)
-                    const id = bid.args._id.toString()
+                    const id = bid._id.toString()
                     const bidsForId = accum[id]
                     return { ...accum, [id]: bidsForId ? bidsForId.concat(parsedBid) : [parsedBid] }
                 }, {})
 
                 const restarts = restartAuctions.reduce((accum: { [key: string]: BigNumber }, restart: any) => {
-                    const id = restart.args._id.toString()
+                    const id = restart._id.toString()
                     const lastRestart = accum[id]
-                    const newRestart = restart.args._auctionDeadline // Do events always come ordered correctly?
+                    const newRestart = restart._auctionDeadline // Do events always come ordered correctly?
                     return { ...accum, [id]: !lastRestart || newRestart.gt(lastRestart) ? newRestart : lastRestart }
                 }, {})
 
                 const settled = settledAuctions.reduce((accum: { [key: string]: boolean }, settled: any) => {
-                    const id = settled.args._id.toString()
+                    const id = settled._id.toString()
                     return { ...accum, [id]: true }
                 }, {})
 
@@ -66,20 +66,20 @@ export class Auctions {
             ({ startAuction, bidEvents, restartAuctions, settledAuctions }) => {
                 const bids = bidEvents.reduce((accum: { [key: string]: IAuctionBidder[] }, bid: any) => {
                     const parsedBid = bidEventToBid(bid)
-                    const id = bid.args._id.toString()
+                    const id = bid._id.toString()
                     const bidsForId = accum[id]
                     return { ...accum, [id]: bidsForId ? bidsForId.concat(parsedBid) : [parsedBid] }
                 }, {})
 
                 const restarts = restartAuctions.reduce((accum: { [key: string]: BigNumber }, restart: any) => {
-                    const id = restart.args._id.toString()
+                    const id = restart._id.toString()
                     const lastRestart = accum[id]
-                    const newRestart = restart.args._auctionDeadline // Do events always come ordered correctly?
+                    const newRestart = restart._auctionDeadline // Do events always come ordered correctly?
                     return { ...accum, [id]: !lastRestart || newRestart.gt(lastRestart) ? newRestart : lastRestart }
                 }, {})
 
                 const settled = settledAuctions.reduce((accum: { [key: string]: boolean }, settled: any) => {
-                    const id = settled.args._id.toString()
+                    const id = settled._id.toString()
                     return { ...accum, [id]: true }
                 }, {})
 
