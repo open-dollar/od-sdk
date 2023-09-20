@@ -1,6 +1,6 @@
 {
   "name": "@usekeyp/od-sdk",
-  "version": "1.4.0-rc.3",
+  "version": "1.4.0-rc.4",
   "description": "Javascript client for Open Dollar",
   "license": "MIT",
   "main": "./lib/index.js",
