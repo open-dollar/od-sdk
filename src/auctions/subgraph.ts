@@ -13,7 +13,7 @@ export const querySubgraph = async (query: string): Promise<Array<any>> => {
         },
         body: JSON.stringify(graphqlQuery),
     }
-    const response = await fetch('https://api.studio.thegraph.com/query/52770/od-test/v0.0.16', options)
+    const response = await fetch('https://api.studio.thegraph.com/query/52770/od-test/v0.0.17', options)
     const data = await response.json()
     if (data.errors) console.log(data.errors)
     if (data?.data) return data?.data

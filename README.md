@@ -1,8 +1,8 @@
 
-<h1 align="center">Weclome to @usekeyp/od-sdk 👋</h1>
+<h1 align="center">Weclome to @opendollar/sdk 👋</h1>
 <p align="center">
-   <a href="https://www.npmjs.org/package/@usekeyp/od-sdk" target="_blank">
-    <img alt="npm package" src="https://img.shields.io/npm/v/@usekeyp/od-sdk.svg?style=flat-square" />
+   <a href="https://www.npmjs.org/package/@opendollar/sdk" target="_blank">
+    <img alt="npm package" src="https://img.shields.io/npm/v/@opendollar/sdk.svg?style=flat-square" />
   </a>
   <a href="#" target="_blank">
     <img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-blue.svg" />
@@ -19,14 +19,14 @@ The library is written in Typescript with full typing support. It allows access 
 ## Usage 📖
 
 ```bash
-yarn add @usekeyp/od-sdk
+yarn add @opendollar/sdk
 ```
 
 
 ```typescript
 import { ethers, utils as ethersUtils } from 'ethers'
-import { Geb, utils } from '@usekeyp/od-sdk'
-import { fetchUserSafes } from '@usekeyp/od-sdk/lib/virtual/virtualUserSafes.js'
+import { Geb, utils } from '@opendollar/sdk'
+import { fetchUserSafes } from '@opendollar/sdk/lib/virtual/virtualUserSafes.js'
 
 // Setup Ether.js
 const provider = new ethers.providers.JsonRpcProvider(
