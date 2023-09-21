@@ -136,7 +136,7 @@ const tokens: Record<GebDeployment, TokenList> = {
     arbitrum: {},
     'arbitrum-goerli': {
         OD: {
-            address: '0x08161Abd14EF3Ae0E81326dD8633B2e1E6403C2F',
+            address: '0xD578921C95240A01FEB96Fb6c92c06bb86d1aA64',
             decimals: 18,
             symbol: 'OD',
             bytes32String: '',
@@ -145,7 +145,7 @@ const tokens: Record<GebDeployment, TokenList> = {
             isCollateral: false,
         },
         ODG: {
-            address: '0x9adbc5c28BE1A58943774298448C32c290bEdB7b',
+            address: '0xeCE206326B3429B7f7359d417d1B7c638341A28A',
             decimals: 18,
             symbol: 'ODG',
             bytes32String: '',
@@ -163,7 +163,7 @@ const tokens: Record<GebDeployment, TokenList> = {
             isCollateral: true,
         },
         FTRG: {
-            address: '0x36E91d510D492b87813Bb49704423b3b5885201F',
+            address: '0x0Ed89D4655b2fE9f99EaDC3116b223527165452D',
             collateralJoin: '0x49eDffDa17a4b31294f4223E20E0C05bFAd7b546',
             collateralAuctionHouse: '0xD81A45066d293F4e030C3f6fD9D96ae1D0316163',
             decimals: 18,
