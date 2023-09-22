@@ -26,6 +26,7 @@ export interface AnalyticsData {
     redemptionRateITerm: string
     surplusInTreasury: string
     tokenAnalyticsData: TokenAnalyticsData
+    totalVaults: string
 }
 
 export async function fetchAnalyticsData(geb: Geb): Promise<AnalyticsData> {
@@ -98,6 +99,8 @@ export async function fetchAnalyticsData(geb: Geb): Promise<AnalyticsData> {
             {}
         )
 
+    const totalVaults = await geb.contracts.proxyRegistry.connect(geb.provider).totalSupply()
+
     const parsedResult = {
         erc20Supply: decoded.erc20Supply.toString(),
         globalDebt: decoded.globalDebt.toString(),
@@ -110,6 +113,7 @@ export async function fetchAnalyticsData(geb: Geb): Promise<AnalyticsData> {
         redemptionRateITerm: decoded.redemptionRateITerm.toString(),
         surplusInTreasury: decoded.surplusInTreasury.toString(),
         tokenAnalyticsData: result,
+        totalVaults: totalVaults.toString(),
     }
 
     return parsedResult
