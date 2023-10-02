@@ -44,7 +44,7 @@ export async function fetchAnalyticsData(geb: Geb): Promise<AnalyticsData> {
             geb.contracts.piCalculator.address,
             geb.contracts.taxCollector.address,
             geb.contracts.stabilityFeeTreasury.address,
-            tokenList
+            tokenList,
         ]
     )
 
