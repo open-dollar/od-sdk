@@ -1,6 +1,6 @@
 {
   "name": "@opendollar/sdk",
-  "version": "1.5.3-rc.1",
+  "version": "1.5.4-rc.1",
   "description": "Javascript client for Open Dollar",
   "license": "MIT",
   "main": "./lib/index.js",
