@@ -21,17 +21,13 @@ import { fetchCollateralAuctionEvents, fetchDebtAuctionEvents, fetchSurplusAucti
  *  management and the [[contracts | contract interface object]] to directly call smart contracts.
  */
 export class Auctions {
-    /**
-     * Constructor for the main Geb.js object.
-     * @param  {GebDeployment} network Either `'kovan'`, `'mainnet'` or an actual list of contract addresses.
-     * @param  {GebProviderInterface|ethers.providers.Provider} provider Either a Ethers.js provider or a Geb provider (support for Web3 will be added in the future)
-     */
-    constructor(public contracts: ContractApis, public tokenList: TokenList) {
+    constructor(public contracts: ContractApis, public tokenList: TokenList, public subgraph: string) {
         this.tokenList = tokenList
+        this.subgraph = subgraph
     }
 
     public getSurplusAuctions(fromBlock: number): Promise<{ auctions: ISurplusAuction[] }> {
-        return fetchSurplusAuctionEvents(fromBlock).then(
+        return fetchSurplusAuctionEvents(fromBlock, this.subgraph).then(
             ({ startAuction, bidEvents, restartAuctions, settledAuctions }) => {
                 const bids = bidEvents.reduce((accum: { [key: string]: IAuctionBidder[] }, bid: any) => {
                     const parsedBid = bidEventToBid(bid)
@@ -62,7 +58,7 @@ export class Auctions {
     }
 
     public getDebtAuctions(fromBlock: number): Promise<{ auctions: IDebtAuction[] }> {
-        return fetchDebtAuctionEvents(fromBlock).then(
+        return fetchDebtAuctionEvents(fromBlock, this.subgraph).then(
             ({ startAuction, bidEvents, restartAuctions, settledAuctions }) => {
                 const bids = bidEvents.reduce((accum: { [key: string]: IAuctionBidder[] }, bid: any) => {
                     const parsedBid = bidEventToBid(bid)
@@ -93,7 +89,7 @@ export class Auctions {
     }
 
     public getCollateralAuctions(fromBlock: number, collateral: string): Promise<{ auctions: ICollateralAuction[] }> {
-        return fetchCollateralAuctionEvents(this.tokenList[collateral].collateralAuctionHouse).then(
+        return fetchCollateralAuctionEvents(this.tokenList[collateral].collateralAuctionHouse, this.subgraph).then(
             ({ startAuction, buyEvents, settleEvents }) => {
                 const bids = buyEvents.reduce((accum: { [key: string]: IAuctionBidder[] }, bid: any) => {
                     const parsedBid = collateralBidEventToBid(bid)
