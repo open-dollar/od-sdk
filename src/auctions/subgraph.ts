@@ -1,6 +1,6 @@
 import { BuyCollateralEventQuery, StartAuctionEventQuery } from '../schema/auction'
 
-export const querySubgraph = async (query: string): Promise<Array<any>> => {
+export const querySubgraph = async (query: string, subgraph: string): Promise<Array<any>> => {
     const graphqlQuery = {
         operationName: 'CollateralAuctionEvents',
         query,
@@ -13,14 +13,14 @@ export const querySubgraph = async (query: string): Promise<Array<any>> => {
         },
         body: JSON.stringify(graphqlQuery),
     }
-    const response = await fetch('https://api.studio.thegraph.com/query/52770/od-test/v1.5.4-rc.1', options)
+    const response = await fetch(subgraph, options)
     const data = await response.json()
     if (data.errors) console.log(data.errors)
     if (data?.data) return data?.data
     return []
 }
 
-export const fetchCollateralAuctionEvents = async (address: string): Promise<any> => {
+export const fetchCollateralAuctionEvents = async (address: string, subgraph: string): Promise<any> => {
     const query = `query CollateralAuctionEvents {
         startAuction: collateralAuctionHouseStartAuctions(
             orderBy: blockNumber
@@ -59,10 +59,10 @@ export const fetchCollateralAuctionEvents = async (address: string): Promise<any
             transactionHash
         }
     }`
-    return querySubgraph(query)
+    return querySubgraph(query, subgraph)
 }
 
-export const fetchDebtAuctionEvents = async (fromBlock: number): Promise<any> => {
+export const fetchDebtAuctionEvents = async (fromBlock: number, subgraph: string): Promise<any> => {
     const query = `query DebtAuctionEvents {
         restartAuctions: debtAuctionHouseRestartAuctions(orderBy: blockNumber, orderDirection: desc) {
           _auctionDeadline
@@ -99,10 +99,10 @@ export const fetchDebtAuctionEvents = async (fromBlock: number): Promise<any> =>
           transactionHash
         }
       }`
-    return querySubgraph(query)
+    return querySubgraph(query, subgraph)
 }
 
-export const fetchSurplusAuctionEvents = async (fromBlock: number): Promise<any> => {
+export const fetchSurplusAuctionEvents = async (fromBlock: number, subgraph: string): Promise<any> => {
     const query = `query SurplusAuctionEvents {
         startAuction: surplusAuctionHouseStartAuctions(orderBy: blockNumber, orderDirection: desc) {
           _id: _auctionId
@@ -139,5 +139,5 @@ export const fetchSurplusAuctionEvents = async (fromBlock: number): Promise<any>
           transactionHash
         }
       }`
-    return querySubgraph(query)
+    return querySubgraph(query, subgraph)
 }

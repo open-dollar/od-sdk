@@ -162,15 +162,6 @@ const tokens: Record<GebDeployment, TokenList> = {
             bytes32String: WETH,
             isCollateral: false,
         },
-        ARB: {
-            address: '0xF09376A1391A2581c29A315a06B869B2b4b834E3',
-            collateralJoin: '0x624543DAa75ee98CB26477a1eB24E5521D1DfFd5',
-            collateralAuctionHouse: '0xc66dC4D0c0A50c2BF221635957Df4f647C6ccFbd',
-            decimals: 18,
-            symbol: 'ARB',
-            bytes32String: ARB,
-            isCollateral: true,
-        },
         WSTETH: {
             address: '0xFa065ba6c1d9a4d44DCE8788C5f555c039a95f88',
             collateralJoin: '0x113CfdeEFe78588402FEcee311Dabe8f1C16BB6E',
@@ -207,7 +198,21 @@ const tokens: Record<GebDeployment, TokenList> = {
             bytes32String: MAGIC,
             isCollateral: true,
         },
+        ARB: {
+            address: '0xF09376A1391A2581c29A315a06B869B2b4b834E3',
+            collateralJoin: '0x624543DAa75ee98CB26477a1eB24E5521D1DfFd5',
+            collateralAuctionHouse: '0xc66dC4D0c0A50c2BF221635957Df4f647C6ccFbd',
+            decimals: 18,
+            symbol: 'ARB',
+            bytes32String: ARB,
+            isCollateral: true,
+        },
     },
+}
+
+const subgraphs: Record<GebDeployment, string> = {
+    'arbitrum-goerli': 'https://api.studio.thegraph.com/query/52770/od-test/v1.5.4-rc.1',
+    arbitrum: '',
 }
 
 export const getTokenList = (network: GebDeployment): TokenList => {
@@ -224,4 +229,8 @@ export const getTokenDetails = (network: GebDeployment, tokenSymbol: string): To
         return tokenList[tokenSymbol]
     }
     return null
+}
+
+export const getSubgraph = (network: GebDeployment): string => {
+    return subgraphs[network]
 }
