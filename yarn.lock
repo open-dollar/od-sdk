@@ -1482,6 +1482,24 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@opendollar/sdk@workspace:.":
+  version: 0.0.0-use.local
+  resolution: "@opendollar/sdk@workspace:."
+  dependencies:
+    "@commitlint/cli": 17.6.5
+    "@commitlint/config-conventional": 17.6.5
+    "@typechain/ethers-v5": ^11.0.0
+    ethers: 5.4.7
+    lint-staged: 13.2.2
+    prettier: 2.8.8
+    sort-package-json: 2.4.1
+    typechain: 8.2.0
+    typescript: 5.0.4
+  peerDependencies:
+    utf-8-validate: ^5.0.2
+  languageName: unknown
+  linkType: soft
+
 "@pkgjs/parseargs@npm:^0.11.0":
   version: 0.11.0
   resolution: "@pkgjs/parseargs@npm:0.11.0"
@@ -1730,24 +1748,6 @@ __metadata:
   checksum: 56822201fad7677a30f732cd3eb94651bb2797bd4e876ff5ec6a3d5c419a11b97ec18ff38ae86bbb945f578ed3d29856221375e1dcbc4ba640020049fcf9535c
   languageName: node
   linkType: hard
-
-"@usekeyp/od-sdk@workspace:.":
-  version: 0.0.0-use.local
-  resolution: "@usekeyp/od-sdk@workspace:."
-  dependencies:
-    "@commitlint/cli": 17.6.5
-    "@commitlint/config-conventional": 17.6.5
-    "@typechain/ethers-v5": ^11.0.0
-    ethers: 5.4.7
-    lint-staged: 13.2.2
-    prettier: 2.8.8
-    sort-package-json: 2.4.1
-    typechain: 8.2.0
-    typescript: 5.0.4
-  peerDependencies:
-    utf-8-validate: ^5.0.2
-  languageName: unknown
-  linkType: soft
 
 "JSONStream@npm:^1.0.4":
   version: 1.3.5

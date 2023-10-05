@@ -26,13 +26,14 @@ export interface AnalyticsData {
     redemptionRateITerm: string
     surplusInTreasury: string
     tokenAnalyticsData: TokenAnalyticsData
+    totalVaults: string
 }
 
 export async function fetchAnalyticsData(geb: Geb): Promise<AnalyticsData> {
     // Encoded input data to be sent to the batch contract constructor
     const tokenList = Object.values(geb.tokenList)
+        .filter((token) => token.isCollateral)
         .map((token) => token.bytes32String)
-        .filter((address) => address !== undefined && address !== '' && address)
 
     const inputData = ethers.utils.defaultAbiCoder.encode(
         ['address', 'address', 'address', 'address', 'address', 'address', 'bytes32[]'],
@@ -57,16 +58,16 @@ export async function fetchAnalyticsData(geb: Geb): Promise<AnalyticsData> {
     const decoded = ethers.utils.defaultAbiCoder.decode(
         [
             `tuple(
+                uint256 marketPrice,
                 uint256 erc20Supply,
                 uint256 globalDebt,
                 uint256 globalDebtCeiling,
                 uint256 globalUnbackedDebt,
-                uint256 marketPrice, 
-                uint256 redemptionPrice, 
-                uint256 redemptionRate, 
+                uint256 redemptionPrice,
+                uint256 redemptionRate,
                 uint256 redemptionRatePTerm, 
                 uint256 redemptionRateITerm, 
-                uint256 surplusInTreasury, 
+                uint256 surplusInTreasury,
                 tuple(
                     address delayedOracle, 
                     uint256 debtAmount, 
@@ -75,8 +76,10 @@ export async function fetchAnalyticsData(geb: Geb): Promise<AnalyticsData> {
                     uint256 currentPrice, 
                     uint256 nextPrice,
                     uint256 stabilityFee
-                    )[] tokenAnalyticsData)`,
+                )[] tokenAnalyticsData
+            )`,
         ],
+
         returnedData
     )[0] as AnalyticsData
 
@@ -98,6 +101,8 @@ export async function fetchAnalyticsData(geb: Geb): Promise<AnalyticsData> {
             {}
         )
 
+    const totalVaults = await geb.contracts.proxyRegistry.connect(geb.provider).totalSupply()
+
     const parsedResult = {
         erc20Supply: decoded.erc20Supply.toString(),
         globalDebt: decoded.globalDebt.toString(),
@@ -110,6 +115,7 @@ export async function fetchAnalyticsData(geb: Geb): Promise<AnalyticsData> {
         redemptionRateITerm: decoded.redemptionRateITerm.toString(),
         surplusInTreasury: decoded.surplusInTreasury.toString(),
         tokenAnalyticsData: result,
+        totalVaults: totalVaults.toString(),
     }
 
     return parsedResult

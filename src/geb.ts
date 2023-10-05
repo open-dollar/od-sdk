@@ -1,7 +1,7 @@
 import { ethers } from 'ethers'
 import { ContractApis } from './api/contract-apis'
-import { Auctions } from './auctions'
-import { TokenList, getTokenList } from './contracts/addreses'
+import { Auctions } from './auctions/auctions'
+import { TokenList, getTokenList, getSubgraph } from './contracts/addreses'
 import { ContractList, GebDeployment, getAddressList } from './contracts/index'
 import { GebError, GebErrorTypes } from './errors'
 import { BasicActions } from './proxy-action'
@@ -74,6 +74,7 @@ export class Geb {
      */
     public contracts: ContractApis
     public tokenList: TokenList
+    public subgraph: string
     public auctions: Auctions
     public liquidations: LiquidationActions
     public provider: ethers.providers.Provider
@@ -100,8 +101,9 @@ export class Geb {
 
         this.addresses = getAddressList(network)
         this.tokenList = getTokenList(network)
+        this.subgraph = getSubgraph(network)
         this.contracts = new ContractApis(network, signerOrProvider)
-        this.auctions = new Auctions(this.contracts)
+        this.auctions = new Auctions(this.contracts, this.tokenList, this.subgraph)
         this.liquidations = new LiquidationActions(this.contracts, this.tokenList)
     }
 

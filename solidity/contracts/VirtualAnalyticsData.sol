@@ -78,11 +78,11 @@ interface ITaxCollector {
 
 contract VirtualAnalyticsData {
     struct AnalyticsData {
+        uint256 marketPrice;
         uint256 erc20Supply;
         uint256 globalDebt;
         uint256 globalDebtCeiling;
         uint256 globalUnbackedDebt;
-        uint256 marketPrice;
         uint256 redemptionPrice;
         uint256 redemptionRate;
         uint256 redemptionRatePTerm;
@@ -138,12 +138,18 @@ contract VirtualAnalyticsData {
          + _safeEngine.coinBalance(address(_stabilityFeeTreasury)) 
          - _safeEngine.debtBalance(address(_stabilityFeeTreasury));
 
+        uint256 marketPrice = 0;
+        try _oracleRelayer.marketPrice() returns (uint256 _marketPrice) {
+            marketPrice = _marketPrice;
+        } catch {}
+            
+
         AnalyticsData memory analyticsData = AnalyticsData({
+            marketPrice: marketPrice,
             erc20Supply: _haiToken.totalSupply(),
             globalDebt: _safeEngine.globalDebt() / RAY,
             globalDebtCeiling: _safeEngine.params().globalDebtCeiling / RAY,
             globalUnbackedDebt: _safeEngine.globalUnbackedDebt() / RAY,
-            marketPrice: _oracleRelayer.marketPrice(),
             redemptionPrice: _oracleRelayer.redemptionPrice() / 1e9,
             redemptionRate: _oracleRelayer.redemptionRate(),
             redemptionRatePTerm: _pidController.getBoundedRedemptionRate(_pOutput),
