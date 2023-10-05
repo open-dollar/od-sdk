@@ -126,6 +126,8 @@ export type TokenData = {
     collateralJoin: string
     collateralAuctionHouse: string
     isCollateral: boolean
+    camelotPoolAddress?: string
+    chainlinkRelayer?: string
 }
 
 export type TokenList = {
@@ -143,6 +145,7 @@ const tokens: Record<GebDeployment, TokenList> = {
             collateralJoin: '',
             collateralAuctionHouse: '',
             isCollateral: false,
+            camelotPoolAddress: '0x2A09411c7208c6dDcEC0fe8e3E58841f5F0F2030',
         },
         ODG: {
             address: '0x4d8377090cc95D341A3EBe96b6f0C27288c569f5',
@@ -161,6 +164,7 @@ const tokens: Record<GebDeployment, TokenList> = {
             symbol: 'WETH',
             bytes32String: WETH,
             isCollateral: false,
+            chainlinkRelayer: '0x42d8a0Eb0dFE1b5b4A2631adBb3310aEa3d70a92',
         },
         WSTETH: {
             address: '0xFa065ba6c1d9a4d44DCE8788C5f555c039a95f88',
