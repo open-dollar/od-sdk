@@ -11,6 +11,8 @@ interface TokenAnalyticsData {
         currentPrice: BigNumber
         nextPrice: BigNumber
         stabilityFee: BigNumber
+        safetyCRatio: BigNumber
+        liquidationCRatio: BigNumber
     }
 }
 
@@ -26,6 +28,7 @@ export interface AnalyticsData {
     redemptionRateITerm: string
     surplusInTreasury: string
     tokenAnalyticsData: TokenAnalyticsData
+    systemCoinOracle: string
     totalVaults: string
 }
 
@@ -58,6 +61,7 @@ export async function fetchAnalyticsData(geb: Geb): Promise<AnalyticsData> {
     const decoded = ethers.utils.defaultAbiCoder.decode(
         [
             `tuple(
+                address systemCoinOracle,
                 uint256 marketPrice,
                 uint256 erc20Supply,
                 uint256 globalDebt,
@@ -70,6 +74,8 @@ export async function fetchAnalyticsData(geb: Geb): Promise<AnalyticsData> {
                 uint256 surplusInTreasury,
                 tuple(
                     address delayedOracle, 
+                    uint256 safetyCRatio,
+                    uint256 liquidationCRatio,
                     uint256 debtAmount, 
                     uint256 debtCeiling, 
                     uint256 lockedAmount,
@@ -96,6 +102,8 @@ export async function fetchAnalyticsData(geb: Geb): Promise<AnalyticsData> {
                     currentPrice: decoded?.tokenAnalyticsData[i]?.currentPrice.toString(),
                     nextPrice: decoded?.tokenAnalyticsData[i]?.nextPrice.toString(),
                     stabilityFee: decoded?.tokenAnalyticsData[i]?.stabilityFee.toString(),
+                    safetyCRatio: decoded?.tokenAnalyticsData[i]?.safetyCRatio.toString(),
+                    liquidationCRatio: decoded?.tokenAnalyticsData[i]?.liquidationCRatio.toString(),
                 },
             }),
             {}
@@ -104,6 +112,7 @@ export async function fetchAnalyticsData(geb: Geb): Promise<AnalyticsData> {
     const totalVaults = await geb.contracts.vault721.connect(geb.provider).totalSupply()
 
     const parsedResult = {
+        systemCoinOracle: decoded.systemCoinOracle,
         erc20Supply: decoded.erc20Supply.toString(),
         globalDebt: decoded.globalDebt.toString(),
         globalDebtCeiling: decoded.globalDebtCeiling.toString(),
