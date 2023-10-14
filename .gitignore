@@ -7,3 +7,5 @@ src/typechained
 src/artifacts
 *.tgz
 package
+yarn-error.log
+abis/imported

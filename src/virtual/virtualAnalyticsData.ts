@@ -101,7 +101,7 @@ export async function fetchAnalyticsData(geb: Geb): Promise<AnalyticsData> {
             {}
         )
 
-    const totalVaults = await geb.contracts.proxyRegistry.connect(geb.provider).totalSupply()
+    const totalVaults = await geb.contracts.vault721.connect(geb.provider).totalSupply()
 
     const parsedResult = {
         erc20Supply: decoded.erc20Supply.toString(),
