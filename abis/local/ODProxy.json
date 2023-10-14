@@ -230,9 +230,7 @@
     "absolutePath": "src/contracts/proxies/ODProxy.sol",
     "id": 67471,
     "exportedSymbols": {
-      "ODProxy": [
-        67470
-      ]
+      "ODProxy": [67470]
     },
     "nodeType": "SourceUnit",
     "src": "36:771:163",
@@ -242,11 +240,7 @@
         "nodeType": "PragmaDirective",
         "src": "36:23:163",
         "nodes": [],
-        "literals": [
-          "solidity",
-          "0.8",
-          ".19"
-        ]
+        "literals": ["solidity", "0.8", ".19"]
       },
       {
         "id": 67470,
@@ -740,9 +734,7 @@
                   }
                 },
                 {
-                  "assignments": [
-                    67449
-                  ],
+                  "assignments": [67449],
                   "declarations": [
                     {
                       "constant": false,
@@ -1004,9 +996,7 @@
                 "modifierName": {
                   "id": 67433,
                   "name": "onlyOwner",
-                  "nameLocations": [
-                    "540:9:163"
-                  ],
+                  "nameLocations": ["540:9:163"],
                   "nodeType": "IdentifierPath",
                   "referencedDeclaration": 67427,
                   "src": "540:9:163"
@@ -1125,17 +1115,11 @@
         "contractDependencies": [],
         "contractKind": "contract",
         "fullyImplemented": true,
-        "linearizedBaseContracts": [
-          67470
-        ],
+        "linearizedBaseContracts": [67470],
         "name": "ODProxy",
         "nameLocation": "103:7:163",
         "scope": 67471,
-        "usedErrors": [
-          67396,
-          67400,
-          67402
-        ]
+        "usedErrors": [67396, 67400, 67402]
       }
     ],
     "license": "GPL-3.0"
