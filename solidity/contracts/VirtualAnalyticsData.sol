@@ -54,6 +54,7 @@ interface IOracleRelayer {
     function redemptionPrice() external returns (uint256 _redemptionPrice);
     function redemptionRate() external view returns (uint256 _redemptionRate);
     function cParams(bytes32 _cType) external view returns (OracleRelayerCollateralParams memory _cParams);
+    function systemCoinOracle() external view returns (address _systemCoinOracle);
 }
 
 interface IPIDController {
@@ -78,6 +79,7 @@ interface ITaxCollector {
 
 contract VirtualAnalyticsData {
     struct AnalyticsData {
+        address systemCoinOracle;
         uint256 marketPrice;
         uint256 erc20Supply;
         uint256 globalDebt;
@@ -93,6 +95,8 @@ contract VirtualAnalyticsData {
 
     struct TokenAnalyticsData {
         address delayedOracle;
+        uint256 safetyCRatio;
+        uint256 liquidationCRatio;
         uint256 debtAmount;
         uint256 debtCeiling;
         uint256 lockedAmount;
@@ -113,14 +117,15 @@ contract VirtualAnalyticsData {
         TokenAnalyticsData[] memory tokenAnalyticsData = new TokenAnalyticsData[](cTypes.length);
         for (uint256 i = 0; i < cTypes.length; i++) {
             bytes32 cType = cTypes[i];
-            uint256 _debtAmount = _safeEngine.cData(cType).debtAmount;
             IDelayedOracle _oracle = _oracleRelayer.cParams(cType).oracle;
             (uint256 _currentPrice,) = _oracle.getResultWithValidity();
             (uint256 _nextPrice,) = _oracle.getNextResultWithValidity();
-
+            
             tokenAnalyticsData[i] = TokenAnalyticsData({
                 delayedOracle: address(_oracle),
-                debtAmount: _debtAmount,
+                safetyCRatio:_oracleRelayer.cParams(cType).safetyCRatio,
+                liquidationCRatio: _oracleRelayer.cParams(cType).liquidationCRatio,
+                debtAmount: _safeEngine.cData(cType).debtAmount,
                 debtCeiling: _safeEngine.cParams(cType).debtCeiling / RAY,
                 lockedAmount: _safeEngine.cData(cType).lockedAmount,
                 currentPrice: _currentPrice,
@@ -143,8 +148,8 @@ contract VirtualAnalyticsData {
             marketPrice = _marketPrice;
         } catch {}
             
-
         AnalyticsData memory analyticsData = AnalyticsData({
+            systemCoinOracle: address(_oracleRelayer.systemCoinOracle()),
             marketPrice: marketPrice,
             erc20Supply: _haiToken.totalSupply(),
             globalDebt: _safeEngine.globalDebt() / RAY,
