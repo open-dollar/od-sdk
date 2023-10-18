@@ -1507,7 +1507,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@opendollar/abis@npm:^0.0.0-4206e930":
+"@opendollar/abis@npm:^0.0.0-ad5646d3":
   version: 0.0.0-f9f4cf29
   resolution: "@opendollar/abis@npm:0.0.0-f9f4cf29"
   dependencies:
@@ -1532,7 +1532,7 @@ __metadata:
   dependencies:
     "@commitlint/cli": 17.6.5
     "@commitlint/config-conventional": 17.6.5
-    "@opendollar/abis": ^0.0.0-4206e930
+    "@opendollar/abis": ^0.0.0-ad5646d3
     "@typechain/ethers-v5": ^11.0.0
     ethers: 5.4.7
     lint-staged: 13.2.2
