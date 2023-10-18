@@ -1,6 +1,13 @@
 import { BigNumber } from 'ethers'
-import { IncreaseBidSizeEvent, StartAuctionEvent as SurplusStartAuctionEvent } from '../typechained/SurplusAuctionHouse'
-import { StartAuctionEvent as DebtStartAuctionEvent } from '../typechained/DebtAuctionHouse'
+import {
+    IncreaseBidSizeEvent,
+    StartAuctionEvent as SurplusStartAuctionEvent,
+} from '../typechained/imported/ISurplusAuctionHouse'
+import { StartAuctionEvent as DebtStartAuctionEvent } from '../typechained/imported/IDebtAuctionHouse'
+import {
+    BuyCollateralEvent,
+    StartAuctionEvent as CollateralAuctionStartEvent,
+} from '../typechained/imported/ICollateralAuctionHouse'
 
 export interface ISurplusAuction {
     auctionId: string

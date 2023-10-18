@@ -14,7 +14,7 @@ export class BasicActions {
      * Underlying proxy object. Can be use to make custom calls to the proxy using `proxy.execute()` function.
      * For the details of each function
      */
-    public proxy: types.HaiProxy
+    public proxy: types.ODProxy
 
     /**
      * Address of the base proxy actions contract.
@@ -48,13 +48,12 @@ export class BasicActions {
 
     private addressList: ContractList
     private tokenList: TokenList
-    private proxyActionCore: types.BasicActions
-    private proxyActionGlobalSettlement: types.GlobalSettlementActions
-    private proxyActionDebtAuction: types.DebtBidActions
-    private proxyActionSurplusAuction: types.SurplusBidActions
-    private proxyActionCollateralAuction: types.CollateralBidActions
-    private proxyActionRewarded: types.RewardedActions
-
+    private proxyActionCore: types.IBasicActions
+    private proxyActionGlobalSettlement: types.IGlobalSettlementActions
+    private proxyActionDebtAuction: types.IDebtBidActions
+    private proxyActionSurplusAuction: types.ISurplusBidActions
+    private proxyActionCollateralAuction: types.ICollateralBidActions
+    private proxyActionRewarded: types.IRewardedActions
     constructor(
         /**
          * Address of the underlying proxy
@@ -66,7 +65,7 @@ export class BasicActions {
         this.addressList = getAddressList(network)
         this.tokenList = getTokenList(network)
 
-        this.proxy = types.HaiProxy__factory.connect(proxyAddress, this.chainProvider)
+        this.proxy = types.ODProxy__factory.connect(proxyAddress, this.chainProvider)
 
         // Set proxy action contract addresses
         this.proxyActionCoreAddress = this.addressList.PROXY_BASIC_ACTIONS
@@ -77,29 +76,29 @@ export class BasicActions {
         this.proxyRewardedActionsAddress = this.addressList.PROXY_REWARDED_ACTIONS
 
         // Proxy contract APIs
-        this.proxyActionCore = types.BasicActions__factory.connect(this.proxyActionCoreAddress, this.chainProvider)
+        this.proxyActionCore = types.IBasicActions__factory.connect(this.proxyActionCoreAddress, this.chainProvider)
 
-        this.proxyActionDebtAuction = types.DebtBidActions__factory.connect(
+        this.proxyActionDebtAuction = types.IDebtBidActions__factory.connect(
             this.proxyActionDebtAuctionAddress,
             this.chainProvider
         )
 
-        this.proxyActionSurplusAuction = types.SurplusBidActions__factory.connect(
+        this.proxyActionSurplusAuction = types.ISurplusBidActions__factory.connect(
             this.proxyActionSurplusAuctionAddress,
             this.chainProvider
         )
 
-        this.proxyActionCollateralAuction = types.CollateralBidActions__factory.connect(
+        this.proxyActionCollateralAuction = types.ICollateralBidActions__factory.connect(
             this.proxyActionCollateralAuctionAddress,
             this.chainProvider
         )
 
-        this.proxyActionGlobalSettlement = types.GlobalSettlementActions__factory.connect(
+        this.proxyActionGlobalSettlement = types.IGlobalSettlementActions__factory.connect(
             this.proxyActionGlobalSettlementAddress,
             this.chainProvider
         )
 
-        this.proxyActionRewarded = types.RewardedActions__factory.connect(
+        this.proxyActionRewarded = types.IRewardedActions__factory.connect(
             this.proxyRewardedActionsAddress,
             this.chainProvider
         )
