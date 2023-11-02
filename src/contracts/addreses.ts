@@ -42,9 +42,43 @@ export type ContractList = {
     [key in ContractKey]: string
 }
 
-export declare type GebDeployment = 'arbitrum' | 'arbitrum-goerli'
+export declare type GebDeployment = 'arbitrum' | 'arbitrum-goerli' | 'arbitrum-sepolia'
 
 const addresses: Record<GebDeployment, ContractList> = {
+    'arbitrum-sepolia': {
+        MULTICALL: '0xcA11bde05977b3631167028862bE2a173976CA11',
+        ETH: '0xEe01c0CD76354C383B8c7B4e65EA88D00B06f36f',
+        GEB_SYSTEM_COIN: '0x94beB5fC16824338Eaa538c3c857D7f7fFf4B2Ce',
+        GEB_PROTOCOL_TOKEN: '0x22d953bc460246199a02A4c6C2dAA929335645d0',
+        GEB_SAFE_ENGINE: '0x30fdA32a673Af230D69cb4A11a6125D7E7E4c11D',
+        GEB_ORACLE_RELAYER: '0x9978BBC228B5dAf625315a4A7696f0f0D3930fDa',
+        GEB_SURPLUS_AUCTION_HOUSE: '0x0eFe9B7aF21C8d345fff787082bbB5fc7B07BA82',
+        GEB_DEBT_AUCTION_HOUSE: '0x750ecadB0086F28e541f09eF11a759a5548E97f9',
+        GEB_COLLATERAL_AUCTION_HOUSE_FACTORY: '0x56Cae2E66D0Dd4C0e6f1944B82F3C082DCCe41EF',
+        GEB_ACCOUNTING_ENGINE: '0x62c7CAE5c017016BEd5f404FD23D43a097f1d9Ba',
+        GEB_LIQUIDATION_ENGINE: '0xd99Ea0A9566d7e5d7e3bB504E7Ea5851dD1BF35f',
+        GEB_COIN_JOIN: '0x266358F318D9b331Ba06cabb1f2A2211FE2BFF44',
+        GEB_COLLATERAL_JOIN_FACTORY: '0x8E68B53d0c3d3f4A9bDffD87782949041395019C',
+        GEB_TAX_COLLECTOR: '0xFefAd2d690895604c8588e4d5bEE31261D06A620',
+        GEB_STABILITY_FEE_TREASURY: '0x8b68dda01E3c17edeb2fb03c6e390D25b906f8A2',
+        GEB_GLOBAL_SETTLEMENT: '0x5e6F4CF324cf9f8Dbb27f4E9Abb2d00f8000Ed27',
+        GEB_POST_SETTLEMENT_SURPLUS_AUCTION_HOUSE: '0x03355b951eD8936902eF21073A1c370E9d9Ac432',
+        GEB_POST_SETTLEMENT_SURPLUS_AUCTIONEER: '0x1D6AC552B5f642A82dbB1e2697a0c1fa9585e02d',
+        GEB_RRFM_SETTER: '0x39192F857b0909ddC4d5B5272383C3c0b43a3967',
+        GEB_RRFM_CALCULATOR: '0xfBF482CEdA400487aa740f602A1f51431aA8a4bc',
+        SAFE_MANAGER: '0xA3EF1c4ef0FDC10501C6F907b004Be3A5905be65',
+        PROXY_BASIC_ACTIONS: '0xeE34Cda23dAF9C92D417379dc258825311420bb2',
+        PROXY_REGISTRY: '0x677Bd90AB6A27552D0744a0Af196DA127f014656',
+        PROXY_DEBT_AUCTION_ACTIONS: '0xe98882f63F1d1F749f627Ef2BA4D86B3c597Cb59',
+        PROXY_SURPLUS_AUCTION_ACTIONS: '0xb4Efb9a37f0af1b7316f2e4df52A8eB541306263',
+        PROXY_COLLATERAL_AUCTION_ACTIONS: '0xEbAB30335CB9D05B3edC9CFb38b7663f7047da4A',
+        PROXY_POST_SETTLEMENT_SURPLUS_AUCTION_ACTIONS: '0x3BC35240184d6ddd63d189fEa5328deA0906FD7C',
+        PROXY_GLOBAL_SETTLEMENT_ACTIONS: '0x9fD3826e3C89EE7f2808D877117A55d732EBa477',
+        PROXY_REWARDED_ACTIONS: '0x2A2C3C71107E390FDB0862d835B638bfC7064c50',
+        JOB_ACCOUNTING: '0x3D65B41898dB1504C78497A0f4FAe7a926355A5B',
+        JOB_LIQUIDATION: '0x08D43780b55F31bAeE80199Bef527C9BeF4D5A28',
+        JOB_ORACLES: '0xC4813f7ca4b73A94b3077D5bADBDca1be1222735',
+    },
     'arbitrum-goerli': {
         MULTICALL: '0xcA11bde05977b3631167028862bE2a173976CA11',
         ETH: '0xEe01c0CD76354C383B8c7B4e65EA88D00B06f36f',
@@ -133,6 +167,82 @@ export type TokenList = {
 
 const tokens: Record<GebDeployment, TokenList> = {
     arbitrum: {},
+    'arbitrum-sepolia': {
+        OD: {
+            address: '0x94beB5fC16824338Eaa538c3c857D7f7fFf4B2Ce',
+            decimals: 18,
+            symbol: 'OD',
+            bytes32String: OD,
+            collateralJoin: '',
+            collateralAuctionHouse: '',
+            isCollateral: false,
+            camelotPoolAddress: '',
+        },
+        ODG: {
+            address: '0x22d953bc460246199a02A4c6C2dAA929335645d0',
+            decimals: 18,
+            symbol: 'ODG',
+            bytes32String: '',
+            collateralJoin: '',
+            collateralAuctionHouse: '',
+            isCollateral: false,
+        },
+        WETH: {
+            address: '0xEe01c0CD76354C383B8c7B4e65EA88D00B06f36f',
+            collateralJoin: '',
+            collateralAuctionHouse: '',
+            decimals: 18,
+            symbol: 'WETH',
+            bytes32String: WETH,
+            isCollateral: false,
+            chainlinkRelayer: '',
+        },
+        WSTETH: {
+            address: '0x93b19315A575532907DeB0FA63Bbd74972934784',
+            collateralJoin: '0xE0dF883Bc3a60Ef8e5522d7B5fE03ee2E5e4e31b',
+            collateralAuctionHouse: '0x9d71cff8e3E2B0DC53983f9E3F38142EE99F8AB8',
+            decimals: 18,
+            symbol: 'WSTETH',
+            bytes32String: WSTETH,
+            isCollateral: true,
+        },
+        CBETH: {
+            address: '0x11afeD730373251392b4bA3D146a334196998201',
+            collateralJoin: '0xC40e96b01f526943596bd57854DAD4285878B989',
+            collateralAuctionHouse: '0x56c04D90766bf64426037680d6bC79fEdba47E79',
+            decimals: 18,
+            symbol: 'CBETH',
+            bytes32String: CBETH,
+            isCollateral: true,
+        },
+        RETH: {
+            address: '0xfaB4E79F883620CE5F9d65F4f760FF706475BFca',
+            collateralJoin: '0x165b9CcB20cc313131c0152450dB91a7ee14E21e',
+            collateralAuctionHouse: '0x88A755ee64e48A3dd239D6d0989D1e27E518ABE8',
+            decimals: 18,
+            symbol: 'RETH',
+            bytes32String: RETH,
+            isCollateral: true,
+        },
+        MAGIC: {
+            address: '0x0F97Fc4b35b1C3c8c9fd6E723ebed6C267e6E2dd',
+            collateralJoin: '0x05f8230CD0C85c43d9a7eDf26532F39B9D7E1896',
+            collateralAuctionHouse: '0x7eeF092e0e89d46986C987Dfb89AA306fc2374d0',
+            decimals: 18,
+            symbol: 'MAGIC',
+            bytes32String: MAGIC,
+            isCollateral: true,
+        },
+        ARB: {
+            address: '0x7Ff1f29BbFee60cFC4f004E9C8B58b57Ff003b3a',
+            collateralJoin: '0x5900EB92788168A8Fa518461652E889f2caBA199',
+            collateralAuctionHouse: '0x7A8152bb519b399e85d446fFe2F432D75AEA6bf9',
+            decimals: 18,
+            symbol: 'ARB',
+            bytes32String: ARB,
+            isCollateral: true,
+        },
+    },
     'arbitrum-goerli': {
         OD: {
             address: '0xc065c5d279E581aCAd056fDF825B0a55EAb9884e',
@@ -212,6 +322,7 @@ const tokens: Record<GebDeployment, TokenList> = {
 }
 
 const subgraphs: Record<GebDeployment, string> = {
+    'arbitrum-sepolia': '',
     'arbitrum-goerli': 'https://api.studio.thegraph.com/query/52770/open-dollar---testnet/v1.5.6-rc.1',
     arbitrum: '',
 }
