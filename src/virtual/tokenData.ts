@@ -9,9 +9,9 @@ export interface TokenFetchData {
 }
 
 export interface PoolData {
-    OD_balance: string;
-    WETH_balance: string;
-    totalLiquidityUSD: string;
+    OD_balance: string
+    WETH_balance: string
+    totalLiquidityUSD: string
 }
 
 /**
@@ -21,41 +21,44 @@ export interface PoolData {
  */
 export async function fetchPoolData(geb: Geb): Promise<PoolData> {
     try {
+        const uniV3PoolAddress = geb.tokenList['OD'].camelotPoolAddress
 
-        const uniV3PoolAddress = geb.tokenList['OD'].camelotPoolAddress;
+        const OD_balance = await geb.contracts.systemCoin.balanceOf(uniV3PoolAddress)
 
-        const OD_balance = await geb.contracts.systemCoin.balanceOf(uniV3PoolAddress);
-
-        const WETH_balance = await geb.contracts.weth.balanceOf(uniV3PoolAddress);
+        const WETH_balance = await geb.contracts.weth.balanceOf(uniV3PoolAddress)
 
         const OD_market_price = await geb.contracts.oracleRelayer.marketPrice()
 
         const chainlinkRelayerContract = new ethers.Contract(
             geb.tokenList['WETH'].chainlinkRelayer,
             ['function getResultWithValidity() external view returns (uint256 _result, bool _validity)'],
-            geb.provider,
-        );
+            geb.provider
+        )
 
-        const WETH_market_price = await chainlinkRelayerContract.getResultWithValidity();
+        const WETH_market_price = await chainlinkRelayerContract.getResultWithValidity()
 
-        const OD_market_price_float = parseFloat(ethers.utils.formatEther(OD_market_price));
+        const OD_market_price_float = parseFloat(ethers.utils.formatEther(OD_market_price))
 
-        const WETH_market_price_float = parseFloat(ethers.utils.formatEther(WETH_market_price._result));
+        const WETH_market_price_float = parseFloat(ethers.utils.formatEther(WETH_market_price._result))
 
-        const OD_market_cap = OD_market_price_float * parseFloat(ethers.utils.formatEther(OD_balance));
+        const OD_market_cap = OD_market_price_float * parseFloat(ethers.utils.formatEther(OD_balance))
 
-        const WETH_market_cap = WETH_market_price_float * parseFloat(ethers.utils.formatEther(WETH_balance));
+        const WETH_market_cap = WETH_market_price_float * parseFloat(ethers.utils.formatEther(WETH_balance))
 
-        const total_market_cap = OD_market_cap + WETH_market_cap;
+        const total_market_cap = OD_market_cap + WETH_market_cap
 
         return {
             OD_balance: OD_balance.toString(),
             WETH_balance: WETH_balance.toString(),
             totalLiquidityUSD: total_market_cap.toString(),
-        };
+        }
     } catch (error) {
         console.log('Error fetching pool data: ', error)
-        throw error;
+        return {
+            OD_balance: '0',
+            WETH_balance: '0',
+            totalLiquidityUSD: '0',
+        }
     }
 }
 
