@@ -188,7 +188,7 @@ const tokens: Record<GebDeployment, TokenList> = {
             isCollateral: false,
         },
         WETH: {
-            address: '0xEe01c0CD76354C383B8c7B4e65EA88D00B06f36f',
+            address: '0x0091f4e75a03C11cB9be8E3717219005eb780D89',
             collateralJoin: '',
             collateralAuctionHouse: '',
             decimals: 18,
