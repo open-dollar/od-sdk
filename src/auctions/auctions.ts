@@ -99,11 +99,11 @@ export class Auctions {
                 }, {})
 
                 const settled = settleEvents.reduce((accum: { [key: string]: boolean }, settled: any) => {
-                  if (!settled._id) {
-                    return accum;
-                  }
-                  const id = settled._id.toString()
-                  return { ...accum, [id]: true }
+                    if (!settled._id) {
+                        return accum
+                    }
+                    const id = settled._id.toString()
+                    return { ...accum, [id]: true }
                 }, {})
 
                 const auctions = startAuction.map((auc: any) =>
