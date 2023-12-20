@@ -5,12 +5,21 @@ export const querySubgraph = async (query: string, subgraph: string): Promise<Ar
         operationName: 'CollateralAuctionEvents',
         query,
     }
+
+    const headers: {
+        'content-type': string
+        Authorization?: string
+    } = {
+        'content-type': 'application/json',
+    }
+
+    if (subgraph.startsWith('https://api.studio.thegraph.com')) {
+        headers.Authorization = '<token>'
+    }
+
     const options = {
         method: 'POST',
-        headers: {
-            'content-type': 'application/json',
-            Authorization: '<token>',
-        },
+        headers: headers,
         body: JSON.stringify(graphqlQuery),
     }
     const response = await fetch(subgraph, options)
