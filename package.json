@@ -22,7 +22,7 @@
     "test": "echo \"No tests yet\""
   },
   "dependencies": {
-    "@opendollar/abis": "0.0.0-874f6292",
+    "@opendollar/abis": "^0.0.0-874f6292",
     "ethers": "5.4.7"
   },
   "devDependencies": {
