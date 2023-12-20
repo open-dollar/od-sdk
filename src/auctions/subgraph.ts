@@ -19,19 +19,19 @@ export const querySubgraph = async (query: string, subgraph: string): Promise<Ar
         method: 'POST',
         headers: headers,
         body: JSON.stringify(graphqlQuery),
-    };
+    }
 
     try {
-        const response = await fetch(subgraph, options);
+        const response = await fetch(subgraph, options)
         const data = await response.json()
         if (data.errors) {
             console.log(data.errors)
         }
-        return data?.data ?? [];
+        return data?.data ?? []
     } catch (error) {
         console.error('Primary subgraph fetch failed:', error)
 
-        const fallbackSubgraph = process.env.REACT_APP_FALLBACK_SUBGRAPH_URL;
+        const fallbackSubgraph = process.env.REACT_APP_FALLBACK_SUBGRAPH_URL
         if (fallbackSubgraph) {
             headers = {
                 'content-type': 'application/json',
@@ -40,9 +40,9 @@ export const querySubgraph = async (query: string, subgraph: string): Promise<Ar
                 method: 'POST',
                 headers: headers,
                 body: JSON.stringify(graphqlQuery),
-            };
+            }
             try {
-                const fallbackResponse = await fetch(fallbackSubgraph, fallbackOptions);
+                const fallbackResponse = await fetch(fallbackSubgraph, fallbackOptions)
                 const fallbackData = await fallbackResponse.json()
                 if (fallbackData.errors) {
                     console.log(fallbackData.errors)
@@ -58,7 +58,6 @@ export const querySubgraph = async (query: string, subgraph: string): Promise<Ar
         }
     }
 }
-
 
 export const fetchCollateralAuctionEvents = async (address: string, subgraph: string): Promise<any> => {
     const query = `query CollateralAuctionEvents {
