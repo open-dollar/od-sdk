@@ -1,23 +1,62 @@
-import { BuyCollateralEventQuery, StartAuctionEventQuery } from '../schema/auction'
-
 export const querySubgraph = async (query: string, subgraph: string): Promise<Array<any>> => {
     const graphqlQuery = {
         operationName: 'CollateralAuctionEvents',
         query,
     }
+
+    let headers: {
+        'content-type': string
+        Authorization?: string
+    } = {
+        'content-type': 'application/json',
+    }
+
+    if (subgraph.startsWith('https://api.studio.thegraph.com')) {
+        headers.Authorization = '<token>'
+    }
+
     const options = {
         method: 'POST',
-        headers: {
-            'content-type': 'application/json',
-            Authorization: '<token>',
-        },
+        headers: headers,
         body: JSON.stringify(graphqlQuery),
     }
-    const response = await fetch(subgraph, options)
-    const data = await response.json()
-    if (data.errors) console.log(data.errors)
-    if (data?.data) return data?.data
-    return []
+
+    try {
+        const response = await fetch(subgraph, options)
+        const data = await response.json()
+        if (data.errors) {
+            console.log(data.errors)
+        }
+        return data?.data ?? []
+    } catch (error) {
+        console.error('Primary subgraph fetch failed:', error)
+
+        const fallbackSubgraph = process.env.REACT_APP_FALLBACK_SUBGRAPH_URL
+        if (fallbackSubgraph) {
+            headers = {
+                'content-type': 'application/json',
+            }
+            const fallbackOptions = {
+                method: 'POST',
+                headers: headers,
+                body: JSON.stringify(graphqlQuery),
+            }
+            try {
+                const fallbackResponse = await fetch(fallbackSubgraph, fallbackOptions)
+                const fallbackData = await fallbackResponse.json()
+                if (fallbackData.errors) {
+                    console.log(fallbackData.errors)
+                }
+                return fallbackData?.data ?? []
+            } catch (fallbackError) {
+                console.error('Fallback subgraph fetch failed:', fallbackError)
+                return []
+            }
+        } else {
+            console.error('No fallback subgraph URL provided.')
+            return []
+        }
+    }
 }
 
 export const fetchCollateralAuctionEvents = async (address: string, subgraph: string): Promise<any> => {
