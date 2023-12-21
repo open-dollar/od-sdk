@@ -53,6 +53,24 @@ await tx.wait()
 // TODO
 ```
 
+## How Information is Fetched with Subgraphs 📊
+
+Our SDK uses subgraphs to fetch indexed information about auctions (collateral, surplus, and debt) from the blockchain. The subgraphs are hosted on The Graph, 
+and we also have our own Render-hosted subgraph. For more information about how to deploy your own subgraph check
+out our [od-subgraph](https://github.com/open-dollar/od-subgraph) repo.
+
+The main way we fetch auction information is through the `querySubgraph` function. This function take in a subgraph URL and a GraphQL query
+corresponding to the auction type (for example, `fetchSurplusAuctionEvents` will fetch the surplus auctions). The function will return
+a promise that resolves to an array of auction events. The auction events will be persisted in `od-app` through the Redux store 
+in `auctionModel.ts`.
+
+### Subgraph Redundancy
+
+When a request fails to our hosted subgraph in The Graph, we will automatically retry the request to our Render-hosted subgraph
+in the `querySubgraph` function. Make sure in `od-app` you've set `REACT_APP_FALLBACK_SUBGRAPH_URL` as a .env variable to ensure
+there's a fallback subgraph to query.
+
+
 ## Resources 🧑‍💻
 
 Documentation
