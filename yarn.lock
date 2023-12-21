@@ -1507,7 +1507,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@opendollar/abis@npm:^0.0.0-ad5646d3":
+"@opendollar/abis@npm:^0.0.0-874f6292":
   version: 0.0.0-f9f4cf29
   resolution: "@opendollar/abis@npm:0.0.0-f9f4cf29"
   dependencies:
@@ -1532,7 +1532,7 @@ __metadata:
   dependencies:
     "@commitlint/cli": 17.6.5
     "@commitlint/config-conventional": 17.6.5
-    "@opendollar/abis": ^0.0.0-ad5646d3
+    "@opendollar/abis": ^0.0.0-874f6292
     "@typechain/ethers-v5": ^11.0.0
     ethers: 5.4.7
     lint-staged: 13.2.2
@@ -1735,31 +1735,31 @@ __metadata:
   linkType: hard
 
 "@typechain/ethers-v6@npm:^0.5.0":
-  version: 0.5.0
-  resolution: "@typechain/ethers-v6@npm:0.5.0"
+  version: 0.5.1
+  resolution: "@typechain/ethers-v6@npm:0.5.1"
   dependencies:
     lodash: ^4.17.15
     ts-essentials: ^7.0.1
   peerDependencies:
     ethers: 6.x
-    typechain: ^8.3.1
+    typechain: ^8.3.2
     typescript: ">=4.7.0"
-  checksum: 3aa8f1b7965b5fbebaa96973bf366b1969b68ab2012c860d0a0d2e0ac4054d4a718dea704fe7fcf6fea78f288f4cae52b742782017f08ab2ade5b02f87e198f8
+  checksum: f3c80151c07e01adbf520e0854426649edb0ee540920569487dd8da7eca2fa8615710f4c0eda008e7afdf255fbb8dfdebf721a5d324a4dffeb087611d9bd64b9
   languageName: node
   linkType: hard
 
 "@typechain/web3-v1@npm:^6.0.6":
-  version: 6.0.6
-  resolution: "@typechain/web3-v1@npm:6.0.6"
+  version: 6.0.7
+  resolution: "@typechain/web3-v1@npm:6.0.7"
   dependencies:
     lodash: ^4.17.15
     ts-essentials: ^7.0.1
   peerDependencies:
-    typechain: ^8.3.1
+    typechain: ^8.3.2
     web3: ^1
     web3-core: ^1
     web3-eth-contract: ^1
-  checksum: 0acc5de19f77275590fb40eec98b1fcc25a7d23a05ab865e5942b1656f26a064f5610fb243b9f2975b47c0348be771c49b9f901e513143ccee158e17616d5a58
+  checksum: 1eb438616485bae26216a1e316186e143158e0a25ef8776c0b9cf4e8a174647063173a4dcfff2c9bef3f12c652b230ea0ff8474ec6c2080484f942115864cf0f
   languageName: node
   linkType: hard
 
@@ -6272,8 +6272,8 @@ __metadata:
   linkType: hard
 
 "typechain@npm:^8.3.1":
-  version: 8.3.1
-  resolution: "typechain@npm:8.3.1"
+  version: 8.3.2
+  resolution: "typechain@npm:8.3.2"
   dependencies:
     "@types/prettier": ^2.1.1
     debug: ^4.3.1
@@ -6289,7 +6289,7 @@ __metadata:
     typescript: ">=4.3.0"
   bin:
     typechain: dist/cli/cli.js
-  checksum: eaf75f34d7ec3cb36ddb7b95447c1f4e9dcbc92acc8ca7fbbf8aa691beaa610c3aad48533f5b368390373096f0c32362d15639b14a106a9be86d9c54279a1243
+  checksum: 1ea660cc7c699c6ac68da67b76454eb4e9395c54666d924ca67f983ae8eb5b5e7dab0a576beb55dbfad75ea784a3f68cb1ca019d332293b7291731c156ead5b5
   languageName: node
   linkType: hard
 
