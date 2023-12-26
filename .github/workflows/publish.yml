@@ -15,7 +15,7 @@ env:
 jobs:
   publish:
     runs-on: ubuntu-latest
-    if: github.repository == 'usekeyp/od-sdk'
+    if: github.repository == 'open-dollar/od-sdk'
 
     steps:
       - name: Check out code
@@ -54,7 +54,7 @@ jobs:
           body: ${{ steps.changelog.outputs.clean_changelog }}
 
       - name: Publish to NPM
-        if: ${{ github.repository == 'usekeyp/od-sdk' && steps.changelog.outputs.skipped == 'false' }}
+        if: ${{ github.repository == 'open-dollar/od-sdk' && steps.changelog.outputs.skipped == 'false' }}
         run: |
           if [ "${{ env.IS_RC }}" = "true" ]; then
             npm publish --tag rc --access public
