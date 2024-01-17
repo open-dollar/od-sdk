@@ -176,7 +176,7 @@ const tokens: Record<GebDeployment, TokenList> = {
             collateralJoin: '',
             collateralAuctionHouse: '',
             isCollateral: false,
-            camelotPoolAddress: '',
+            camelotPoolAddress: '0x00D0f23771915A857d6483C7734838b87Fc90fD2',
         },
         ODG: {
             address: '0x00D2363Ea723d8Bc3D664b87Cf51A04033BD0Ef1',
@@ -224,15 +224,15 @@ const tokens: Record<GebDeployment, TokenList> = {
             bytes32String: RETH,
             isCollateral: true,
         },
-        MAGIC: {
-            address: '0x0F97Fc4b35b1C3c8c9fd6E723ebed6C267e6E2dd',
-            collateralJoin: '0x05f8230CD0C85c43d9a7eDf26532F39B9D7E1896',
-            collateralAuctionHouse: '0x7eeF092e0e89d46986C987Dfb89AA306fc2374d0',
-            decimals: 18,
-            symbol: 'MAGIC',
-            bytes32String: MAGIC,
-            isCollateral: true,
-        },
+        // MAGIC: {
+        //     address: '0x0F97Fc4b35b1C3c8c9fd6E723ebed6C267e6E2dd',
+        //     collateralJoin: '0x05f8230CD0C85c43d9a7eDf26532F39B9D7E1896',
+        //     collateralAuctionHouse: '0x7eeF092e0e89d46986C987Dfb89AA306fc2374d0',
+        //     decimals: 18,
+        //     symbol: 'MAGIC',
+        //     bytes32String: MAGIC,
+        //     isCollateral: true,
+        // },
         ARB: {
             address: '0x2F6aeB8D80C0726DEec970F615769f1c989d36b2',
             collateralJoin: '0xF14405230f195287d426616bE103B5227815D40F',
@@ -322,7 +322,7 @@ const tokens: Record<GebDeployment, TokenList> = {
 }
 
 const subgraphs: Record<GebDeployment, string> = {
-    'arbitrum-sepolia': 'https://api.studio.thegraph.com/query/52770/open-dollar---testnet/v1.5.8-rc.8',
+    'arbitrum-sepolia': 'https://api.studio.thegraph.com/query/52770/open-dollar---testnet/v1.5.9-rc.1',
     'arbitrum-goerli': 'https://api.studio.thegraph.com/query/52770/open-dollar---testnet/v1.5.6-rc.1',
     arbitrum: '',
 }
