@@ -148,7 +148,6 @@ export class BasicActions {
         return this.getProxiedTransactionRequest(
             this.proxyActionCore.populateTransaction.generateDebt(
                 this.addressList.SAFE_MANAGER,
-                this.addressList.GEB_TAX_COLLECTOR,
                 this.addressList.GEB_COIN_JOIN,
                 safe,
                 wad
@@ -182,7 +181,6 @@ export class BasicActions {
         return this.getProxiedTransactionRequest(
             this.proxyActionCore.populateTransaction.lockTokenCollateralAndGenerateDebt(
                 this.addressList.SAFE_MANAGER,
-                this.addressList.GEB_TAX_COLLECTOR,
                 collateralJoin,
                 this.addressList.GEB_COIN_JOIN,
                 safe,
@@ -202,7 +200,6 @@ export class BasicActions {
         return this.getProxiedTransactionRequest(
             this.proxyActionCore.populateTransaction.openLockTokenCollateralAndGenerateDebt(
                 this.addressList.SAFE_MANAGER,
-                this.addressList.GEB_TAX_COLLECTOR,
                 collateralJoin,
                 this.addressList.GEB_COIN_JOIN,
                 collateralType,
@@ -223,7 +220,6 @@ export class BasicActions {
         return this.getProxiedTransactionRequest(
             this.proxyActionCore.populateTransaction.repayAllDebt(
                 this.addressList.SAFE_MANAGER,
-                this.addressList.GEB_TAX_COLLECTOR,
                 this.addressList.GEB_COIN_JOIN,
                 safe
             )
@@ -239,7 +235,6 @@ export class BasicActions {
         return this.getProxiedTransactionRequest(
             this.proxyActionCore.populateTransaction.repayAllDebtAndFreeTokenCollateral(
                 this.addressList.SAFE_MANAGER,
-                this.addressList.GEB_TAX_COLLECTOR,
                 collateralJoin,
                 this.addressList.GEB_COIN_JOIN,
                 safe,
@@ -252,7 +247,6 @@ export class BasicActions {
         return this.getProxiedTransactionRequest(
             this.proxyActionCore.populateTransaction.repayDebt(
                 this.addressList.SAFE_MANAGER,
-                this.addressList.GEB_TAX_COLLECTOR,
                 this.addressList.GEB_COIN_JOIN,
                 safe,
                 wad
@@ -270,7 +264,6 @@ export class BasicActions {
         return this.getProxiedTransactionRequest(
             this.proxyActionCore.populateTransaction.repayDebtAndFreeTokenCollateral(
                 this.addressList.SAFE_MANAGER,
-                this.addressList.GEB_TAX_COLLECTOR,
                 collateralJoin,
                 this.addressList.GEB_COIN_JOIN,
                 safe,
