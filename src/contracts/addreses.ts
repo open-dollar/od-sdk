@@ -1,4 +1,4 @@
-import { WETH, ARB, OD, WSTETH, CBETH, RETH, MAGIC } from '../utils'
+import { WETH, ARB, OD, WSTETH, CBETH, RETH } from '../utils'
 
 // All keys are mandatory
 export type ContractKey =
@@ -300,15 +300,15 @@ const tokens: Record<GebDeployment, TokenList> = {
             bytes32String: RETH,
             isCollateral: true,
         },
-        MAGIC: {
-            address: '0x4785cE54fAc50A793bEf8D7B0fBcbE476726ed51',
-            collateralJoin: '0x4ec74508fc6E2eB524c70c894C5878a94A82b9bd',
-            collateralAuctionHouse: '0x27C698F2206c28b05393a792c96E491F8f8E1644',
-            decimals: 18,
-            symbol: 'MAGIC',
-            bytes32String: MAGIC,
-            isCollateral: true,
-        },
+        // MAGIC: {
+        //     address: '0x4785cE54fAc50A793bEf8D7B0fBcbE476726ed51',
+        //     collateralJoin: '0x4ec74508fc6E2eB524c70c894C5878a94A82b9bd',
+        //     collateralAuctionHouse: '0x27C698F2206c28b05393a792c96E491F8f8E1644',
+        //     decimals: 18,
+        //     symbol: 'MAGIC',
+        //     bytes32String: MAGIC,
+        //     isCollateral: true,
+        // },
         ARB: {
             address: '0x6cf4f5A945B956355Bc33b992DF87C8A445855E1',
             collateralJoin: '0x2006A04Cd2C46fd6421845f4Ee2B7A2804A45394',
