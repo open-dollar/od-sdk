@@ -459,9 +459,9 @@ export class BasicActions {
         )
     }
 
-    transferExtraSurplus(): Promise<ethers.PopulatedTransaction> {
+    auctionSurplus(): Promise<ethers.PopulatedTransaction> {
         return this.getProxiedTransactionRequest(
-            this.proxyActionRewarded.populateTransaction.transferExtraSurplus(
+            this.proxyActionRewarded.populateTransaction.auctionSurplus(
                 this.addressList.JOB_ACCOUNTING,
                 this.addressList.GEB_COIN_JOIN
             )
