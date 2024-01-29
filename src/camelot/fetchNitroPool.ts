@@ -22,7 +22,7 @@ export type CamelotStaking = {
  * @param geb
  * @param address
  */
-export default async function fetchCamelotStaking(geb: Geb, address: string | null): Promise<CamelotStaking> {
+export default async function fetchNitroPool(geb: Geb, address: string | null): Promise<CamelotStaking> {
     const ODGAddress = geb.tokenList['ODG'].address
     const wstETHAddress = geb.tokenList['wstETH'].address
 
