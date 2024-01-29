@@ -8,7 +8,7 @@ import { CamelotPoolTotalSupply, ERC20 } from '../typechained'
 import { fromBigNumber } from './utils'
 import { Geb } from '../geb'
 
-export type CamelotStaking = {
+export type NitroPoolDetails = {
     tvl: number
     apy: number
     valuePerLPToken: number
@@ -18,11 +18,11 @@ export type CamelotStaking = {
 }
 
 /**
- * Fetches the data for the ODG-WSTETH Camelot staking pool
+ * Fetches the data for the ODG-WSTETH Camelot Nitro pool
  * @param geb
  * @param address
  */
-export default async function fetchNitroPool(geb: Geb, address: string | null): Promise<CamelotStaking> {
+export default async function fetchNitroPoolODGwstETH(geb: Geb, address: string | null): Promise<NitroPoolDetails> {
     const ODGAddress = geb.tokenList['ODG'].address
     const wstETHAddress = geb.tokenList['wstETH'].address
 
