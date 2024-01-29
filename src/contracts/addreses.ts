@@ -37,6 +37,8 @@ export type ContractKey =
     | 'JOB_ACCOUNTING'
     | 'JOB_LIQUIDATION'
     | 'JOB_ORACLES'
+    | 'CAMELOT_NITRO_POOL'
+    | 'CAMELOT_ODG_POOL'
 
 export type ContractList = {
     [key in ContractKey]: string
@@ -78,6 +80,9 @@ const addresses: Record<GebDeployment, ContractList> = {
         JOB_ACCOUNTING: '0x5178C1A616CaF67184104Cc6555c0310bbB7F6d5',
         JOB_LIQUIDATION: '0xD1D1a18a459d9Be1a7C237578DF1aB3CFf051282',
         JOB_ORACLES: '0x67cAD916b2572708E352eDE3A16E54F8d353ebDB',
+        // TODO: Add nitro and ODG pool addresses
+        CAMELOT_NITRO_POOL: '',
+        CAMELOT_ODG_POOL: ''
     },
     'arbitrum-goerli': {
         MULTICALL: '0xcA11bde05977b3631167028862bE2a173976CA11',
@@ -112,6 +117,8 @@ const addresses: Record<GebDeployment, ContractList> = {
         JOB_ACCOUNTING: '0xa6D3F5162F711240250472eAEfdAdC706C1F3a33',
         JOB_LIQUIDATION: '0xc938F05af0949D3de802DC874599dEE9BaCB250b',
         JOB_ORACLES: '0x920553927193474b4E25Fb73Ae51D1DdA0A5283f',
+        CAMELOT_NITRO_POOL: '',
+        CAMELOT_ODG_POOL: ''
     },
     arbitrum: {
         MULTICALL: '0xcA11bde05977b3631167028862bE2a173976CA11',
@@ -146,6 +153,9 @@ const addresses: Record<GebDeployment, ContractList> = {
         JOB_ACCOUNTING: '0x0000000000000000000000000000000000000000',
         JOB_LIQUIDATION: '0x0000000000000000000000000000000000000000',
         JOB_ORACLES: '0x0000000000000000000000000000000000000000',
+        // ARB-USDC Test address for now
+        CAMELOT_NITRO_POOL: '0x6aCdfD8Bd4f5AC6F5E0cA54024663C251e9Cf0f4',
+        CAMELOT_ODG_POOL: ''
     },
 }
 
@@ -186,6 +196,8 @@ const tokens: Record<GebDeployment, TokenList> = {
             collateralJoin: '',
             collateralAuctionHouse: '',
             isCollateral: false,
+            // The mainnet pool is at 0xF935263c9950EB2881FF58Bd6a76c3D2564A78D5
+            camelotPoolAddress: ''
         },
         WETH: {
             address: '0x0091f4e75a03C11cB9be8E3717219005eb780D89',
@@ -205,6 +217,7 @@ const tokens: Record<GebDeployment, TokenList> = {
             symbol: 'WSTETH',
             bytes32String: WSTETH,
             isCollateral: true,
+            chainlinkRelayer: '',
         },
         CBETH: {
             address: '0x098bbDB3575CA05273837043f9F59946C62201e4',
@@ -262,6 +275,7 @@ const tokens: Record<GebDeployment, TokenList> = {
             collateralJoin: '',
             collateralAuctionHouse: '',
             isCollateral: false,
+            camelotPoolAddress: ''
         },
         WETH: {
             address: '0xEe01c0CD76354C383B8c7B4e65EA88D00B06f36f',
