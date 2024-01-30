@@ -1,5 +1,10 @@
+<p align="center">
+<img width="60" height="60"  src="https://raw.githubusercontent.com/open-dollar/.github/main/od-logo.svg">
+</p>
+<h1 align="center">
+  @opendollar/sdk
+</h1>
 
-<h1 align="center">Weclome to @opendollar/sdk 👋</h1>
 <p align="center">
    <a href="https://www.npmjs.org/package/@opendollar/sdk" target="_blank">
     <img alt="npm package" src="https://img.shields.io/npm/v/@opendollar/sdk.svg?style=flat-square" />
@@ -7,8 +12,8 @@
   <a href="#" target="_blank">
     <img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-blue.svg" />
   </a>
-  <a href="https://twitter.com/UseKeyp" target="_blank">
-    <img alt="Twitter: UseKeyp" src="https://img.shields.io/twitter/follow/UseKeyp.svg?style=social" />
+  <a href="https://twitter.com/open_dollar" target="_blank">
+    <img alt="Twitter: open_dollar" src="https://img.shields.io/twitter/follow/open_dollar.svg?style=social" />
   </a>
 </p>
 
