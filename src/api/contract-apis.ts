@@ -36,7 +36,8 @@ export class ContractApis {
 
     public tokenCollateralJoin: { [key: string]: types.ICoinJoin }
     public tokenCollateralAuctionHouse: { [key: string]: types.ICollateralAuctionHouse }
-    public camelotNitroPool: types.CamelotNitroPool
+    public camelotwstETHNitroPool: types.CamelotNitroPool
+    public camelotRETHNitroPool: types.CamelotNitroPool
     public camelotODGPool: types.CamelotPool
     public multicall: types.Multicall3
 
@@ -81,7 +82,8 @@ export class ContractApis {
             const collateralAuctionHouse = types.ICollateralAuctionHouse__factory.connect(token.collateralAuctionHouse, signerOrProvider)            
             return { ...accum, [token.symbol]: collateralAuctionHouse }
         }, {})
-        this.camelotNitroPool = types.CamelotNitroPool__factory.connect(addressList.CAMELOT_NITRO_POOL, signerOrProvider)
+        this.camelotwstETHNitroPool = types.CamelotNitroPool__factory.connect(addressList.CAMELOT_WSTETH_NITRO_POOL, signerOrProvider)
+        this.camelotRETHNitroPool = types.CamelotNitroPool__factory.connect(addressList.CAMELOT_RETH_NITRO_POOL, signerOrProvider)
         this.camelotODGPool = types.CamelotPool__factory.connect(addressList.CAMELOT_ODG_POOL, signerOrProvider)
         this.multicall = types.Multicall3__factory.connect(addressList.MULTICALL, signerOrProvider)
     }

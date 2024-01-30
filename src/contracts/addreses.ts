@@ -37,7 +37,8 @@ export type ContractKey =
     | 'JOB_ACCOUNTING'
     | 'JOB_LIQUIDATION'
     | 'JOB_ORACLES'
-    | 'CAMELOT_NITRO_POOL'
+    | 'CAMELOT_WSTETH_NITRO_POOL'
+    | 'CAMELOT_RETH_NITRO_POOL'
     | 'CAMELOT_ODG_POOL'
 
 export type ContractList = {
@@ -81,7 +82,8 @@ const addresses: Record<GebDeployment, ContractList> = {
         JOB_LIQUIDATION: '0xD1D1a18a459d9Be1a7C237578DF1aB3CFf051282',
         JOB_ORACLES: '0x67cAD916b2572708E352eDE3A16E54F8d353ebDB',
         // TODO: Add nitro and ODG pool addresses
-        CAMELOT_NITRO_POOL: '',
+        CAMELOT_WSTETH_NITRO_POOL: '',
+        CAMELOT_RETH_NITRO_POOL: '',
         CAMELOT_ODG_POOL: ''
     },
     'arbitrum-goerli': {
@@ -117,7 +119,8 @@ const addresses: Record<GebDeployment, ContractList> = {
         JOB_ACCOUNTING: '0xa6D3F5162F711240250472eAEfdAdC706C1F3a33',
         JOB_LIQUIDATION: '0xc938F05af0949D3de802DC874599dEE9BaCB250b',
         JOB_ORACLES: '0x920553927193474b4E25Fb73Ae51D1DdA0A5283f',
-        CAMELOT_NITRO_POOL: '',
+        CAMELOT_WSTETH_NITRO_POOL: '',
+        CAMELOT_RETH_NITRO_POOL: '',
         CAMELOT_ODG_POOL: ''
     },
     arbitrum: {
@@ -154,7 +157,8 @@ const addresses: Record<GebDeployment, ContractList> = {
         JOB_LIQUIDATION: '0x0000000000000000000000000000000000000000',
         JOB_ORACLES: '0x0000000000000000000000000000000000000000',
         // ARB-USDC Test address for now
-        CAMELOT_NITRO_POOL: '0x6aCdfD8Bd4f5AC6F5E0cA54024663C251e9Cf0f4',
+        CAMELOT_WSTETH_NITRO_POOL: '0x6aCdfD8Bd4f5AC6F5E0cA54024663C251e9Cf0f4',
+        CAMELOT_RETH_NITRO_POOL: '',
         CAMELOT_ODG_POOL: ''
     },
 }

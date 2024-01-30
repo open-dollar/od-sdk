@@ -3,10 +3,9 @@
 
 import { BigNumber, ethers } from 'ethers'
 
-import { multicall, MulticallRequest, SECONDS_IN_YEAR } from './utils'
 import { CamelotPoolTotalSupply, ERC20 } from '../typechained'
-import { fromBigNumber } from './utils'
 import { Geb } from '../geb'
+import { fromBigNumber, multicall, MulticallRequest, SECONDS_IN_YEAR } from '../utils'
 
 export type NitroPoolDetails = {
     tvl: number
@@ -45,7 +44,7 @@ export default async function fetchNitroPoolODGwstETH(geb: Geb, address: string 
     // For some reason our camelotPool ABI does not have the totalSupply() function
     const camelotPool = await geb.contracts.camelotODGPool
 
-    const camelotNitroPool = await geb.contracts.camelotNitroPool
+    const camelotwstETHNitroPool = await geb.contracts.camelotwstETHNitroPool
 
     const odgMarketPrice = await geb.contracts.oracleRelayer.marketPrice()
     const odgMarketPriceFloat = parseFloat(ethers.utils.formatEther(odgMarketPrice))
@@ -60,7 +59,7 @@ export default async function fetchNitroPoolODGwstETH(geb: Geb, address: string 
 
     const [
         {
-            returnData: [[totalSupplyBN], [poolODGBalanceBN], [poolwstETHBalanceBN]],
+            returnData: [[poolODGBalanceBN], [poolwstETHBalanceBN]],
         },
         nitroRewardsPerSecond,
         odgPrice,
@@ -92,10 +91,10 @@ export default async function fetchNitroPoolODGwstETH(geb: Geb, address: string 
                 args: [camelotPool.address],
             },
         ]),
-        camelotNitroPool.rewardsToken1PerSecond(),
+        camelotwstETHNitroPool.rewardsToken1PerSecond(),
         odgMarketPrice,
         wstETH_market_price,
-        address ? camelotNitroPool.userInfo(address) : null,
+        address ? camelotwstETHNitroPool.userInfo(address) : null,
     ])
 
     const poolODGBalance = fromBigNumber(poolODGBalanceBN)
