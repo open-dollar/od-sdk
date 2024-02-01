@@ -3,21 +3,40 @@
 
 import { BigNumber, ethers } from 'ethers'
 
-import { CamelotPoolTotalSupply, ERC20 } from '../typechained'
+import { CamelotNitroPool, ERC20 } from '../typechained'
 import { Geb } from '../geb'
 import { fromBigNumber, multicall, MulticallRequest, SECONDS_IN_YEAR } from '../utils'
 
 export type NitroPoolDetails = {
     tvl: number
+    settings: {
+        startTime: BigNumber
+        endTime: BigNumber
+        harvestStartTime: BigNumber
+        depositEndTime: BigNumber
+        lockDurationReq: BigNumber
+        lockEndReq: BigNumber
+        depositAmountReq: BigNumber
+        whitelist: boolean
+        description: string
+    }
+    rewardsPerSecond: number
+    lpTokenBalance: number,
+    userInfo: {
+        totalDepositAmount: BigNumber,
+        rewardDebtToken1: BigNumber,
+        rewardDebtToken2: BigNumber,
+        pendingRewardsToken1: BigNumber,
+        pendingRewardsToken2: BigNumber
+    } | null,
     apy: number
-    valuePerLPToken: number
-    odgPerLPToken: number
-    wstETHPerLPToken: number
-    lpTokenBalance: number
 }
 
 /**
- * Fetches the data for the ODG-WSTETH Camelot Nitro pool
+ * Fetches the relevant pool data for the ODG-WSTETH Camelot Nitro pool. Note that a user deposits an spNFT
+ * by transferring it to the NitroPool, and the NitroPool contract will have ownership of the spNFT and provide data
+ * on the user's deposit
+ *
  * @param geb
  * @param address
  */
@@ -30,11 +49,21 @@ export default async function fetchNitroPoolODGwstETH(geb: Geb, address: string 
         console.warn('Missing token info in tokenlist')
         return {
             tvl: 0,
-            apy: 0,
-            valuePerLPToken: 0,
-            odgPerLPToken: 0,
-            wstETHPerLPToken: 0,
+            settings: {
+                startTime: BigNumber.from(0),
+                endTime: BigNumber.from(0),
+                harvestStartTime: BigNumber.from(0),
+                depositEndTime: BigNumber.from(0),
+                lockDurationReq: BigNumber.from(0),
+                lockEndReq: BigNumber.from(0),
+                depositAmountReq: BigNumber.from(0),
+                whitelist: false,
+                description: '',
+            },
+            rewardsPerSecond: 0,
             lpTokenBalance: 0,
+            userInfo: null,
+            apy: 0,
         }
     }
 
@@ -59,25 +88,22 @@ export default async function fetchNitroPoolODGwstETH(geb: Geb, address: string 
 
     const [
         {
-            returnData: [[poolODGBalanceBN], [poolwstETHBalanceBN]],
+            returnData: [settings, [poolODGBalanceBN], [poolwstETHBalanceBN]],
         },
         nitroRewardsPerSecond,
-        odgPrice,
         wstETHPrice,
         userInfo,
     ] = await Promise.all([
         multicall<
             [
-                // Using type CamelotPoolTotalSupply because of the missing totalSupply() function in the CamelotPool ABI
-                MulticallRequest<CamelotPoolTotalSupply, 'totalSupply'>,
+                MulticallRequest<CamelotNitroPool, 'settings'>,
                 MulticallRequest<ERC20, 'balanceOf'>,
                 MulticallRequest<ERC20, 'balanceOf'>
             ]
         >(geb, [
             {
-                // TODO: Need to replace this camelotPool object with a contract that has totalSupply()
-                contract: camelotPool,
-                function: 'totalSupply',
+                contract: camelotwstETHNitroPool,
+                function: 'settings',
                 args: [],
             },
             {
@@ -99,20 +125,18 @@ export default async function fetchNitroPoolODGwstETH(geb: Geb, address: string 
 
     const poolODGBalance = fromBigNumber(poolODGBalanceBN)
     const poolwstETHBalance = fromBigNumber(poolwstETHBalanceBN)
-    const totalSupply = fromBigNumber(totalSupplyBN)
-    const odgPerLPToken = totalSupply > 0 ? poolODGBalance / totalSupply : 0
-    const wstETHPerLPToken = totalSupply > 0 ? poolwstETHBalance / totalSupply : 0
-    const tvl = poolODGBalance * odgMarketPriceFloat + poolwstETHBalance * wstETHPrice
-    const valuePerLPToken = totalSupply > 0 ? tvl / totalSupply : 0
-    const rewardsPerSecond = totalSupply > 0 ? fromBigNumber(BigNumber.from(nitroRewardsPerSecond)) / totalSupply : 0
-    const apy = valuePerLPToken > 0 ? (rewardsPerSecond * SECONDS_IN_YEAR * odgPrice) / valuePerLPToken : 0
+    const wstETHPriceFloat = parseFloat(ethers.utils.formatEther(wstETHPrice))
+    const tvl = poolODGBalance * odgMarketPriceFloat + poolwstETHBalance * wstETHPriceFloat
+    const rewardsPerSecond = fromBigNumber(BigNumber.from(nitroRewardsPerSecond))
     const lpTokenBalance = userInfo ? fromBigNumber(userInfo.totalDepositAmount) : 0
+    // Assumes rewardsPerSecond and odgMarketPrice are constant. Also does not take into account compounding
+    const apy = (rewardsPerSecond * SECONDS_IN_YEAR * odgMarketPriceFloat) / tvl
     return {
         tvl,
-        apy,
-        odgPerLPToken,
-        wstETHPerLPToken,
-        valuePerLPToken,
+        settings,
+        rewardsPerSecond,
         lpTokenBalance,
+        userInfo,
+        apy,
     }
 }
