@@ -5,7 +5,7 @@ import { BigNumber, ethers } from 'ethers'
 
 import { CamelotNitroPool, ERC20 } from '../typechained'
 import { Geb } from '../geb'
-import { fromBigNumber, multicall, MulticallRequestCamelot, SECONDS_IN_YEAR } from '../utils'
+import { fromBigNumber, multicall, CamelotMulticallRequest, SECONDS_IN_YEAR } from '../utils'
 
 export type NitroPoolDetails = {
     tvl: number
@@ -21,14 +21,14 @@ export type NitroPoolDetails = {
         description: string
     }
     rewardsPerSecond: number
-    lpTokenBalance: number
+    lpTokenBalance: number,
     userInfo: {
-        totalDepositAmount: BigNumber
-        rewardDebtToken1: BigNumber
-        rewardDebtToken2: BigNumber
-        pendingRewardsToken1: BigNumber
+        totalDepositAmount: BigNumber,
+        rewardDebtToken1: BigNumber,
+        rewardDebtToken2: BigNumber,
+        pendingRewardsToken1: BigNumber,
         pendingRewardsToken2: BigNumber
-    } | null
+    } | null,
     apy: number
 }
 
@@ -69,9 +69,6 @@ export default async function fetchNitroPoolODGwstETH(geb: Geb, address: string 
     const odg = geb.getErc20Contract(geb.tokenList['ODG'].address)
     const wstETH = geb.getErc20Contract(geb.tokenList['WSTETH'].address)
 
-    // For some reason our camelotPool ABI does not have the totalSupply() function
-    const camelotPool = await geb.contracts.camelotODGPool
-
     const camelotwstETHNitroPool = await geb.contracts.camelotwstETHNitroPool
 
     const odgMarketPrice = await geb.contracts.oracleRelayer.marketPrice()
@@ -95,9 +92,9 @@ export default async function fetchNitroPoolODGwstETH(geb: Geb, address: string 
     ] = await Promise.all([
         multicall<
             [
-                MulticallRequestCamelot<CamelotNitroPool, 'settings'>,
-                MulticallRequestCamelot<ERC20, 'balanceOf'>,
-                MulticallRequestCamelot<ERC20, 'balanceOf'>
+                CamelotMulticallRequest<CamelotNitroPool, 'settings'>,
+                CamelotMulticallRequest<ERC20, 'balanceOf'>,
+                CamelotMulticallRequest<ERC20, 'balanceOf'>
             ]
         >(geb, [
             {
@@ -108,12 +105,12 @@ export default async function fetchNitroPoolODGwstETH(geb: Geb, address: string 
             {
                 contract: odg,
                 function: 'balanceOf',
-                args: [camelotPool.address],
+                args: [camelotwstETHNitroPool.address],
             },
             {
                 contract: wstETH,
                 function: 'balanceOf',
-                args: [camelotPool.address],
+                args: [camelotwstETHNitroPool.address],
             },
         ]),
         camelotwstETHNitroPool.rewardsToken1PerSecond(),
