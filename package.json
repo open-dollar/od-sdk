@@ -1,6 +1,6 @@
 {
   "name": "@opendollar/sdk",
-  "version": "1.5.9-rc.1",
+  "version": "1.6.0-rc.1",
   "description": "Javascript client for Open Dollar",
   "license": "MIT",
   "main": "lib",
@@ -22,7 +22,7 @@
     "test": "echo \"No tests yet\""
   },
   "dependencies": {
-    "@opendollar/abis": "0.0.0-980e6a5e",
+    "@opendollar/abis": "0.0.0-ddd353db",
     "ethers": "5.4.7"
   },
   "devDependencies": {
