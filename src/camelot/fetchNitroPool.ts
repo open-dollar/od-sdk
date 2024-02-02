@@ -5,7 +5,7 @@ import { BigNumber, ethers } from 'ethers'
 
 import { CamelotNitroPool, ERC20 } from '../typechained'
 import { Geb } from '../geb'
-import { fromBigNumber, multicall, MulticallRequest, SECONDS_IN_YEAR } from '../utils'
+import { fromBigNumber, multicall, MulticallRequestCamelot, SECONDS_IN_YEAR } from '../utils'
 
 export type NitroPoolDetails = {
     tvl: number
@@ -21,14 +21,14 @@ export type NitroPoolDetails = {
         description: string
     }
     rewardsPerSecond: number
-    lpTokenBalance: number,
+    lpTokenBalance: number
     userInfo: {
-        totalDepositAmount: BigNumber,
-        rewardDebtToken1: BigNumber,
-        rewardDebtToken2: BigNumber,
-        pendingRewardsToken1: BigNumber,
+        totalDepositAmount: BigNumber
+        rewardDebtToken1: BigNumber
+        rewardDebtToken2: BigNumber
+        pendingRewardsToken1: BigNumber
         pendingRewardsToken2: BigNumber
-    } | null,
+    } | null
     apy: number
 }
 
@@ -43,7 +43,6 @@ export type NitroPoolDetails = {
 export default async function fetchNitroPoolODGwstETH(geb: Geb, address: string | null): Promise<NitroPoolDetails> {
     const ODGAddress = geb.tokenList['ODG'].address
     const wstETHAddress = geb.tokenList['wstETH'].address
-
 
     if (!ODGAddress || !wstETHAddress) {
         console.warn('Missing token info in tokenlist')
@@ -96,9 +95,9 @@ export default async function fetchNitroPoolODGwstETH(geb: Geb, address: string 
     ] = await Promise.all([
         multicall<
             [
-                MulticallRequest<CamelotNitroPool, 'settings'>,
-                MulticallRequest<ERC20, 'balanceOf'>,
-                MulticallRequest<ERC20, 'balanceOf'>
+                MulticallRequestCamelot<CamelotNitroPool, 'settings'>,
+                MulticallRequestCamelot<ERC20, 'balanceOf'>,
+                MulticallRequestCamelot<ERC20, 'balanceOf'>
             ]
         >(geb, [
             {

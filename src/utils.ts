@@ -8,17 +8,19 @@ import { formatUnits } from 'ethers/lib/utils'
 
 export const SECONDS_IN_YEAR = 31536000
 
-export type MulticallRequest<C extends Contract = Contract, F extends keyof C['functions'] & string = string> = {
+export type MulticallRequestCamelot<C extends Contract = Contract, F extends keyof C['functions'] & string = string> = {
     contract: C
     function: F
     args: Parameters<C['functions'][F]>
 }
 
-type MulticallResponse<R extends MulticallRequest> = Awaited<ReturnType<R['contract']['functions'][R['function']]>>
+type MulticallResponse<R extends MulticallRequestCamelot> = Awaited<
+    ReturnType<R['contract']['functions'][R['function']]>
+>
 
-type MulticallResponses<Reqs extends MulticallRequest[]> = { [K in keyof Reqs]: MulticallResponse<Reqs[K]> }
+type MulticallResponses<Reqs extends MulticallRequestCamelot[]> = { [K in keyof Reqs]: MulticallResponse<Reqs[K]> }
 
-export async function multicall<Reqs extends MulticallRequest[]>(
+export async function multicall<Reqs extends MulticallRequestCamelot[]>(
     geb: Geb,
     requests: Reqs
 ): Promise<{
@@ -26,7 +28,7 @@ export async function multicall<Reqs extends MulticallRequest[]>(
     blockNumber: number
 }> {
     const multicall3Contract = geb.contracts.multicall
-    const calls = requests.map(req => ({
+    const calls = requests.map((req) => ({
         target: req.contract.address,
         callData: req.contract.interface.encodeFunctionData(req.function, req.args),
     }))
