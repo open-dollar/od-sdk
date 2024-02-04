@@ -21,14 +21,14 @@ export type NitroPoolDetails = {
         description: string
     }
     rewardsPerSecond: number
-    lpTokenBalance: number
-    userInfo: {
-        totalDepositAmount: BigNumber
-        rewardDebtToken1: BigNumber
-        rewardDebtToken2: BigNumber
-        pendingRewardsToken1: BigNumber
-        pendingRewardsToken2: BigNumber
-    } | null
+    // lpTokenBalance: number
+    // userInfo: {
+    //     totalDepositAmount: BigNumber
+    //     rewardDebtToken1: BigNumber
+    //     rewardDebtToken2: BigNumber
+    //     pendingRewardsToken1: BigNumber
+    //     pendingRewardsToken2: BigNumber
+    // } | null
     apy: number
 }
 
@@ -60,8 +60,8 @@ const fetchNitroPoolODGwstETH = async (geb: Geb, address: string | null): Promis
                 description: '',
             },
             rewardsPerSecond: 0,
-            lpTokenBalance: 0,
-            userInfo: null,
+            // lpTokenBalance: 0,
+            // userInfo: null,
             apy: 0,
         }
     }
@@ -132,15 +132,15 @@ const fetchNitroPoolODGwstETH = async (geb: Geb, address: string | null): Promis
     const wstETHPriceFloat = parseFloat(ethers.utils.formatEther(wstETHPrice))
     const tvl = poolODGBalance * odgMarketPriceFloat + poolwstETHBalance * wstETHPriceFloat
     const rewardsPerSecond = fromBigNumber(BigNumber.from(nitroRewardsPerSecond))
-    const lpTokenBalance = userInfo ? fromBigNumber(userInfo.totalDepositAmount) : 0
+    // const lpTokenBalance = userInfo ? fromBigNumber(userInfo.totalDepositAmount) : (0 as number)
     // Assumes rewardsPerSecond and odgMarketPrice are constant. Also does not take into account compounding
     const apy = (rewardsPerSecond * SECONDS_IN_YEAR * odgMarketPriceFloat) / tvl
     return {
         tvl,
         settings,
         rewardsPerSecond,
-        lpTokenBalance,
-        userInfo,
+        // lpTokenBalance,
+        // userInfo,
         apy,
     }
 }
