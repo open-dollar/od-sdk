@@ -227,8 +227,7 @@ const tokens: Record<GebDeployment, TokenList> = {
             collateralJoin: '',
             collateralAuctionHouse: '',
             isCollateral: false,
-            // The mainnet pool is at 0xF935263c9950EB2881FF58Bd6a76c3D2564A78D5
-            camelotPoolAddress: '',
+            camelotPoolAddress: '0xF935263c9950EB2881FF58Bd6a76c3D2564A78D5',
         },
         WETH: {
             address: '0x0000000000000000000000000000000000000000',

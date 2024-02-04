@@ -21,14 +21,14 @@ export type NitroPoolDetails = {
         description: string
     }
     rewardsPerSecond: number
-    lpTokenBalance: number,
+    lpTokenBalance: number
     userInfo: {
-        totalDepositAmount: BigNumber,
-        rewardDebtToken1: BigNumber,
-        rewardDebtToken2: BigNumber,
-        pendingRewardsToken1: BigNumber,
+        totalDepositAmount: BigNumber
+        rewardDebtToken1: BigNumber
+        rewardDebtToken2: BigNumber
+        pendingRewardsToken1: BigNumber
         pendingRewardsToken2: BigNumber
-    } | null,
+    } | null
     apy: number
 }
 
@@ -40,9 +40,9 @@ export type NitroPoolDetails = {
  * @param geb
  * @param address
  */
-export default async function fetchNitroPoolODGwstETH(geb: Geb, address: string | null): Promise<NitroPoolDetails> {
+const fetchNitroPoolODGwstETH = async (geb: Geb, address: string | null): Promise<NitroPoolDetails> => {
     const ODGAddress = geb.tokenList['ODG'].address
-    const wstETHAddress = geb.tokenList['wstETH'].address
+    const wstETHAddress = geb.tokenList['WSTETH'].address
 
     if (!ODGAddress || !wstETHAddress) {
         console.warn('Missing token info in tokenlist')
@@ -71,16 +71,24 @@ export default async function fetchNitroPoolODGwstETH(geb: Geb, address: string 
 
     const camelotwstETHNitroPool = await geb.contracts.camelotwstETHNitroPool
 
-    const odgMarketPrice = await geb.contracts.oracleRelayer.marketPrice()
-    const odgMarketPriceFloat = parseFloat(ethers.utils.formatEther(odgMarketPrice))
+    let odgMarketPrice = '16000000000000000000'
+    let odgMarketPriceFloat = 1.6
+    let wstETH_market_price = '2000000000000000000000'
+    try {
+        const odgMarketPrice = await geb.contracts.oracleRelayer.marketPrice()
+        odgMarketPriceFloat = parseFloat(ethers.utils.formatEther(odgMarketPrice))
 
-    const chainlinkRelayerContract = new ethers.Contract(
-        geb.tokenList['WSTETH'].chainlinkRelayer,
-        ['function getResultWithValidity() external view returns (uint256 _result, bool _validity)'],
-        geb.provider
-    )
+        const chainlinkRelayerContract = new ethers.Contract(
+            geb.tokenList['WSTETH'].chainlinkRelayer,
+            ['function getResultWithValidity() external view returns (uint256 _result, bool _validity)'],
+            geb.provider
+        )
 
-    const wstETH_market_price = await chainlinkRelayerContract.getResultWithValidity()
+        const wstETH_market_price = await chainlinkRelayerContract.getResultWithValidity()
+    } catch (e) {
+        // TODO: Pull correct market prices
+        console.log(e)
+    }
 
     const [
         {
@@ -136,3 +144,5 @@ export default async function fetchNitroPoolODGwstETH(geb: Geb, address: string 
         apy,
     }
 }
+
+export { fetchNitroPoolODGwstETH }
