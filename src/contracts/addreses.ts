@@ -219,18 +219,18 @@ const tokens: Record<GebDeployment, TokenList> = {
             camelotPoolAddress: '0x0000000000000000000000000000000000000000',
         },
         ODG: {
-            // Test ODG address
-            address: '0x0dc0caB40adDB6694B089dEdfC35B694a9B60Aac',
+            address: '0x0dc0caB40adDB6694B089dEdfC35B694a9B60Aac', // Test ODG
+            // address: '0x000D636bD52BFc1B3a699165Ef5aa340BEA8939c',  // Actual ODG
             decimals: 18,
             symbol: 'ODG',
             bytes32String: '',
             collateralJoin: '',
             collateralAuctionHouse: '',
             isCollateral: false,
-            camelotPoolAddress: '0xF935263c9950EB2881FF58Bd6a76c3D2564A78D5',
+            camelotPoolAddress: '0xF935263c9950EB2881FF58Bd6a76c3D2564A78D5', // Actual swap pool
         },
         WETH: {
-            address: '0x0000000000000000000000000000000000000000',
+            address: '0x82af49447d8a07e3bd95bd0d56f35241523fbab1',
             collateralJoin: '',
             collateralAuctionHouse: '',
             decimals: 18,
@@ -240,7 +240,8 @@ const tokens: Record<GebDeployment, TokenList> = {
             chainlinkRelayer: '',
         },
         WSTETH: {
-            address: '0xE5A21382f6ef9c3B6F873f69d583fFD3b91449F0',
+            address: '0xE5A21382f6ef9c3B6F873f69d583fFD3b91449F0', // Test WSTETH
+            // address: '0x5979d7b546e38e414f7e9822514be443a4800529' // Actual WSTETH
             collateralJoin: '0x0000000000000000000000000000000000000000',
             collateralAuctionHouse: '0x0000000000000000000000000000000000000000',
             decimals: 18,
@@ -249,17 +250,17 @@ const tokens: Record<GebDeployment, TokenList> = {
             isCollateral: true,
             chainlinkRelayer: '',
         },
-        CBETH: {
-            address: '0x0000000000000000000000000000000000000000',
-            collateralJoin: '0x0000000000000000000000000000000000000000',
-            collateralAuctionHouse: '0x0000000000000000000000000000000000000000',
-            decimals: 18,
-            symbol: 'CBETH',
-            bytes32String: CBETH,
-            isCollateral: true,
-        },
+        // CBETH: {
+        //     address: '0x0000000000000000000000000000000000000000',
+        //     collateralJoin: '0x0000000000000000000000000000000000000000',
+        //     collateralAuctionHouse: '0x0000000000000000000000000000000000000000',
+        //     decimals: 18,
+        //     symbol: 'CBETH',
+        //     bytes32String: CBETH,
+        //     isCollateral: true,
+        // },
         RETH: {
-            address: '0x0000000000000000000000000000000000000000',
+            address: '0xEC70Dcb4A1EFa46b8F2D97C310C9c4790ba5ffA8',
             collateralJoin: '0x0000000000000000000000000000000000000000',
             collateralAuctionHouse: '0x0000000000000000000000000000000000000000',
             decimals: 18,
@@ -268,7 +269,7 @@ const tokens: Record<GebDeployment, TokenList> = {
             isCollateral: true,
         },
         ARB: {
-            address: '0x0000000000000000000000000000000000000000',
+            address: '0x912ce59144191c1204e64559fe8253a0e49e6548', // Actual ARB
             collateralJoin: '0x0000000000000000000000000000000000000000',
             collateralAuctionHouse: '0x0000000000000000000000000000000000000000',
             decimals: 18,
