@@ -80,7 +80,6 @@ const addresses: Record<GebDeployment, ContractList> = {
         JOB_ACCOUNTING: '0xfbC2F8ff792B924644CFE88cf75E6373c93c0186',
         JOB_LIQUIDATION: '0x8E1Ce955669121ac719107660EA17505AD1Dba34',
         JOB_ORACLES: '0xF1c6949E650b3b644e9B297A7f8472A23f52803B',
-        // TODO: Add nitro and ODG pool addresses
         CAMELOT_WSTETH_NITRO_POOL: '0x0000000000000000000000000000000000000000',
         CAMELOT_RETH_NITRO_POOL: '0x0000000000000000000000000000000000000000',
     },
@@ -117,9 +116,8 @@ const addresses: Record<GebDeployment, ContractList> = {
         JOB_ACCOUNTING: '0x0000000000000000000000000000000000000000',
         JOB_LIQUIDATION: '0x0000000000000000000000000000000000000000',
         JOB_ORACLES: '0x0000000000000000000000000000000000000000',
-        // TODO: Replace with mainnet addresses
-        CAMELOT_WSTETH_NITRO_POOL: '0x4391D56A8E56BE1fB30a45bAa0E5B7a4b488FbAa',
-        CAMELOT_RETH_NITRO_POOL: '0x4391D56A8E56BE1fB30a45bAa0E5B7a4b488FbAa',
+        CAMELOT_WSTETH_NITRO_POOL: '0x4391D56A8E56BE1fB30a45bAa0E5B7a4b488FbAa', // Test pool address
+        CAMELOT_RETH_NITRO_POOL: '0x4391D56A8E56BE1fB30a45bAa0E5B7a4b488FbAa', // Test pool address
     },
 }
 
@@ -141,77 +139,7 @@ export type TokenList = {
 
 const tokens: Record<GebDeployment, TokenList> = {
     // TODO: Replace with mainnet addresses
-    arbitrum: {
-        OD: {
-            address: '0x0006d00Ae8375BDb0b10fBb100490CD5504fD802',
-            decimals: 18,
-            symbol: 'OD',
-            bytes32String: OD,
-            collateralJoin: '',
-            collateralAuctionHouse: '',
-            isCollateral: false,
-            camelotPoolAddress: '0x00D0f23771915A857d6483C7734838b87Fc90fD2',
-        },
-        ODG: {
-            // Test ODG address
-            address: '0x0dc0caB40adDB6694B089dEdfC35B694a9B60Aac',
-            decimals: 18,
-            symbol: 'ODG',
-            bytes32String: '',
-            collateralJoin: '',
-            collateralAuctionHouse: '',
-            isCollateral: false,
-            // The mainnet pool is at 0xF935263c9950EB2881FF58Bd6a76c3D2564A78D5
-            camelotPoolAddress: '',
-        },
-        WETH: {
-            address: '0x0091f4e75a03C11cB9be8E3717219005eb780D89',
-            collateralJoin: '',
-            collateralAuctionHouse: '',
-            decimals: 18,
-            symbol: 'WETH',
-            bytes32String: WETH,
-            isCollateral: false,
-            chainlinkRelayer: '',
-        },
-        WSTETH: {
-            address: '0xE5A21382f6ef9c3B6F873f69d583fFD3b91449F0',
-            collateralJoin: '0x7B6583a843b41E5CB3E52055452052813496958C',
-            collateralAuctionHouse: '0x965f467706bE40f2020e0eFa85Ef38607d592c65',
-            decimals: 18,
-            symbol: 'WSTETH',
-            bytes32String: WSTETH,
-            isCollateral: true,
-            chainlinkRelayer: '',
-        },
-        CBETH: {
-            address: '0x098bbDB3575CA05273837043f9F59946C62201e4',
-            collateralJoin: '0x4BaD88483C9C98b76A0eF4413B6f5F19fF5f76D5',
-            collateralAuctionHouse: '0xEe54B801ac028d76d35290816b0b18383b404254',
-            decimals: 18,
-            symbol: 'CBETH',
-            bytes32String: CBETH,
-            isCollateral: true,
-        },
-        RETH: {
-            address: '0x2bF2A9E3A07B9f75fC1b36D56Efd6999b3AF7951',
-            collateralJoin: '0xD5Caf52F4f2365789f5dC75b5847A5873DABad95',
-            collateralAuctionHouse: '0x3e9D80DD8538222d81dF41cd001D4aDcb096CFc4',
-            decimals: 18,
-            symbol: 'RETH',
-            bytes32String: RETH,
-            isCollateral: true,
-        },
-        ARB: {
-            address: '0x2F6aeB8D80C0726DEec970F615769f1c989d36b2',
-            collateralJoin: '0xF14405230f195287d426616bE103B5227815D40F',
-            collateralAuctionHouse: '0xbb5484cd846685152b0758Fd7265763Fb095698A',
-            decimals: 18,
-            symbol: 'ARB',
-            bytes32String: ARB,
-            isCollateral: true,
-        },
-    },
+
     'arbitrum-sepolia': {
         OD: {
             address: '0x0006d00Ae8375BDb0b10fBb100490CD5504fD802',
@@ -273,6 +201,77 @@ const tokens: Record<GebDeployment, TokenList> = {
             address: '0x53865560cfA2d952F255Dd7d5c61C49C350a25Fd',
             collateralJoin: '0xAf8F2CE440509279645e8747c0DBc2700ce0559F',
             collateralAuctionHouse: '0x1C788DD757060ee01aF63C772aA2eB58b60152aE',
+            decimals: 18,
+            symbol: 'ARB',
+            bytes32String: ARB,
+            isCollateral: true,
+        },
+    },
+    arbitrum: {
+        OD: {
+            address: '0x0000000000000000000000000000000000000000',
+            decimals: 18,
+            symbol: 'OD',
+            bytes32String: OD,
+            collateralJoin: '',
+            collateralAuctionHouse: '',
+            isCollateral: false,
+            camelotPoolAddress: '0x0000000000000000000000000000000000000000',
+        },
+        ODG: {
+            // Test ODG address
+            address: '0x0dc0caB40adDB6694B089dEdfC35B694a9B60Aac',
+            decimals: 18,
+            symbol: 'ODG',
+            bytes32String: '',
+            collateralJoin: '',
+            collateralAuctionHouse: '',
+            isCollateral: false,
+            // The mainnet pool is at 0xF935263c9950EB2881FF58Bd6a76c3D2564A78D5
+            camelotPoolAddress: '',
+        },
+        WETH: {
+            address: '0x0000000000000000000000000000000000000000',
+            collateralJoin: '',
+            collateralAuctionHouse: '',
+            decimals: 18,
+            symbol: 'WETH',
+            bytes32String: WETH,
+            isCollateral: false,
+            chainlinkRelayer: '',
+        },
+        WSTETH: {
+            address: '0xE5A21382f6ef9c3B6F873f69d583fFD3b91449F0',
+            collateralJoin: '0x0000000000000000000000000000000000000000',
+            collateralAuctionHouse: '0x0000000000000000000000000000000000000000',
+            decimals: 18,
+            symbol: 'WSTETH',
+            bytes32String: WSTETH,
+            isCollateral: true,
+            chainlinkRelayer: '',
+        },
+        CBETH: {
+            address: '0x0000000000000000000000000000000000000000',
+            collateralJoin: '0x0000000000000000000000000000000000000000',
+            collateralAuctionHouse: '0x0000000000000000000000000000000000000000',
+            decimals: 18,
+            symbol: 'CBETH',
+            bytes32String: CBETH,
+            isCollateral: true,
+        },
+        RETH: {
+            address: '0x0000000000000000000000000000000000000000',
+            collateralJoin: '0x0000000000000000000000000000000000000000',
+            collateralAuctionHouse: '0x0000000000000000000000000000000000000000',
+            decimals: 18,
+            symbol: 'RETH',
+            bytes32String: RETH,
+            isCollateral: true,
+        },
+        ARB: {
+            address: '0x0000000000000000000000000000000000000000',
+            collateralJoin: '0x0000000000000000000000000000000000000000',
+            collateralAuctionHouse: '0x0000000000000000000000000000000000000000',
             decimals: 18,
             symbol: 'ARB',
             bytes32String: ARB,
