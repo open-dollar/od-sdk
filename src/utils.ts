@@ -14,7 +14,9 @@ export type CamelotMulticallRequest<C extends Contract = Contract, F extends key
     args: Parameters<C['functions'][F]>
 }
 
-type MulticallResponse<R extends CamelotMulticallRequest> = Awaited<ReturnType<R['contract']['functions'][R['function']]>>
+type MulticallResponse<R extends CamelotMulticallRequest> = Awaited<
+    ReturnType<R['contract']['functions'][R['function']]>
+>
 
 type MulticallResponses<Reqs extends CamelotMulticallRequest[]> = { [K in keyof Reqs]: MulticallResponse<Reqs[K]> }
 
@@ -26,7 +28,7 @@ export async function multicall<Reqs extends CamelotMulticallRequest[]>(
     blockNumber: number
 }> {
     const multicall3Contract = geb.contracts.multicall
-    const calls = requests.map(req => ({
+    const calls = requests.map((req) => ({
         target: req.contract.address,
         callData: req.contract.interface.encodeFunctionData(req.function, req.args),
     }))

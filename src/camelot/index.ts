@@ -1,1 +1,1 @@
-export * from "./fetchNitroPool"
+export * from './fetchNitroPool'
