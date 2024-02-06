@@ -117,7 +117,7 @@ const addresses: Record<GebDeployment, ContractList> = {
         JOB_LIQUIDATION: '0x0000000000000000000000000000000000000000',
         JOB_ORACLES: '0x0000000000000000000000000000000000000000',
         CAMELOT_WSTETH_NITRO_POOL: '0x4391D56A8E56BE1fB30a45bAa0E5B7a4b488FbAa', // Test pool address
-        CAMELOT_RETH_NITRO_POOL: '0x4391D56A8E56BE1fB30a45bAa0E5B7a4b488FbAa', // Test pool address
+        CAMELOT_RETH_NITRO_POOL: '0xCb0E3ab1EA61598029111e360b0a999f0E6067fd', // Test pool address
     },
 }
 
@@ -260,7 +260,8 @@ const tokens: Record<GebDeployment, TokenList> = {
         //     isCollateral: true,
         // },
         RETH: {
-            address: '0xEC70Dcb4A1EFa46b8F2D97C310C9c4790ba5ffA8',
+            address: '0xcbdc45feac9a5a3d2de92013564685152a2d4465', // Test RETH
+            // address: '0xEC70Dcb4A1EFa46b8F2D97C310C9c4790ba5ffA8', // Actual RETH
             collateralJoin: '0x0000000000000000000000000000000000000000',
             collateralAuctionHouse: '0x0000000000000000000000000000000000000000',
             decimals: 18,

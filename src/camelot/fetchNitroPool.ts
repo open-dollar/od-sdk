@@ -29,11 +29,11 @@ export type NitroPoolDetails = {
     apy: number
 }
 
-const fetchNitroPoolODGWSTETH = async (geb: Geb, address: string | null): Promise<NitroPoolDetails> => {
+const fetchNitroPool = async (geb: Geb, collateralType: 'RETH' | 'WSTETH', address: string | null): Promise<NitroPoolDetails> => {
     const ODGAddress = geb.tokenList['ODG'].address
-    const WSTETHAddress = geb.tokenList['WSTETH'].address
+    const collateralAddress = geb.tokenList[collateralType].address
 
-    if (!ODGAddress || !WSTETHAddress) {
+    if (!ODGAddress || !collateralAddress) {
         console.warn('Missing token info in tokenlist')
         return {
             tvl: 0,
@@ -56,12 +56,13 @@ const fetchNitroPoolODGWSTETH = async (geb: Geb, address: string | null): Promis
     }
 
     const odg = geb.getErc20Contract(ODGAddress)
-    const WSTETH = geb.getErc20Contract(WSTETHAddress)
+    const collateral = geb.getErc20Contract(collateralAddress)
 
-    const camelotWSTETHNitroPool = await geb.contracts.camelotWSTETHNitroPool
+    const camelotNitroPool = await geb.contracts[`camelot${collateralType}NitroPool`]
 
     let odgMarketPriceFloat = 1.6
-    let WSTETHPriceFloat = 2000
+    // Hardcode price for now
+    let collateralPriceFloat = collateralType === 'WSTETH' ? 2000 : 1700
 
     const results = await Promise.all([
         multicall<
@@ -72,34 +73,34 @@ const fetchNitroPoolODGWSTETH = async (geb: Geb, address: string | null): Promis
             ]
         >(geb, [
             {
-                contract: camelotWSTETHNitroPool,
+                contract: camelotNitroPool,
                 function: 'settings',
                 args: [],
             },
             {
                 contract: odg,
                 function: 'balanceOf',
-                args: [camelotWSTETHNitroPool.address],
+                args: [camelotNitroPool.address],
             },
             {
-                contract: WSTETH,
+                contract: collateral,
                 function: 'balanceOf',
-                args: [camelotWSTETHNitroPool.address],
+                args: [camelotNitroPool.address],
             },
         ]),
-        camelotWSTETHNitroPool.rewardsToken1PerSecond(),
+        camelotNitroPool.rewardsToken1PerSecond(),
         Promise.resolve(odgMarketPriceFloat),
-        Promise.resolve(WSTETHPriceFloat),
-        address ? camelotWSTETHNitroPool.userInfo(address) : Promise.resolve(null),
+        Promise.resolve(collateralPriceFloat),
+        address ? camelotNitroPool.userInfo(address) : Promise.resolve(null),
     ])
 
     const [
         {
-            returnData: [settings, [poolODGBalanceBN], [poolWSTETHBalanceBN]],
+            returnData: [settings, [poolODGBalanceBN], [poolCollateralBalanceBN]],
         },
         nitroRewardsPerSecond,
         odgMarketPrice,
-        WSTETH_market_price,
+        collateralMarketPrice,
         userInfo,
     ] = results as [
         { returnData: [any, BigNumber[], BigNumber[]] },
@@ -116,8 +117,8 @@ const fetchNitroPoolODGWSTETH = async (geb: Geb, address: string | null): Promis
     ]
 
     const poolODGBalance = fromBigNumber(poolODGBalanceBN)
-    const poolWSTETHBalance = fromBigNumber(poolWSTETHBalanceBN)
-    const tvl = poolODGBalance * odgMarketPrice + poolWSTETHBalance * WSTETHPriceFloat
+    const poolCollateralBalance = fromBigNumber(poolCollateralBalanceBN)
+    const tvl = poolODGBalance * odgMarketPrice + poolCollateralBalance * collateralMarketPrice
     const rewardsPerSecond = fromBigNumber(nitroRewardsPerSecond)
     const lpTokenBalance = userInfo ? fromBigNumber(userInfo.totalDepositAmount) : 0
     const apy = (rewardsPerSecond * SECONDS_IN_YEAR * odgMarketPrice) / tvl
@@ -131,4 +132,4 @@ const fetchNitroPoolODGWSTETH = async (geb: Geb, address: string | null): Promis
     }
 }
 
-export { fetchNitroPoolODGWSTETH }
+export { fetchNitroPool }
