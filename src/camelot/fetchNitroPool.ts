@@ -4,12 +4,6 @@ import { CamelotNitroPool, ERC20 } from '../typechained'
 import { Geb } from '../geb'
 import { fromBigNumber, multicall, CamelotMulticallRequest, SECONDS_IN_YEAR } from '../utils'
 
-export type AvailableDepositTypes =  (['RETH', 'WSTETH'])
-
-function availableCollateralsForDeposit(): AvailableDepositTypes {
-    return ['RETH', 'WSTETH']
-}
-
 export type NitroPoolDetails = {
     tvl: number,
     pendingRewards: {
@@ -39,7 +33,9 @@ export type NitroPoolDetails = {
     apy: number
 }
 
-const fetchNitroPool = async (geb: Geb, collateralType: 'RETH' | 'WSTETH', address: string | null): Promise<NitroPoolDetails> => {
+type AvailableDepositTypes = 'WSTETH' | 'RETH'
+
+const fetchNitroPool = async (geb: Geb, collateralType: AvailableDepositTypes, address: string | null): Promise<NitroPoolDetails> => {
     const ODGAddress = geb.tokenList['ODG'].address
     const collateralAddress = geb.tokenList[collateralType].address
     const collateralChainlinkRelayer = geb.tokenList[collateralType].chainlinkRelayer
@@ -195,4 +191,4 @@ const fetchNitroPool = async (geb: Geb, collateralType: 'RETH' | 'WSTETH', addre
     }
 }
 
-export { fetchNitroPool, availableCollateralsForDeposit }
+export { fetchNitroPool, AvailableDepositTypes }
