@@ -1,11 +1,21 @@
-import { BigNumber } from 'ethers'
+import { BigNumber, ethers } from 'ethers'
 
 import { CamelotNitroPool, ERC20 } from '../typechained'
 import { Geb } from '../geb'
 import { fromBigNumber, multicall, CamelotMulticallRequest, SECONDS_IN_YEAR } from '../utils'
 
+export type AvailableDepositTypes =  (['RETH', 'WSTETH'])
+
+function availableCollateralsForDeposit(): AvailableDepositTypes {
+    return ['RETH', 'WSTETH']
+}
+
 export type NitroPoolDetails = {
-    tvl: number
+    tvl: number,
+    pendingRewards: {
+        pending1: number,
+        pending2: number,
+    },
     settings: {
         startTime: BigNumber
         endTime: BigNumber
@@ -32,11 +42,17 @@ export type NitroPoolDetails = {
 const fetchNitroPool = async (geb: Geb, collateralType: 'RETH' | 'WSTETH', address: string | null): Promise<NitroPoolDetails> => {
     const ODGAddress = geb.tokenList['ODG'].address
     const collateralAddress = geb.tokenList[collateralType].address
+    const collateralChainlinkRelayer = geb.tokenList[collateralType].chainlinkRelayer
+    const odgChainlinkRelayerAddress = geb.tokenList['ODG'].chainlinkRelayer;
 
-    if (!ODGAddress || !collateralAddress) {
+    if (!ODGAddress || !collateralAddress || !collateralChainlinkRelayer) {
         console.warn('Missing token info in tokenlist')
         return {
             tvl: 0,
+            pendingRewards: {
+                pending1: 0,
+                pending2: 0,
+            },
             settings: {
                 startTime: BigNumber.from(0),
                 endTime: BigNumber.from(0),
@@ -60,18 +76,67 @@ const fetchNitroPool = async (geb: Geb, collateralType: 'RETH' | 'WSTETH', addre
 
     const camelotNitroPool = await geb.contracts[`camelot${collateralType}NitroPool`]
 
-    let odgMarketPriceFloat = 1.6
-    // Hardcode price for now
-    let collateralPriceFloat = collateralType === 'WSTETH' ? 2000 : 1700
+    const chainlinkRelayerContract = new ethers.Contract(
+        collateralChainlinkRelayer,
+        ['function getResultWithValidity() external view returns (uint256 _result, bool _validity)'],
+        geb.provider
+    )
+
+    const chainlinkRelayerContractODG = new ethers.Contract(
+        odgChainlinkRelayerAddress,
+        ['function getResultWithValidity() external view returns (uint256 _result, bool _validity)'],
+        geb.provider
+    );
+
+    const [odgPrice, odgPriceValidity] = await chainlinkRelayerContractODG.getResultWithValidity();
+
+    const [collateralPrice, collateralPriceValidity] = await chainlinkRelayerContract.getResultWithValidity()
+
+    const odgMarketPriceFloat = parseFloat(ethers.utils.formatEther(odgPrice));
+
+    // TODO: Collateral price is invalid for some reason so just doing ODG validity price check for now
+    if (!odgPriceValidity) {
+        console.warn('Chainlink price fetch invalid')
+        return {
+            tvl: 0,
+            pendingRewards: {
+                pending1: 0,
+                pending2: 0,
+            },
+            settings: {
+                startTime: BigNumber.from(0),
+                endTime: BigNumber.from(0),
+                harvestStartTime: BigNumber.from(0),
+                depositEndTime: BigNumber.from(0),
+                lockDurationReq: BigNumber.from(0),
+                lockEndReq: BigNumber.from(0),
+                depositAmountReq: BigNumber.from(0),
+                whitelist: false,
+                description: '',
+            },
+            rewardsPerSecond: 0,
+            lpTokenBalance: 0,
+            userInfo: null,
+            apy: 0,
+        }
+    }
+
+    const collateralPriceFloat = parseFloat(ethers.utils.formatEther(collateralPrice))
 
     const results = await Promise.all([
         multicall<
             [
+                CamelotMulticallRequest<CamelotNitroPool, 'pendingRewards'>,
                 CamelotMulticallRequest<CamelotNitroPool, 'settings'>,
                 CamelotMulticallRequest<ERC20, 'balanceOf'>,
                 CamelotMulticallRequest<ERC20, 'balanceOf'>
             ]
         >(geb, [
+            {
+                contract: camelotNitroPool,
+                function: 'pendingRewards',
+                args: [address],
+            },
             {
                 contract: camelotNitroPool,
                 function: 'settings',
@@ -89,24 +154,18 @@ const fetchNitroPool = async (geb: Geb, collateralType: 'RETH' | 'WSTETH', addre
             },
         ]),
         camelotNitroPool.rewardsToken1PerSecond(),
-        Promise.resolve(odgMarketPriceFloat),
-        Promise.resolve(collateralPriceFloat),
         address ? camelotNitroPool.userInfo(address) : Promise.resolve(null),
     ])
 
     const [
         {
-            returnData: [settings, [poolODGBalanceBN], [poolCollateralBalanceBN]],
+            returnData: [pendingRewards, settings, [poolODGBalanceBN], [poolCollateralBalanceBN]],
         },
         nitroRewardsPerSecond,
-        odgMarketPrice,
-        collateralMarketPrice,
         userInfo,
     ] = results as [
-        { returnData: [any, BigNumber[], BigNumber[]] },
+        { returnData: [any, any, BigNumber[], BigNumber[]] },
         BigNumber,
-        number,
-        number,
             {
                 totalDepositAmount: BigNumber
                 rewardDebtToken1: BigNumber
@@ -118,12 +177,16 @@ const fetchNitroPool = async (geb: Geb, collateralType: 'RETH' | 'WSTETH', addre
 
     const poolODGBalance = fromBigNumber(poolODGBalanceBN)
     const poolCollateralBalance = fromBigNumber(poolCollateralBalanceBN)
-    const tvl = poolODGBalance * odgMarketPrice + poolCollateralBalance * collateralMarketPrice
+    const tvl = poolODGBalance * odgMarketPriceFloat + poolCollateralBalance * collateralPriceFloat
     const rewardsPerSecond = fromBigNumber(nitroRewardsPerSecond)
     const lpTokenBalance = userInfo ? fromBigNumber(userInfo.totalDepositAmount) : 0
-    const apy = (rewardsPerSecond * SECONDS_IN_YEAR * odgMarketPrice) / tvl
+    const apy = (rewardsPerSecond * SECONDS_IN_YEAR * odgMarketPriceFloat) / tvl
     return {
         tvl,
+        pendingRewards: {
+            pending1: fromBigNumber(pendingRewards[0]),
+            pending2: fromBigNumber(pendingRewards[1]),
+        },
         settings,
         rewardsPerSecond,
         lpTokenBalance,
@@ -132,4 +195,4 @@ const fetchNitroPool = async (geb: Geb, collateralType: 'RETH' | 'WSTETH', addre
     }
 }
 
-export { fetchNitroPool }
+export { fetchNitroPool, availableCollateralsForDeposit }

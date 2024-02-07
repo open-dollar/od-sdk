@@ -228,6 +228,7 @@ const tokens: Record<GebDeployment, TokenList> = {
             collateralAuctionHouse: '',
             isCollateral: false,
             camelotPoolAddress: '0xF935263c9950EB2881FF58Bd6a76c3D2564A78D5', // Actual swap pool
+            chainlinkRelayer: '0xE90E52eb676bc00DD85FAE83D2FAC22062F7f470', // Actual USD price feed
         },
         WETH: {
             address: '0x82af49447d8a07e3bd95bd0d56f35241523fbab1',
@@ -248,7 +249,7 @@ const tokens: Record<GebDeployment, TokenList> = {
             symbol: 'WSTETH',
             bytes32String: WSTETH,
             isCollateral: true,
-            chainlinkRelayer: '',
+            chainlinkRelayer: '0xCeE84f86d76bADa12262138b860D772812334DD6', // Actual USD price feed
         },
         // CBETH: {
         //     address: '0x0000000000000000000000000000000000000000',
@@ -268,6 +269,7 @@ const tokens: Record<GebDeployment, TokenList> = {
             symbol: 'RETH',
             bytes32String: RETH,
             isCollateral: true,
+            chainlinkRelayer: '0xCa3AD386d14d851A5fF5f08De2Bd2de88db2d5A0' // Actual USD price feed
         },
         ARB: {
             address: '0x912ce59144191c1204e64559fe8253a0e49e6548', // Actual ARB
