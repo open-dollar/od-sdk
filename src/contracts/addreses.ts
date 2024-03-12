@@ -235,20 +235,20 @@ const tokens: Record<GebDeployment, TokenList> = {
         },
     },
     optimism: {
-        OD: {
+        HAI: {
             address: '0x10398AbC267496E49106B07dd6BE13364D10dC71',
             decimals: 18,
-            symbol: 'OD',
-            bytes32String: OD,
+            symbol: 'HAI',
+            bytes32String: '',
             collateralJoin: '',
             collateralAuctionHouse: '',
             isCollateral: false,
             camelotPoolAddress: '0x0000000000000000000000000000000000000000',
         },
-        ODG: {
+        KITE: {
             address: '0xf467C7d5a4A9C4687fFc7986aC6aD5A4c81E1404',
             decimals: 18,
-            symbol: 'ODG',
+            symbol: 'KITE',
             bytes32String: '',
             collateralJoin: '',
             collateralAuctionHouse: '',
