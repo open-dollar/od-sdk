@@ -109,36 +109,31 @@ export async function fetchAnalyticsData(geb: Geb): Promise<AnalyticsData> {
             {}
         )
 
-    async function calculateTotalVaults(): Promise<BigNumber> {
-        let totalVaultCount: BigNumber = BigNumber.from(0)
-        console.error('before total vault count')
+    async function calculateTotalVaults(): Promise<Number> {
+        let totalVaultCount: Number = 0
         if (geb.network === 'optimism') {
-            console.error('hit if of total vault count')
             try {
-                fetch('https://subgraph.reflexer.finance/subgraphs/name/reflexer-labs/rai', {
+                const response = await fetch('https://subgraph.reflexer.finance/subgraphs/name/reflexer-labs/rai', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         query: `
-    query {
-  systemStates {
-    totalActiveSafeCount
-  }
-}`,
+                        query {
+                          systemStates {
+                            totalActiveSafeCount
+                          }
+                        }`,
                     }),
-                })
-                    .then((res) => res.json())
-                    .then((res) => {
-                        totalVaultCount = BigNumber.from(res.data?.systemStates[0]?.totalActiveSafeCount)
-                    })
-            } catch (error) {
-                console.error(error)
+                });
+                const res = await response.json();
+                totalVaultCount = res.data?.systemStates[0]?.totalActiveSafeCount || 0;
+            }
+                catch (error) {
+                console.error(error, 'calculateTotalVaults() error')
             }
         } else {
-            console.error('hit else of total vault count')
-            totalVaultCount = await geb.contracts.vault721.connect(geb.provider).totalSupply()
+            totalVaultCount = Number(ethers.utils.formatEther(await geb.contracts.vault721.connect(geb.provider).totalSupply()))
         }
-        console.error(totalVaultCount, 'totalVaultCount')
         return totalVaultCount
     }
 
