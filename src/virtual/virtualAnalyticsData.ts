@@ -142,7 +142,7 @@ export async function fetchAnalyticsData(geb: Geb): Promise<AnalyticsData> {
         return totalVaultCount
     }
 
-    const totalVaults = calculateTotalVaults()
+    const totalVaults = await calculateTotalVaults()
 
     const parsedResult = {
         systemCoinOracle: decoded.systemCoinOracle,
