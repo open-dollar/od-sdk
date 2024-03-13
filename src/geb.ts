@@ -114,7 +114,8 @@ export class Geb {
      */
     public async getProxyAction(ownerAddress: string) {
         const address = await this.contracts.proxyRegistry.getProxy(ownerAddress)
-
+        // TODO: add the ability to make this call instead, if above fails (eg when on HAI Optimism)
+        // const address = await this.contracts.proxyRegistry.proxies(ownerAddress)
         if (address === NULL_ADDRESS) {
             throw new GebError(GebErrorTypes.DOES_NOT_OWN_HAVE_PROXY)
         }

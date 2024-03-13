@@ -109,7 +109,8 @@ export async function fetchAnalyticsData(geb: Geb): Promise<AnalyticsData> {
             {}
         )
 
-    const totalVaults = await geb.contracts.vault721.connect(geb.provider).totalSupply()
+    // TODO: determine another way to fetch the total number of vaults, which is also compatible with the HAI Optimism deployment
+    // const totalVaults = await geb.contracts.vault721.connect(geb.provider).totalSupply()
 
     const parsedResult = {
         systemCoinOracle: decoded.systemCoinOracle,
@@ -124,7 +125,7 @@ export async function fetchAnalyticsData(geb: Geb): Promise<AnalyticsData> {
         redemptionRateITerm: decoded.redemptionRateITerm.toString(),
         surplusInTreasury: decoded.surplusInTreasury.toString(),
         tokenAnalyticsData: result,
-        totalVaults: totalVaults.toString(),
+        totalVaults: '0', //totalVaults.toString(),
     }
 
     return parsedResult
