@@ -59,8 +59,6 @@ export async function fetchPoolData(geb: Geb): Promise<PoolData> {
             totalLiquidityUSD: total_market_cap.toString(),
         }
     } catch (error) {
-        console.log(geb)
-
         console.log('Error fetching pool data: ', error)
         return {
             OD_balance: '0',
