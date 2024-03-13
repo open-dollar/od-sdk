@@ -109,8 +109,40 @@ export async function fetchAnalyticsData(geb: Geb): Promise<AnalyticsData> {
             {}
         )
 
-    // TODO: determine another way to fetch the total number of vaults, which is also compatible with the HAI Optimism deployment
-    // const totalVaults = await geb.contracts.vault721.connect(geb.provider).totalSupply()
+    async function calculateTotalVaults(): Promise<BigNumber> {
+        let totalVaultCount: BigNumber = BigNumber.from(0)
+        console.error('before total vault count')
+        if (geb.network === 'optimism') {
+            console.error('hit if of total vault count')
+            try {
+                fetch('https://subgraph.reflexer.finance/subgraphs/name/reflexer-labs/rai', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        query: `
+    query {
+  systemStates {
+    totalActiveSafeCount
+  }
+}`,
+                    }),
+                })
+                    .then((res) => res.json())
+                    .then((res) => {
+                        totalVaultCount = BigNumber.from(res.data?.systemStates[0]?.totalActiveSafeCount)
+                    })
+            } catch (error) {
+                console.error(error)
+            }
+        } else {
+            console.error('hit else of total vault count')
+            totalVaultCount = await geb.contracts.vault721.connect(geb.provider).totalSupply()
+        }
+        console.error(totalVaultCount, 'totalVaultCount')
+        return totalVaultCount
+    }
+
+    const totalVaults = calculateTotalVaults()
 
     const parsedResult = {
         systemCoinOracle: decoded.systemCoinOracle,
@@ -125,7 +157,7 @@ export async function fetchAnalyticsData(geb: Geb): Promise<AnalyticsData> {
         redemptionRateITerm: decoded.redemptionRateITerm.toString(),
         surplusInTreasury: decoded.surplusInTreasury.toString(),
         tokenAnalyticsData: result,
-        totalVaults: '0', //totalVaults.toString(),
+        totalVaults: totalVaults.toString(),
     }
 
     return parsedResult

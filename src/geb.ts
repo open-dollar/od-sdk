@@ -5,7 +5,6 @@ import { TokenList, getTokenList, getSubgraph } from './contracts/addreses'
 import { ContractList, GebDeployment, getAddressList } from './contracts/index'
 import { GebError, GebErrorTypes } from './errors'
 import { BasicActions } from './proxy-action'
-import { Safe } from './schema/safe'
 import { ERC20, ERC20__factory } from './typechained'
 import { NULL_ADDRESS } from './utils'
 import { LiquidationActions } from './liquidation-actions'
@@ -113,9 +112,14 @@ export class Geb {
      * @param ownerAddress Externally owned user account aka Ethereum address that owns a GEB proxy.
      */
     public async getProxyAction(ownerAddress: string) {
-        const address = await this.contracts.proxyRegistry.getProxy(ownerAddress)
-        // TODO: add the ability to make this call instead, if above fails (eg when on HAI Optimism)
-        // const address = await this.contracts.proxyRegistry.proxies(ownerAddress)
+        let address;
+        if (this.network === 'optimism' && this.contracts?.proxyFactory) {
+            address = await this.contracts?.proxyFactory.proxies(ownerAddress)
+        } else {
+            address = await this.contracts.proxyRegistry.getProxy(ownerAddress)
+        }
+        console.error(address, 'address of getProxyAction')
+
         if (address === NULL_ADDRESS) {
             throw new GebError(GebErrorTypes.DOES_NOT_OWN_HAVE_PROXY)
         }

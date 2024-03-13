@@ -14,6 +14,8 @@ export class ContractApis {
     public vault721: types.ERC721
 
     public safeManager: types.IODSafeManager
+    // Factory for HAI deployment
+    public proxyFactory: types.ProxyFactory
 
     public safeEngine: types.ISAFEEngine
     public accountingEngine: types.IAccountingEngine
@@ -53,6 +55,7 @@ export class ContractApis {
         this.vault721 = types.ERC721__factory.connect(addressList.PROXY_REGISTRY, signerOrProvider)
 
         this.safeManager = types.IODSafeManager__factory.connect(addressList.SAFE_MANAGER, signerOrProvider)
+        this.proxyFactory = types.ProxyFactory__factory.connect(addressList.PROXY_FACTORY, signerOrProvider)
         
         this.safeEngine = types.ISAFEEngine__factory.connect(addressList.GEB_SAFE_ENGINE, signerOrProvider)
         this.accountingEngine = types.IAccountingEngine__factory.connect(addressList.GEB_ACCOUNTING_ENGINE, signerOrProvider)
