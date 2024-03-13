@@ -21,7 +21,13 @@ export interface PoolData {
  */
 export async function fetchPoolData(geb: Geb): Promise<PoolData> {
     try {
-        const uniV3PoolAddress = geb.tokenList['OD'].camelotPoolAddress
+        let uniV3PoolAddress = '0x0000000000000000000000000000000000000000'
+        try {
+            uniV3PoolAddress = geb.tokenList['OD'].camelotPoolAddress
+            if (!uniV3PoolAddress) uniV3PoolAddress = geb.tokenList['HAI'].camelotPoolAddress
+        } catch {
+            // do nothing
+        }
 
         const OD_balance = await geb.contracts.systemCoin.balanceOf(uniV3PoolAddress)
 
@@ -53,6 +59,8 @@ export async function fetchPoolData(geb: Geb): Promise<PoolData> {
             totalLiquidityUSD: total_market_cap.toString(),
         }
     } catch (error) {
+        console.log(geb)
+
         console.log('Error fetching pool data: ', error)
         return {
             OD_balance: '0',
