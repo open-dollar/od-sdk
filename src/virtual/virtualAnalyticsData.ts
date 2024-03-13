@@ -124,15 +124,16 @@ export async function fetchAnalyticsData(geb: Geb): Promise<AnalyticsData> {
                           }
                         }`,
                     }),
-                });
-                const res = await response.json();
-                totalVaultCount = res.data?.systemStates[0]?.totalActiveSafeCount || 0;
-            }
-                catch (error) {
+                })
+                const res = await response.json()
+                totalVaultCount = res.data?.systemStates[0]?.totalActiveSafeCount || 0
+            } catch (error) {
                 console.error(error, 'calculateTotalVaults() error')
             }
         } else {
-            totalVaultCount = Number(ethers.utils.formatEther(await geb.contracts.vault721.connect(geb.provider).totalSupply()))
+            totalVaultCount = Number(
+                ethers.utils.formatEther(await geb.contracts.vault721.connect(geb.provider).totalSupply())
+            )
         }
         return totalVaultCount
     }
