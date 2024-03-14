@@ -21,13 +21,7 @@ export interface PoolData {
  */
 export async function fetchPoolData(geb: Geb): Promise<PoolData> {
     try {
-        let uniV3PoolAddress = '0x0000000000000000000000000000000000000000'
-        try {
-            uniV3PoolAddress = geb.tokenList['OD'].camelotPoolAddress
-            if (!uniV3PoolAddress) uniV3PoolAddress = geb.tokenList['HAI'].camelotPoolAddress
-        } catch {
-            // do nothing
-        }
+        const uniV3PoolAddress = geb.tokenList['OD'].camelotPoolAddress
 
         const OD_balance = await geb.contracts.systemCoin.balanceOf(uniV3PoolAddress)
 
