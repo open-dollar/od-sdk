@@ -244,8 +244,8 @@ export class BasicActions {
                     this.addressList.SAFE_MANAGER,
                     this.addressList.GEB_TAX_COLLECTOR,
                     collateralJoin,
-                    collateralType,
                     this.addressList.GEB_COIN_JOIN,
+                    collateralType,
                     collateralAmount,
                     deltaWad
                 )
