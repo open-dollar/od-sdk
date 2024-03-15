@@ -85,7 +85,10 @@ export class BasicActions {
 
         // Proxy contract APIs
         this.proxyActionCore = types.IBasicActions__factory.connect(this.proxyActionCoreAddress, this.chainProvider)
-        this.HaiProxyActionCore = types.HAIBasicActions__factory.connect(this.proxyActionCoreAddress, this.chainProvider)
+        this.HaiProxyActionCore = types.HAIBasicActions__factory.connect(
+            this.proxyActionCoreAddress,
+            this.chainProvider
+        )
 
         this.proxyActionDebtAuction = types.IDebtBidActions__factory.connect(
             this.proxyActionDebtAuctionAddress,
