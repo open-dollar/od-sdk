@@ -1,0 +1,88 @@
+{
+  "_format": "hh-sol-artifact-1",
+  "contractName": "ICommonActions",
+  "sourceName": "contracts/ICommonActions.sol",
+  "abi": [
+    {
+      "inputs": [],
+      "name": "OnlyDelegateCalls",
+      "type": "error"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_coinJoin",
+          "type": "address"
+        }
+      ],
+      "name": "exitAllSystemCoins",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_collateralJoin",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_wad",
+          "type": "uint256"
+        }
+      ],
+      "name": "exitCollateral",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_coinJoin",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_coinsToExit",
+          "type": "uint256"
+        }
+      ],
+      "name": "exitSystemCoins",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_coinJoin",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "_dst",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_wad",
+          "type": "uint256"
+        }
+      ],
+      "name": "joinSystemCoins",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "bytecode": "0x",
+  "deployedBytecode": "0x",
+  "linkReferences": {},
+  "deployedLinkReferences": {}
+}
