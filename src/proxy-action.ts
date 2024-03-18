@@ -17,6 +17,11 @@ export class BasicActions {
     public proxy: types.ODProxy
 
     /**
+     * Proxy object for the HAI deployment, which has a slightly different API
+     */
+    public HaiProxy: types.IHaiProxy
+
+    /**
      * Address of the base proxy actions contract.
      */
     public proxyActionCoreAddress: string
@@ -49,11 +54,13 @@ export class BasicActions {
     private addressList: ContractList
     private tokenList: TokenList
     private proxyActionCore: types.IBasicActions
+    private HaiProxyActionCore: types.HAIBasicActions
     private proxyActionGlobalSettlement: types.IGlobalSettlementActions
     private proxyActionDebtAuction: types.IDebtBidActions
     private proxyActionSurplusAuction: types.ISurplusBidActions
     private proxyActionCollateralAuction: types.ICollateralBidActions
     private proxyActionRewarded: types.IRewardedActions
+    private HaiProxyActionRewarded: types.IRewardedActionsHAI
     constructor(
         /**
          * Address of the underlying proxy
@@ -66,6 +73,7 @@ export class BasicActions {
         this.tokenList = getTokenList(network)
 
         this.proxy = types.ODProxy__factory.connect(proxyAddress, this.chainProvider)
+        this.HaiProxy = types.IHaiProxy__factory.connect(proxyAddress, this.chainProvider)
 
         // Set proxy action contract addresses
         this.proxyActionCoreAddress = this.addressList.PROXY_BASIC_ACTIONS
@@ -77,6 +85,10 @@ export class BasicActions {
 
         // Proxy contract APIs
         this.proxyActionCore = types.IBasicActions__factory.connect(this.proxyActionCoreAddress, this.chainProvider)
+        this.HaiProxyActionCore = types.HAIBasicActions__factory.connect(
+            this.proxyActionCoreAddress,
+            this.chainProvider
+        )
 
         this.proxyActionDebtAuction = types.IDebtBidActions__factory.connect(
             this.proxyActionDebtAuctionAddress,
@@ -102,6 +114,11 @@ export class BasicActions {
             this.proxyRewardedActionsAddress,
             this.chainProvider
         )
+
+        this.HaiProxyActionRewarded = types.IRewardedActionsHAI__factory.connect(
+            this.proxyRewardedActionsAddress,
+            this.chainProvider
+        )
     }
 
     private async getProxiedTransactionRequest(
@@ -117,6 +134,9 @@ export class BasicActions {
             throw Error('This proxy action is not supported on this network')
         }
 
+        if (tx.chainId === 10) {
+            return this.HaiProxy.populateTransaction.execute(tx.to, tx.data)
+        }
         return this.proxy.populateTransaction.execute(tx.to, tx.data)
     }
 
@@ -145,6 +165,17 @@ export class BasicActions {
     }
 
     generateDebt(safe: BigNumberish, wad: BigNumberish): Promise<ethers.PopulatedTransaction> {
+        if (this.addressList.GEB_TAX_COLLECTOR !== NULL_ADDRESS) {
+            return this.getProxiedTransactionRequest(
+                this.HaiProxyActionCore.populateTransaction.generateDebt(
+                    this.addressList.SAFE_MANAGER,
+                    this.addressList.GEB_TAX_COLLECTOR,
+                    this.addressList.GEB_COIN_JOIN,
+                    safe,
+                    wad
+                )
+            )
+        }
         return this.getProxiedTransactionRequest(
             this.proxyActionCore.populateTransaction.generateDebt(
                 this.addressList.SAFE_MANAGER,
@@ -178,6 +209,19 @@ export class BasicActions {
         deltaWad: BigNumberish
     ): Promise<ethers.PopulatedTransaction> {
         let collateralJoin = this.tokenList[collateralName].collateralJoin
+        if (this.addressList.GEB_TAX_COLLECTOR !== NULL_ADDRESS) {
+            return this.getProxiedTransactionRequest(
+                this.HaiProxyActionCore.populateTransaction.lockTokenCollateralAndGenerateDebt(
+                    this.addressList.SAFE_MANAGER,
+                    this.addressList.GEB_TAX_COLLECTOR,
+                    collateralJoin,
+                    this.addressList.GEB_COIN_JOIN,
+                    safe,
+                    collateralAmount,
+                    deltaWad
+                )
+            )
+        }
         return this.getProxiedTransactionRequest(
             this.proxyActionCore.populateTransaction.lockTokenCollateralAndGenerateDebt(
                 this.addressList.SAFE_MANAGER,
@@ -197,6 +241,19 @@ export class BasicActions {
     ): Promise<ethers.PopulatedTransaction> {
         let collateralJoin = this.tokenList[collateralName].collateralJoin
         let collateralType = this.tokenList[collateralName].bytes32String
+        if (this.addressList.GEB_TAX_COLLECTOR !== NULL_ADDRESS) {
+            return this.getProxiedTransactionRequest(
+                this.HaiProxyActionCore.populateTransaction.openLockTokenCollateralAndGenerateDebt(
+                    this.addressList.SAFE_MANAGER,
+                    this.addressList.GEB_TAX_COLLECTOR,
+                    collateralJoin,
+                    this.addressList.GEB_COIN_JOIN,
+                    collateralType,
+                    collateralAmount,
+                    deltaWad
+                )
+            )
+        }
         return this.getProxiedTransactionRequest(
             this.proxyActionCore.populateTransaction.openLockTokenCollateralAndGenerateDebt(
                 this.addressList.SAFE_MANAGER,
@@ -217,6 +274,16 @@ export class BasicActions {
     }
 
     repayAllDebt(safe: BigNumberish): Promise<ethers.PopulatedTransaction> {
+        if (this.addressList.GEB_TAX_COLLECTOR !== NULL_ADDRESS) {
+            return this.getProxiedTransactionRequest(
+                this.HaiProxyActionCore.populateTransaction.repayAllDebt(
+                    this.addressList.SAFE_MANAGER,
+                    this.addressList.GEB_TAX_COLLECTOR,
+                    this.addressList.GEB_COIN_JOIN,
+                    safe
+                )
+            )
+        }
         return this.getProxiedTransactionRequest(
             this.proxyActionCore.populateTransaction.repayAllDebt(
                 this.addressList.SAFE_MANAGER,
@@ -232,6 +299,18 @@ export class BasicActions {
         collateralAmount: BigNumberish
     ): Promise<ethers.PopulatedTransaction> {
         let collateralJoin = this.tokenList[collateralName].collateralJoin
+        if (this.addressList.GEB_TAX_COLLECTOR !== NULL_ADDRESS) {
+            return this.getProxiedTransactionRequest(
+                this.HaiProxyActionCore.populateTransaction.repayAllDebtAndFreeTokenCollateral(
+                    this.addressList.SAFE_MANAGER,
+                    this.addressList.GEB_TAX_COLLECTOR,
+                    collateralJoin,
+                    this.addressList.GEB_COIN_JOIN,
+                    safe,
+                    collateralAmount
+                )
+            )
+        }
         return this.getProxiedTransactionRequest(
             this.proxyActionCore.populateTransaction.repayAllDebtAndFreeTokenCollateral(
                 this.addressList.SAFE_MANAGER,
@@ -244,6 +323,17 @@ export class BasicActions {
     }
 
     repayDebt(safe: BigNumberish, wad: BigNumberish): Promise<ethers.PopulatedTransaction> {
+        if (this.addressList.GEB_TAX_COLLECTOR !== NULL_ADDRESS) {
+            return this.getProxiedTransactionRequest(
+                this.HaiProxyActionCore.populateTransaction.repayDebt(
+                    this.addressList.SAFE_MANAGER,
+                    this.addressList.GEB_TAX_COLLECTOR,
+                    this.addressList.GEB_COIN_JOIN,
+                    safe,
+                    wad
+                )
+            )
+        }
         return this.getProxiedTransactionRequest(
             this.proxyActionCore.populateTransaction.repayDebt(
                 this.addressList.SAFE_MANAGER,
@@ -261,6 +351,19 @@ export class BasicActions {
         deltaWad: BigNumberish
     ): Promise<ethers.PopulatedTransaction> {
         let collateralJoin = this.tokenList[collateralName].collateralJoin
+        if (this.addressList.GEB_TAX_COLLECTOR !== NULL_ADDRESS) {
+            return this.getProxiedTransactionRequest(
+                this.HaiProxyActionCore.populateTransaction.repayDebtAndFreeTokenCollateral(
+                    this.addressList.SAFE_MANAGER,
+                    this.addressList.GEB_TAX_COLLECTOR,
+                    collateralJoin,
+                    this.addressList.GEB_COIN_JOIN,
+                    safe,
+                    collateralAmount,
+                    deltaWad
+                )
+            )
+        }
         return this.getProxiedTransactionRequest(
             this.proxyActionCore.populateTransaction.repayDebtAndFreeTokenCollateral(
                 this.addressList.SAFE_MANAGER,
@@ -459,6 +562,21 @@ export class BasicActions {
                 this.addressList.GEB_COIN_JOIN
             )
         )
+    }
+
+    // For HAI deployment only
+    transferExtraSurplus(): Promise<ethers.PopulatedTransaction> {
+        try {
+            return this.getProxiedTransactionRequest(
+                this.HaiProxyActionRewarded.populateTransaction.transferExtraSurplus(
+                    this.addressList.JOB_ACCOUNTING,
+                    this.addressList.GEB_COIN_JOIN
+                )
+            )
+        } catch (error) {
+            console.error(error, 'transferExtraSurplus()')
+            return Promise.resolve({} as ethers.PopulatedTransaction)
+        }
     }
 
     liquidateSAFE(collateralName: string, safeAddress: string): Promise<ethers.PopulatedTransaction> {

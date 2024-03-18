@@ -109,7 +109,36 @@ export async function fetchAnalyticsData(geb: Geb): Promise<AnalyticsData> {
             {}
         )
 
-    const totalVaults = await geb.contracts.vault721.connect(geb.provider).totalSupply()
+    async function calculateTotalVaults(): Promise<Number> {
+        let totalVaultCount: Number = 0
+        if (geb.network === 'optimism') {
+            try {
+                const response = await fetch('https://subgraph.reflexer.finance/subgraphs/name/reflexer-labs/rai', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        query: `
+                        query {
+                          systemStates {
+                            totalActiveSafeCount
+                          }
+                        }`,
+                    }),
+                })
+                const res = await response.json()
+                totalVaultCount = res.data?.systemStates[0]?.totalActiveSafeCount || 0
+            } catch (error) {
+                console.error(error, 'calculateTotalVaults() error')
+            }
+        } else {
+            totalVaultCount = Number(
+                ethers.utils.formatEther(await geb.contracts.vault721.connect(geb.provider).totalSupply())
+            )
+        }
+        return totalVaultCount
+    }
+
+    const totalVaults = await calculateTotalVaults()
 
     const parsedResult = {
         systemCoinOracle: decoded.systemCoinOracle,

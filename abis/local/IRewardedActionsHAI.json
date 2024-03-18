@@ -1,0 +1,234 @@
+{
+  "_format": "hh-sol-artifact-1",
+  "contractName": "IRewardedActions",
+  "sourceName": "contracts/IRewardedActions.sol",
+  "abi": [
+    {
+      "inputs": [],
+      "name": "OnlyDelegateCalls",
+      "type": "error"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_coinJoin",
+          "type": "address"
+        }
+      ],
+      "name": "exitAllSystemCoins",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_collateralJoin",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_wad",
+          "type": "uint256"
+        }
+      ],
+      "name": "exitCollateral",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_coinJoin",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_coinsToExit",
+          "type": "uint256"
+        }
+      ],
+      "name": "exitSystemCoins",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_coinJoin",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "_dst",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_wad",
+          "type": "uint256"
+        }
+      ],
+      "name": "joinSystemCoins",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_liquidationJob",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "_coinJoin",
+          "type": "address"
+        },
+        {
+          "internalType": "bytes32",
+          "name": "_cType",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "address",
+          "name": "_safe",
+          "type": "address"
+        }
+      ],
+      "name": "liquidateSAFE",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_accountingJob",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "_coinJoin",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_debtTimestamp",
+          "type": "uint256"
+        }
+      ],
+      "name": "popDebtFromQueue",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_accountingJob",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "_coinJoin",
+          "type": "address"
+        }
+      ],
+      "name": "startDebtAuction",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_accountingJob",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "_coinJoin",
+          "type": "address"
+        }
+      ],
+      "name": "startSurplusAuction",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_accountingJob",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "_coinJoin",
+          "type": "address"
+        }
+      ],
+      "name": "transferExtraSurplus",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_oracleJob",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "_coinJoin",
+          "type": "address"
+        },
+        {
+          "internalType": "bytes32",
+          "name": "_cType",
+          "type": "bytes32"
+        }
+      ],
+      "name": "updateCollateralPrice",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_oracleJob",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "_coinJoin",
+          "type": "address"
+        }
+      ],
+      "name": "updateRedemptionRate",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "bytecode": "0x",
+  "deployedBytecode": "0x",
+  "linkReferences": {},
+  "deployedLinkReferences": {}
+}

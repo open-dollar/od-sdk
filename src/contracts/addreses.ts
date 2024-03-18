@@ -1,4 +1,4 @@
-import { WETH, ARB, OD, WSTETH, CBETH, RETH } from '../utils'
+import { WETH, ARB, OD, WSTETH, CBETH, RETH, OP } from '../utils'
 
 // All keys are mandatory
 export type ContractKey =
@@ -23,6 +23,7 @@ export type ContractKey =
     | 'GEB_RRFM_SETTER'
     | 'GEB_RRFM_CALCULATOR'
     | 'SAFE_MANAGER'
+    | 'PROXY_FACTORY'
     | 'GEB_GLOBAL_SETTLEMENT'
     | 'PROXY_BASIC_ACTIONS'
     | 'PROXY_REGISTRY'
@@ -42,7 +43,7 @@ export type ContractList = {
     [key in ContractKey]: string
 }
 
-export declare type GebDeployment = 'arbitrum' | 'arbitrum-sepolia'
+export declare type GebDeployment = 'arbitrum' | 'arbitrum-sepolia' | 'optimism'
 
 const addresses: Record<GebDeployment, ContractList> = {
     'arbitrum-sepolia': {
@@ -67,6 +68,7 @@ const addresses: Record<GebDeployment, ContractList> = {
         GEB_RRFM_SETTER: '0xAa39DD9cFfB9984A8ab5Ae3daeE1770Ef07Afd98',
         GEB_RRFM_CALCULATOR: '0x2241ed6EA90FFd6fad2e586FF630A52c4020E340',
         SAFE_MANAGER: '0xea1bF408bF3f29C4787712E67390552163a465f3',
+        PROXY_FACTORY: '0x0000000000000000000000000000000000000000',
         PROXY_BASIC_ACTIONS: '0x65AA70ed223368119D34C6a24a5050b446Ce74f7',
         PROXY_REGISTRY: '0x00024F3c588d9a1c11Be800637b43E0C88befF1A',
         PROXY_DEBT_AUCTION_ACTIONS: '0x51905778Af208271a6Cb817617C21ACa961C3B20',
@@ -97,6 +99,7 @@ const addresses: Record<GebDeployment, ContractList> = {
         GEB_RRFM_SETTER: '0x0000000000000000000000000000000000000000',
         GEB_GLOBAL_SETTLEMENT: '0x0000000000000000000000000000000000000000',
         SAFE_MANAGER: '0x0000000000000000000000000000000000000000',
+        PROXY_FACTORY: '0x0000000000000000000000000000000000000000',
         PROXY_REGISTRY: '0x0000000000000000000000000000000000000000',
         PROXY_BASIC_ACTIONS: '0x0000000000000000000000000000000000000000',
         PROXY_DEBT_AUCTION_ACTIONS: '0x0000000000000000000000000000000000000000',
@@ -112,6 +115,42 @@ const addresses: Record<GebDeployment, ContractList> = {
         JOB_ACCOUNTING: '0x0000000000000000000000000000000000000000',
         JOB_LIQUIDATION: '0x0000000000000000000000000000000000000000',
         JOB_ORACLES: '0x0000000000000000000000000000000000000000',
+    },
+    optimism: {
+        MULTICALL: '0xcA11bde05977b3631167028862bE2a173976CA11',
+        ETH: '0x4200000000000000000000000000000000000006',
+        GEB_SYSTEM_COIN: '0x10398AbC267496E49106B07dd6BE13364D10dC71',
+        GEB_PROTOCOL_TOKEN: '0xf467C7d5a4A9C4687fFc7986aC6aD5A4c81E1404',
+        GEB_SAFE_ENGINE: '0x9Ff826860689483181C5FAc9628fd2F70275A700',
+        GEB_ORACLE_RELAYER: '0x6270403b908505F02Da05BE5c1956aBB59FDb3A6',
+        GEB_SURPLUS_AUCTION_HOUSE: '0x096125Fa7E2181DbA78136782365a39c3a1778E9',
+        GEB_DEBT_AUCTION_HOUSE: '0x7CdE0d7296725aFB80EA091Eca8D06A377f617b3',
+        GEB_ACCOUNTING_ENGINE: '0xa4900795EbFfadc12790f05f7c4AC42CD765Bd10',
+        GEB_LIQUIDATION_ENGINE: '0x8Be588895BE9B75F9a9dAee185e0c2ad89891b56',
+        GEB_COIN_JOIN: '0x30Ce72230A47A0967B7e52A1bAE0178DbD7c6eA3',
+        GEB_TAX_COLLECTOR: '0x62B82ccE08f8F2D808348409E9418c65EB1973C3',
+        GEB_STABILITY_FEE_TREASURY: '0xE9E54c55d41D6622933F9F736e0c55484b3c4f6f',
+        GEB_RRFM_CALCULATOR: '0x6f9aeC3c0DF4DF7A0Da66453a38B8C767972f609',
+        GEB_RRFM_SETTER: '0x1F76F20C9D9075dc160d0E47cd214dF0B7434d2f',
+        GEB_GLOBAL_SETTLEMENT: '0x75880aca7230462a630Ad65ad5444cb1E1864218',
+        SAFE_MANAGER: '0xB0FF82D8322f6Fa9C28Ec46eF0A5C343e95106C3',
+        // Factory for HAI deployment
+        PROXY_FACTORY: '0xBAfbCDbFbB1569722253ED4D491D2fB3b5E03a27',
+        PROXY_REGISTRY: '0xBAfbCDbFbB1569722253ED4D491D2fB3b5E03a27',
+        PROXY_BASIC_ACTIONS: '0xd36b1bD5445374Ceb7Fe4148a719584234Da7Bb0',
+        PROXY_DEBT_AUCTION_ACTIONS: '0xFC55B886a2619bd8645549f7Cb672872479F8117',
+        PROXY_SURPLUS_AUCTION_ACTIONS: '0x632229A0A849bde3A1f1200cF23118b33A925cEc',
+        PROXY_COLLATERAL_AUCTION_ACTIONS: '0xbFAc170711DFE2043f47b34F118E9FCDA8FC694D',
+        PROXY_REWARDED_ACTIONS: '0xB688d73B58e5004341f855f3E71177316281cDE7',
+        GEB_COLLATERAL_AUCTION_HOUSE_FACTORY: '0x81c5C2DA8C1a74c6077B03aD69ca04b74b94B427',
+        GEB_COLLATERAL_JOIN_FACTORY: '0xfE7987b1Ee45a8d592B15e8E924d50BFC8536143',
+        GEB_POST_SETTLEMENT_SURPLUS_AUCTION_HOUSE: '0x1fa281EA8d0e9DB78bEAA1F5b1a452058F956d66',
+        GEB_POST_SETTLEMENT_SURPLUS_AUCTIONEER: '0x7EDaD06B56bbEC6A1C5Dd95b8D00aebc803afe43',
+        PROXY_POST_SETTLEMENT_SURPLUS_AUCTION_ACTIONS: '0x48c3416097529944946D08486f10185F18463640',
+        PROXY_GLOBAL_SETTLEMENT_ACTIONS: '0xA0A78899Cd5c093F563EF22e86B68bBC44845Fa1',
+        JOB_ACCOUNTING: '0xc256C3aa404Ab74cE050Bcf8A05256B6A1729EF0',
+        JOB_LIQUIDATION: '0x5EF15750b5672CD6217E4E184cEAD440cB1b3638',
+        JOB_ORACLES: '0xF4F18205D8D46638489865e42c0a71a3d4F9FC22',
     },
 }
 
@@ -142,7 +181,7 @@ const tokens: Record<GebDeployment, TokenList> = {
             collateralJoin: '',
             collateralAuctionHouse: '',
             isCollateral: false,
-            camelotPoolAddress: '0x167c118AAB87c015Ef954dBe2FeD6C87c0038C0a',
+            camelotPoolAddress: '0xf26300c074769320189f1a065C540e2513A57845',
         },
         ODG: {
             address: '0x000e59706a2d1151721F5ef09ad311985d4267f9',
@@ -161,7 +200,7 @@ const tokens: Record<GebDeployment, TokenList> = {
             symbol: 'WETH',
             bytes32String: WETH,
             isCollateral: false,
-            chainlinkRelayer: '',
+            chainlinkRelayer: '0x62B89024cFC2AaB93732c800c7f3dbEEA56e0B0c',
         },
         WSTETH: {
             address: '0x28708a74510BB214B685FfB371d593c51F597fC3',
@@ -200,11 +239,61 @@ const tokens: Record<GebDeployment, TokenList> = {
             isCollateral: true,
         },
     },
+    optimism: {
+        OD: {
+            address: '0x10398AbC267496E49106B07dd6BE13364D10dC71',
+            decimals: 18,
+            symbol: 'OD',
+            bytes32String: '',
+            collateralJoin: '',
+            collateralAuctionHouse: '',
+            isCollateral: false,
+            camelotPoolAddress: '0x146b020399769339509c98B7B353d19130C150EC',
+        },
+        ODG: {
+            address: '0xf467C7d5a4A9C4687fFc7986aC6aD5A4c81E1404',
+            decimals: 18,
+            symbol: 'ODG',
+            bytes32String: '',
+            collateralJoin: '',
+            collateralAuctionHouse: '',
+            isCollateral: false,
+        },
+        WETH: {
+            address: '0x4200000000000000000000000000000000000006',
+            collateralJoin: '0xbE57D71e81F83a536937f07E0B3f48dd6f55376B',
+            collateralAuctionHouse: '0x2c6c978B3e707482236De7d23E3A375270F41175',
+            decimals: 18,
+            symbol: 'WETH',
+            bytes32String: WETH,
+            isCollateral: true,
+            chainlinkRelayer: '0x8c212bCaE328669c8b045D467CB78b88e0BE0D39',
+        },
+        WSTETH: {
+            address: '0x1F32b1c2345538c0c6f582fCB022739c4A194Ebb',
+            collateralJoin: '0x77a82b65F8FA7da357A047B897C0339bD0B0B361',
+            collateralAuctionHouse: '0x375686A4cD77DD8e86dD06353E0b42bC53cB3704',
+            decimals: 18,
+            symbol: 'WSTETH',
+            bytes32String: WSTETH,
+            isCollateral: true,
+        },
+        OP: {
+            address: '0x4200000000000000000000000000000000000042',
+            collateralJoin: '0x994fa61F9305Bdd6e5E6bA84015Ee28b109C827A',
+            collateralAuctionHouse: '0x6b5c2deA8b9b13A043DDc25C6581cD6D87a2A881',
+            decimals: 18,
+            symbol: 'OP',
+            bytes32String: OP,
+            isCollateral: true,
+        },
+    },
 }
 
 const subgraphs: Record<GebDeployment, string> = {
     'arbitrum-sepolia': 'https://api.studio.thegraph.com/query/52770/open-dollar---testnet/v1.6.1-rc.1',
     arbitrum: '',
+    optimism: 'https://api.studio.thegraph.com/query/52770/open-dollar---testnet/v1.6.1-rc.1',
 }
 
 export const getTokenList = (network: GebDeployment): TokenList => {

@@ -6,6 +6,7 @@ interface IERC20 {
 }
 
 interface IProxyRegistry {
+    function proxies(address guy) external view returns (address);
     function getProxy(address guy) external view returns (address);
 }
 
@@ -41,7 +42,13 @@ contract VirtualUserSafes {
         address user
     ) {
         uint256 coinBalance = coin.balanceOf(user);
-        address userProxy = proxyRegistry.getProxy(user);
+
+        address userProxy = address(0);
+        try proxyRegistry.proxies(user) returns (address proxy) {
+            userProxy = proxy;
+        } catch {
+            userProxy = proxyRegistry.getProxy(user);
+        }
 
         SafeData[] memory safesData;
 
