@@ -125,14 +125,14 @@ export async function fetchAnalyticsData(geb: Geb): Promise<AnalyticsData> {
                         }`,
                     }),
                 })
-                const res = await response.json();
-                totalVaultCount = Number(res.data?.systemStates[0]?.totalActiveSafeCount) || 0;
+                const res = await response.json()
+                totalVaultCount = Number(res.data?.systemStates[0]?.totalActiveSafeCount) || 0
             } catch (error) {
                 console.error(error, 'calculateTotalVaults() error')
             }
         } else {
-            const totalSupplyBigNumber = await geb.contracts.vault721.connect(geb.provider).totalSupply();
-            totalVaultCount = Number(totalSupplyBigNumber.toString());
+            const totalSupplyBigNumber = await geb.contracts.vault721.connect(geb.provider).totalSupply()
+            totalVaultCount = Number(totalSupplyBigNumber.toString())
         }
         return totalVaultCount
     }
