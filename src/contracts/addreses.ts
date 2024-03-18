@@ -181,7 +181,7 @@ const tokens: Record<GebDeployment, TokenList> = {
             collateralJoin: '',
             collateralAuctionHouse: '',
             isCollateral: false,
-            camelotPoolAddress: '0x167c118AAB87c015Ef954dBe2FeD6C87c0038C0a',
+            camelotPoolAddress: '0xf26300c074769320189f1a065C540e2513A57845',
         },
         ODG: {
             address: '0x000e59706a2d1151721F5ef09ad311985d4267f9',
@@ -200,7 +200,7 @@ const tokens: Record<GebDeployment, TokenList> = {
             symbol: 'WETH',
             bytes32String: WETH,
             isCollateral: false,
-            chainlinkRelayer: '',
+            chainlinkRelayer: '0x62B89024cFC2AaB93732c800c7f3dbEEA56e0B0c',
         },
         WSTETH: {
             address: '0x28708a74510BB214B685FfB371d593c51F597fC3',
@@ -248,7 +248,7 @@ const tokens: Record<GebDeployment, TokenList> = {
             collateralJoin: '',
             collateralAuctionHouse: '',
             isCollateral: false,
-            camelotPoolAddress: '0x0000000000000000000000000000000000000000',
+            camelotPoolAddress: '0x146b020399769339509c98B7B353d19130C150EC',
         },
         ODG: {
             address: '0xf467C7d5a4A9C4687fFc7986aC6aD5A4c81E1404',
@@ -267,7 +267,7 @@ const tokens: Record<GebDeployment, TokenList> = {
             symbol: 'WETH',
             bytes32String: WETH,
             isCollateral: true,
-            chainlinkRelayer: '',
+            chainlinkRelayer: '0x8c212bCaE328669c8b045D467CB78b88e0BE0D39',
         },
         WSTETH: {
             address: '0x1F32b1c2345538c0c6f582fCB022739c4A194Ebb',
