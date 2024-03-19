@@ -49,7 +49,6 @@ export class ContractApis {
 
         this.systemCoin = types.ERC20__factory.connect(addressList.GEB_SYSTEM_COIN, signerOrProvider)
         this.protocolToken = types.ERC20__factory.connect(addressList.GEB_PROTOCOL_TOKEN, signerOrProvider)
-        this.weth = types.WETH9__factory.connect(addressList.ETH, signerOrProvider)
         
         this.proxyRegistry = types.IVault721__factory.connect(addressList.PROXY_REGISTRY, signerOrProvider)
         this.vault721 = types.ERC721__factory.connect(addressList.PROXY_REGISTRY, signerOrProvider)

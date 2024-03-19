@@ -2,6 +2,7 @@ import { ethers } from 'ethers'
 import { Geb } from '../geb'
 import TokensData from '../artifacts/contracts/TokensData.sol/TokensData.json'
 import { TokenData } from '../contracts/addreses'
+import { WETH9__factory } from '../typechained'
 
 export interface TokenFetchData {
     balanceE18: string
@@ -25,7 +26,11 @@ export async function fetchPoolData(geb: Geb): Promise<PoolData> {
 
         const OD_balance = await geb.contracts.systemCoin.balanceOf(uniV3PoolAddress)
 
-        const WETH_balance = await geb.contracts.weth.balanceOf(uniV3PoolAddress)
+        const WETH_address = geb.tokenList['WETH'].address
+
+        const WETH_contract = new ethers.Contract(WETH_address, WETH9__factory.abi, geb.provider)
+
+        const WETH_balance = await WETH_contract.balanceOf(uniV3PoolAddress)
 
         const OD_market_price = await geb.contracts.oracleRelayer.marketPrice()
 
